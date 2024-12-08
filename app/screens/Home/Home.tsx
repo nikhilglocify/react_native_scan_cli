@@ -7,19 +7,17 @@ import {
   Pressable,
   TouchableOpacity,
   ScrollView,
-} from "react-native";
+} from 'react-native';
 
+import {SafeAreaView} from 'react-native-safe-area-context';
 
-import { SafeAreaView } from "react-native-safe-area-context";
-
-
-
-import { useEffect, useMemo, useState } from "react";
-import { ScanIcon } from "../../components/ui/svgIcons/Scan";
-import AddScanIcon from "../../components/ui/svgIcons/AddScanIcon";
-import TimerIcon from "../../components/ui/svgIcons/TimerIcon";
-import DeleteIcon from "../../components/ui/svgIcons/DeleteIcon";
-import { useScanContext } from "../../../context/ScanContext";
+import {useEffect, useMemo, useState} from 'react';
+import {ScanIcon} from '../../components/ui/svgIcons/Scan';
+import AddScanIcon from '../../components/ui/svgIcons/AddScanIcon';
+import TimerIcon from '../../components/ui/svgIcons/TimerIcon';
+import DeleteIcon from '../../components/ui/svgIcons/DeleteIcon';
+import {useScanContext} from '../../../context/ScanContext';
+import AddScanModal from '../../components/Scan/AddScanModal';
 
 // import Svg, { Path, Rect, Mask, G } from "react-native-svg";
 // import { getScansLocally } from "@/helpers/asyncStorage";
@@ -34,10 +32,19 @@ import { useScanContext } from "../../../context/ScanContext";
 // import * as TaskManager from "expo-task-manager";
 export default function HomeScreen() {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
-  const { scans, addScan, removeScan, getScheduledScans, setScanList,setInitNewScan,initNewScan,checkForScan,setCheckForScan } =
-    useScanContext();
-    const BACKGROUND_FETCH_TASK = "background-fetch-task";
-const scheduledScans=useMemo(()=>getScheduledScans(),[scans.length])
+  const {
+    scans,
+    addScan,
+    removeScan,
+    getScheduledScans,
+    setScanList,
+    setInitNewScan,
+    initNewScan,
+    checkForScan,
+    setCheckForScan,
+  } = useScanContext();
+  const BACKGROUND_FETCH_TASK = 'background-fetch-task';
+  const scheduledScans = useMemo(() => getScheduledScans(), [scans.length]);
   // useEffect(() => {
   //   const fetchScans = async () => {
   //     const scanList = await getScansLocally();
@@ -46,11 +53,11 @@ const scheduledScans=useMemo(()=>getScheduledScans(),[scans.length])
   //     await registerBackgroundFetchAsync()
   //   };
   //   fetchScans();
-   
+
   // }, []);
 
   // // heck every minute
-  
+
   // async function registerBackgroundFetchAsync() {
   //   console.log("registerBackgroundFetchAsync")
   //   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
@@ -63,13 +70,13 @@ const scheduledScans=useMemo(()=>getScheduledScans(),[scans.length])
   // // Note: This needs to be called in the global scope (e.g outside of your React components)
   // TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
   //   const now = Date.now();
-  
+
   //   console.log(`Got background fetch call at date: ${new Date(now).toISOString()}`);
-  
+
   //   // Be sure to return the successful result type!
   //   return BackgroundFetch.BackgroundFetchResult.NewData;
   // });
-  
+
   return (
     <>
       <View className="flex-1 h-screen mt-[40px]">
@@ -81,21 +88,18 @@ const scheduledScans=useMemo(()=>getScheduledScans(),[scans.length])
               <Pressable
                 onPress={() => {
                   // router.push("/screens/scan/RunScan");
-                  setCheckForScan(!checkForScan)
-                }}
-              >
+                  setCheckForScan(!checkForScan);
+                }}>
                 <ScanIcon />
-               
               </Pressable>
             </View>
-          </View>{" "}
+          </View>{' '}
           {scheduledScans.length > 0 ? (
             <ScrollView className="p-4">
-              {scheduledScans.map((scan:any) => (
+              {scheduledScans.map((scan: any) => (
                 <View
                   key={scan.id}
-                  className="bg-white shadow-[0_5px_15px_0_rgba(0,0,0,0.2)] border border-solid border-[#F0F0F0] rounded-[10px] mt-1 mb-4"
-                >
+                  className="bg-white shadow-[0_5px_15px_0_rgba(0,0,0,0.2)] border border-solid border-[#F0F0F0] rounded-[10px] mt-1 mb-4">
                   <View className="flex flex-row p-2 gap-3 items-center justify-between">
                     <View className="flex flex-row gap-3 items-center">
                       <TimerIcon />
@@ -124,13 +128,12 @@ const scheduledScans=useMemo(()=>getScheduledScans(),[scans.length])
         <View className="position-absolute bottom-[2px] left-0 right-0 mx-auto">
           <Pressable onPress={() => setVisibleScanModal(true)}>
             <AddScanIcon />
-            
           </Pressable>
         </View>
-        {/* <AddScanModal
+        <AddScanModal
           visible={visibleScanModal}
           onClose={() => setVisibleScanModal(false)}
-        /> */}
+        />
       </View>
     </>
   );
@@ -138,8 +141,8 @@ const scheduledScans=useMemo(()=>getScheduledScans(),[scans.length])
 
 const styles = StyleSheet.create({
   titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
   },
   stepContainer: {
@@ -151,6 +154,6 @@ const styles = StyleSheet.create({
     width: 290,
     bottom: 0,
     left: 0,
-    position: "absolute",
+    position: 'absolute',
   },
 });

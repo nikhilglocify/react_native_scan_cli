@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,184 +7,47 @@ import {
   TouchableOpacity,
   Platform,
   Pressable,
-} from "react-native";
-import { DateTime } from "luxon";
-import { Picker } from "@react-native-picker/picker";
-import "react-native-get-random-values";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { MaterialIcons } from "../ui/TabIcons";
-import Svg, { Path, Rect, Mask, G } from "react-native-svg";
-import { ScheduledScan } from "@/constants/Interface";
-import { useScanContext } from "@/context/ScanContext";
-import { v4 as uuidv4 } from "uuid";
-import { get12HourFormat, getAmPm } from "@/helpers/dateUtils";
-import * as BackgroundFetch from "expo-background-fetch";
-import * as TaskManager from "expo-task-manager";
-import * as Notifications from "expo-notifications";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { configureProps } from "react-native-reanimated/lib/typescript/ConfigHelper";
+} from 'react-native';
 
-// Define types for props
-interface AddScanModalProps {
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+import Svg, {Path, Rect, Mask, G} from 'react-native-svg';
+
+import {v4 as uuidv4} from 'uuid';
+import uuid from 'react-native-uuid';
+ 
+import {ScheduledScan} from '../../constants/Interface';
+import {useScanContext} from '../../../context/ScanContext';
+import {get12HourFormat, getAmPm} from '../../helpers/dateUtils';
+import ClockIcon from '../ui/svgIcons/ClockIcon';
+
+const AddScanModal = ({
+  visible,
+  onClose,
+}: {
   visible: boolean;
   onClose: () => void;
-}
-
-// Define interface for event data
-interface Event {
-  id: string;
-  time: string;
-  eventData: string;
-  isExecuted: boolean;
-}
-
-// Define interface for ScanData
-interface ScanData {
-  id: string;
-  time: string; // ISO string representation of time
-  urls: string[];
-}
-
-const AddScanModal: React.FC<AddScanModalProps> = ({ visible, onClose }) => {
-  const [time, setTime] = useState<Date>(new Date());
-  const [scanDuration, setScanDuration] = useState<number>(5);
-  const [showPicker, setShowPicker] = useState<boolean>(false);
-  const { scans, addScan, removeScan, updateScan } = useScanContext();
-  const notificationListener = useRef<ReturnType<typeof Notifications.addNotificationResponseReceivedListener> | null>(null);
-  const BACKGROUND_FETCH_TASK = "background-fetch-task";
-
+}) => {
+  const [time, setTime] = useState(new Date());
+  const [scanDuration, setScanDuration] = useState(5);
+  const [showPicker, setShowPicker] = useState(false);
+  const {scans, addScan, removeScan, updateScan} = useScanContext();
   // Handler for time change
   const onChangeTime = (event: any, selectedTime?: Date) => {
     setShowPicker(false);
     if (selectedTime) setTime(selectedTime);
   };
 
-  // Background Fetch Task
- 
-
-  TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-    try {
-      console.log("RUNNING BACKGROUND TASK");
-      // Fetch stored events from AsyncStorage
-      const storedEventsJson = await AsyncStorage.getItem("events");
-      const storedEvents: Event[] = storedEventsJson ? JSON.parse(storedEventsJson) : [];
-
-      const currentTime = DateTime.local();
-      console.log("storedEvents", storedEvents);
-
-      // Check each event to see if it should be executed
-      for (const event of storedEvents) {
-        const eventTime = DateTime.fromISO(event.time);
-
-        // If the scheduled time is before or equal to the current time and not executed yet
-        if (eventTime <= currentTime && !event.isExecuted) {
-          // Update isExecuted to true in AsyncStorage
-          event.isExecuted = true;
-          await AsyncStorage.setItem("events", JSON.stringify(storedEvents));
-
-          // Execute the event (e.g., show a notification or perform any other task)
-          console.log(`Executing event: ${event.id}`);
-          // You could also show a notification here if you like
-          await Notifications.scheduleNotificationAsync({
-            content: {
-              title: "Event Executed",
-              body: `Event with ID ${event.id} executed.`,
-            },
-            trigger: null, // Execute immediately
-          });
-        }
-      }
-      const result = await BackgroundFetch.getStatusAsync();
-      // Finish the background task
-      return result;
-    } catch (error) {
-      console.error("Error in background fetch task", error);
-    }
-  });
-
-  const saveEventToStorage = async (event: Event) => {
-    const storedEvents: Event[] =
-      JSON.parse((await AsyncStorage.getItem("events")) as string) || [];
-    storedEvents.push(event);
-    await AsyncStorage.setItem("events", JSON.stringify(storedEvents));
-  };
-  async function registerBackgroundFetchAsync() {
-    console.log("registerBackgroundFetchAsync")
-    return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-      minimumInterval: 60, // 15 minutes
-      stopOnTerminate: false, // android only,
-      startOnBoot: true, // android only
-    });
-  }
-  // Function to schedule a scan
-  const scheduleScan = async (scanData: ScanData) => {
-    const { id, time, urls } = scanData;
-    const eventTime = DateTime.fromJSDate(new Date(time)); // Use Luxon to handle DateTime
-    const currentTime = DateTime.local();
-    await registerBackgroundFetchAsync()
-    // if (eventTime > currentTime) {
-    //   const event: Event = {
-    //     id: Math.random().toString(36).substring(7), // Random ID for the event
-    //     time: eventTime.toISO()!,
-    //     eventData: "Some event data", // Add any data you want to store
-    //     isExecuted: false,
-    //   };
-
-    //   await registerBackgroundFetchAsync()
-    //   await saveEventToStorage(event);
-    // } else {
-    //   alert("Selected time is in the past!");
-    // }
-
-    const scheduledTime = new Date(time);
-
-    const notificationId = await Notifications.scheduleNotificationAsync({
-      identifier: id,
-      content: {
-        title: `Scheduled Scan`,
-        body: `Running scan for ID: ${id}`,
-        data: { id, time, urls },
-      },
-      trigger: {
-        type: "date",
-        date: scheduledTime,
-      },
-    });
-
-    console.log(`Scan scheduled with ID: ${id} at ${scheduledTime}`);
-    return notificationId;
-  };
-
-  Notifications.setNotificationHandler({
-    handleNotification: async (notification) => {
-      return {
-        shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
-      };
-    },
-  });
-
-  Notifications.addNotificationReceivedListener((notification) => {
-    const data = notification.request.content.data;
-  });
-
-  const scan_id = uuidv4();
-
   const handleAddScan = async () => {
+    
     const obj: ScheduledScan = {
-      id: scan_id,
+      id: uuid.v4(),
       time: time.toISOString(),
       date: time,
       scanDuration,
       isCompleted: false,
     };
 
-    await scheduleScan({
-      id: scan_id,
-      time: new Date(time).toISOString(),
-      urls: [],
-    });
     await addScan(obj);
 
     onClose();
@@ -195,37 +58,46 @@ const AddScanModal: React.FC<AddScanModalProps> = ({ visible, onClose }) => {
       transparent={false}
       visible={visible}
       animationType="slide"
-      onRequestClose={onClose}
-    >
+      onRequestClose={onClose}>
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
           <Text style={styles.title}>Select Time</Text>
 
-          {Platform.OS == "android" && (
+          {Platform.OS == 'android' && (
             <Pressable onPress={() => setShowPicker(true)}>
-              <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                <View style={styles.timeBox}>
-                  <Text style={styles.timeText}>{get12HourFormat(time)}</Text>
-                  <View style={styles.border} />
-                  <Text style={styles.timeLabel}>Hour</Text>
+              <View className="flex items-center gap-3 justify-center flex-row">
+                <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[84px] max-h-[84px] text-center mx-auto">
+                  <Text className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center">
+                    {get12HourFormat(time)}
+                  </Text>
+                  <View className="border-b-[1.5px] border-solid border-[#8C46A9]/15"></View>
+                  <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5">
+                    Hour
+                  </Text>
                 </View>
-                <View style={styles.timeBox}>
-                  <Text style={styles.timeText}>{time.getMinutes()}</Text>
-                  <View style={styles.border} />
-                  <Text style={styles.timeLabel}>Min</Text>
+                <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[84px] max-h-[84px] text-center mx-auto">
+                  <Text className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center">
+                    {time.getMinutes()}
+                  </Text>
+                  <View className="border-b-[1.5px] border-solid border-[#8C46A9]/15"></View>
+                  <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5">
+                    Min
+                  </Text>
                 </View>
-                <View style={styles.timeBox}>
-                  <Text style={styles.timeText}>{getAmPm(time)}</Text>
-                  <View style={styles.border} />
-                  <Text style={styles.timeLabel}>
-                    {getAmPm(time) == "AM" ? "PM" : "AM"}
+                <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[84px] max-h-[84px] text-center mx-auto">
+                  <Text className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center">
+                    {getAmPm(time)}
+                  </Text>
+                  <View className="border-b-[1.5px] border-solid border-[#8C46A9]/15"></View>
+                  <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5">
+                    {getAmPm(time) == 'AM' ? 'PM' : 'AM'}
                   </Text>
                 </View>
               </View>
             </Pressable>
           )}
 
-          {Platform.OS === "android" && showPicker && (
+          {Platform.OS === 'android' && showPicker && (
             <TouchableOpacity onPress={() => setTime(new Date())}>
               <DateTimePicker
                 value={time}
@@ -237,14 +109,13 @@ const AddScanModal: React.FC<AddScanModalProps> = ({ visible, onClose }) => {
             </TouchableOpacity>
           )}
 
-          {Platform.OS === "ios" && (
+          {Platform.OS === 'ios' && (
             <View
               style={{
                 height: 150,
-                justifyContent: "center",
-                overflow: "hidden",
-              }}
-            >
+                justifyContent: 'center',
+                overflow: 'hidden',
+              }}>
               <DateTimePicker
                 value={time}
                 mode="time"
@@ -256,100 +127,127 @@ const AddScanModal: React.FC<AddScanModalProps> = ({ visible, onClose }) => {
           )}
 
           {/* Scan Duration Picker */}
-          <View style={styles.durationContainer}>
-            <Text style={styles.scanDurationText}>Scan Duration:</Text>
-            <View style={styles.durationPicker}>
-              <Text style={styles.durationText}>{scanDuration}</Text>
-              <View style={styles.arrowContainer}>
+          <View className="mt-[36px] mb-[36px] flex flex-row items-center gap-2">
+            <Text className="text-base text-[#393939] font-semibold leading-5">
+              Scan Duration:
+            </Text>
+            <View className="flex items-center flex-row justify-between px-3 p-1 text-left bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg relative min-w-[64px] h-[44px] max-w-[65px]">
+              <Text className="text-[16px] inline-block">{scanDuration}</Text>
+              <View className="flex flex-col gap-3 justify-end text-right">
                 {/* up arrow */}
-                <Pressable onPress={() => setScanDuration((prev) => prev + 1)}>
-                  <Svg width="12" height="12" viewBox="0 0 5 4" fill="none">
-                    <Path
-                      d="M0.250151 4L4.75028 4C4.79584 3.99985 4.8405 3.98642 4.87945 3.96116C4.9184 3.93591 4.95017 3.89978 4.97133 3.85666C4.9925 3.81355 5.00211 3.76513 5.00041 3.71625C4.99871 3.66737 4.98506 3.62156 4.96058 3.58858L3.01878 1.33782L3.01888 1.33775C2.99428 1.29598 2.96265 1.27128 2.92271 1.26157C2.88276 1.25187 2.84194 1.25716 2.80491 1.27654C2.76788 1.29593 2.73655 1.32856 2.71388 1.36952C2.69121 1.41047 2.6788 1.45765 2.6788 1.50555C2.6788 1.55345 2.69115 1.60062 2.71375 1.64156L3.65072 2.90798H1.25016C1.22397 2.90798 1.20103 2.92763 1.18372 2.95156C1.16642 2.97548 1.15563 3.00162 1.15325 3.02793C1.15087 3.05425 1.15796 3.08044 1.17361 3.10394L4.17361 4.10394"
-                      fill="#4C4C4C"
-                    />
-                  </Svg>
+
+                <Pressable
+                  onPress={() => {
+                    setScanDuration(prev => prev + 1);
+                  }}>
+                  <View>
+                    <Svg width="12" height="12" viewBox="0 0 5 4" fill="none">
+                      <Path
+                        d="M0.250151 4L4.75028 4C4.79584 3.99985 4.8405 3.98642 4.87945 3.96116C4.9184 3.93591 4.95017 3.89978 4.97133 3.85666C4.9925 3.81355 5.00226 3.76508 4.99956 3.71648C4.99687 3.66789 4.98182 3.62099 4.95603 3.58085L2.70597 0.107993C2.61272 -0.0359975 2.38821 -0.0359975 2.29471 0.107993L0.0446447 3.58085C0.0186002 3.62091 0.00332707 3.66783 0.000484745 3.71651C-0.00235758 3.76519 0.00733961 3.81377 0.0285227 3.85697C0.0497059 3.90018 0.0815647 3.93635 0.120638 3.96157C0.159711 3.98678 0.204504 4.00008 0.250151 4Z"
+                        fill="#464646"
+                        fill-opacity="0.45"
+                      />
+                    </Svg>
+                  </View>
+                </Pressable>
+
+                {/* down arrow */}
+                <Pressable
+                  onPress={() => {
+                    console.log('scanDurection', scanDuration);
+                    if (scanDuration > 1) {
+                      setScanDuration(prev => prev - 1);
+                    }
+                  }}>
+                  <View>
+                    <Svg width="12" height="12" viewBox="0 0 5 4" fill="none">
+                      <Path
+                        d="M4.74985 6.93387e-07L0.249721 2.99973e-07C0.20416 0.000152884 0.1595 0.0135806 0.120549 0.0388372C0.0815977 0.0640939 0.0498303 0.100223 0.0286664 0.143337C0.00750241 0.18645 -0.00225702 0.234916 0.000439015 0.283515C0.00313457 0.332114 0.0181835 0.379008 0.0439657 0.419148L2.29403 3.89201C2.38728 4.036 2.61179 4.036 2.70529 3.89201L4.95536 0.419148C4.9814 0.379092 4.99667 0.332175 4.99952 0.283494C5.00236 0.234814 4.99266 0.186232 4.97148 0.143027C4.95029 0.0998225 4.91844 0.0636465 4.87936 0.0384309C4.84029 0.0132153 4.7955 -7.5835e-05 4.74985 6.93387e-07Z"
+                        fill="#464646"
+                      />
+                    </Svg>
+                  </View>
                 </Pressable>
               </View>
             </View>
+            <Text className="text-base text-[#393939] font-semibold leading-5">
+              Site
+            </Text>
           </View>
-          <TouchableOpacity onPress={handleAddScan} style={styles.addButton}>
-            <Text style={styles.buttonText}>Add Scan</Text>
-          </TouchableOpacity>
+
+          <View className="w-full flex flex-row items-center justify-between my-auto">
+            <ClockIcon />
+
+            {/* Action Buttons */}
+
+            <View className="flex items-center flex-row gap-2">
+              <TouchableOpacity
+                className="bg-[#ECECEC] border border-solid border-[#D4D4D4] py-3 min-w-[86px] rounded-lg"
+                onPress={onClose}>
+                <Text className="text-center text-base text-[#393939] font-semibold leading-6">
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="bg-[#23B0C2] border border-solid border-[#23B0C2] py-3 min-w-[86px] rounded-lg"
+                onPress={() => {
+                  handleAddScan();
+                }}>
+                <Text className="text-center text-base text-white font-semibold leading-6">
+                  OK
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </View>
     </Modal>
   );
 };
 
+export default AddScanModal;
+
 const styles = StyleSheet.create({
   modalBackground: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {
-    backgroundColor: "white",
+    width: 350,
+    height: 390,
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 20,
-    width: 300,
+    alignItems: 'center',
   },
   title: {
     fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 15,
-  },
-  timeBox: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  timeText: {
-    fontSize: 18,
-  },
-  timeLabel: {
-    fontSize: 12,
-    color: "#4C4C4C",
-  },
-  border: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#4C4C4C",
-    width: "70%",
-    marginVertical: 5,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   durationContainer: {
-    flexDirection: "row",
-    marginTop: 10,
-    justifyContent: "space-between",
-  },
-  scanDurationText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  durationPicker: {
-    flexDirection: "row",
-  },
-  durationText: {
-    fontSize: 16,
-    color: "#333",
-    marginRight: 5,
-  },
-  arrowContainer: {
-    flexDirection: "row",
-  },
-  addButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 20,
-    backgroundColor: "#2D82B7",
-    borderRadius: 5,
-    paddingVertical: 12,
-    paddingHorizontal: 30,
   },
-  buttonText: {
-    color: "white",
+  label: {
     fontSize: 16,
-    textAlign: "center",
+    marginRight: 10,
   },
+  picker: {
+    width: 100,
+    height: 44,
+  },
+  unit: {
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  //   buttonContainer: {
+  //     flexDirection: "row",
+  //     marginTop: 30,
+  //     width: "100%",
+  //     // justifyContent: "space-between",
+  //   },
 });
-
-export default AddScanModal;
