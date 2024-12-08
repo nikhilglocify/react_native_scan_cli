@@ -30,7 +30,7 @@ import AddScanModal from '../../components/Scan/AddScanModal';
 // import AddScanIcon from "@/components/ui/svgIcons/AddScanIcon";
 // import * as BackgroundFetch from "expo-background-fetch";
 // import * as TaskManager from "expo-task-manager";
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
   const {
     scans,
@@ -88,6 +88,7 @@ export default function HomeScreen() {
               <Pressable
                 onPress={() => {
                   // router.push("/screens/scan/RunScan");
+                  navigation.navigate("RunScan")
                   setCheckForScan(!checkForScan);
                 }}>
                 <ScanIcon />

@@ -13,6 +13,8 @@ import Home from './app/screens/Home/Home';
 import History from './app/screens/History/History';
 import {ScanProvider} from './context/ScanContext';
 import Tips from './app/screens/Tips/Tip';
+import { createStackNavigator } from '@react-navigation/stack';
+import RunScan from './app/components/Scan/RunScan';
 
 // Define the types for the navigation
 export type RootTabParamList = {
@@ -22,30 +24,54 @@ export type RootTabParamList = {
 
   Tips:undefined
 };
-
+export type RootStackParamList = {
+  Tabs: undefined; // For the Tab Navigator
+  RunScan:undefined
+};
 const Tab = createBottomTabNavigator<RootTabParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
+const TabNavigator: React.FC = () => {
+  return (
+    <Tab.Navigator initialRouteName="Home">
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{headerShown: false}}
+      />
+      <Tab.Screen
+        name="History"
+        component={History}
+        options={{headerShown: false}}
+      />
+      <Tab.Screen
+        name="Tips"
+        component={Tips}
+        options={{headerShown: false}}
+      />
+    </Tab.Navigator>
+  );
+};
 const App: React.FC = () => {
   return (
     <ScanProvider>
       <NavigationContainer>
-        <Tab.Navigator initialRouteName="Home">
-          <Tab.Screen
-            name="Home"
-            component={Home}
+      <Stack.Navigator initialRouteName="Tabs">
+          {/* Main Tab Navigator */}
+          <Stack.Screen
+            name="Tabs"
+            component={TabNavigator}
             options={{headerShown: false}}
           />
-          <Tab.Screen
-            name="History"
-            component={History}
+          {/* Additional screens */}
+          <Stack.Screen
+            name="RunScan"
+            component={RunScan}
             options={{headerShown: false}}
+            
           />
-          <Tab.Screen
-            name="Tips"
-            component={Tips}
-            options={{headerShown: false}}
-          />
-        </Tab.Navigator>
+          
+        </Stack.Navigator>
       </NavigationContainer>
     </ScanProvider>
   );

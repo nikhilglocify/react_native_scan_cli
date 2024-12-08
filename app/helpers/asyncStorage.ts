@@ -1,6 +1,7 @@
-import { ScheduledScan } from '@/constants/Interface';
-import { Scan } from '@/constants/enums';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ScheduledScan } from '../constants/Interface';
+import { Scan } from '../constants/enums';
 
 export const setItem = async (item: string, value: any) => {
   try {
