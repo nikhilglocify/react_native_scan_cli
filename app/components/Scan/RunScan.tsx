@@ -22,6 +22,7 @@ import {
   createNotificationChannel,
   scheduleNotification,
 } from '../../services/PushNotificationConfig';
+import BackIconSvg from '../ui/svgIcons/BackIconSvg';
 
 type scannedWebView = {
   webView: JSX.Element;
@@ -45,11 +46,11 @@ const RunScan = ({navigation}: any) => {
     console.log('useEffect 1 RUnning');
     if (initNewScan && isFocused) {
       console.log('RUN SCAN AGAIN');
-      
+
       runScan(selectedUrls);
     }
   }, [initNewScan, checkForScan]);
-  
+
   const reset = () => {
     console.log('reset State');
     setScannedUrls([]);
@@ -119,18 +120,18 @@ const RunScan = ({navigation}: any) => {
         console.log(`Closed: ${url}`);
         if (index == selectedUrls.length - 1) {
           console.log('SCAN COMPLETED');
-          const addToScanHistory: ScheduledScan = {
-            id: uuid.v4(),
-            time: new Date().toISOString(),
-            date: new Date(),
-            scanDuration: selectedUrls.length,
-            isCompleted: true,
-            visitedSites: selectedUrls,
-          };
+          // const addToScanHistory: ScheduledScan = {
+          //   id: uuid.v4(),
+          //   time: new Date().toISOString(),
+          //   date: new Date(),
+          //   scanDuration: selectedUrls.length,
+          //   isCompleted: true,
+          //   visitedSites: selectedUrls,
+          // };
 
-          setIsScanCompleted(true);
+          // setIsScanCompleted(true);
 
-          addScan(addToScanHistory);
+          // addScan(addToScanHistory);
         }
       }, k + 2000); // Close after 2 seconds
     };
@@ -162,15 +163,32 @@ const RunScan = ({navigation}: any) => {
     }
   };
 
+  const handleAddScan = () => {
+    const addToScanHistory: ScheduledScan = {
+      id: uuid.v4(),
+      time: new Date().toISOString(),
+      date: new Date(),
+      scanDuration: scannedUrls.length,
+      isCompleted: true,
+      visitedSites: scannedUrls,
+    };
+
+    setIsScanCompleted(true);
+
+    addScan(addToScanHistory);
+  };
+
   return (
     <View className="flex-1 h-screen mt-[40px] px-4">
       <View className="flex items-center justify-between flex-row mb-4 relative">
         <Pressable
           onPress={() => {
             navigation.goBack();
+            handleAddScan();
             reset();
           }}>
-          <Text> Back</Text>
+          {/* <Text> Back</Text> */}
+          <BackIconSvg/>
         </Pressable>
         <Text className="text-2xl font-medium flex-grow text-center pr-6">
           Run Scan
