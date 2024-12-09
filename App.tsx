@@ -94,6 +94,7 @@ const TabNavigator: React.FC = () => {
 
 import {PermissionsAndroid, Platform} from 'react-native';
 import {Linking} from 'react-native';
+import { navigationRef } from './app/navigation/NavigationRef';
 export const checkExactAlarmPermission = async () => {
   if (Platform.OS === 'android' && Platform.Version >= 31) {
     console.log('SCHEDULE_EXACT_ALARM permission cannot be checked programmatically.');
@@ -135,7 +136,7 @@ const App: React.FC = () => {
   }, []);
   return (
     <ScanProvider>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <Stack.Navigator initialRouteName="Tabs">
           {/* Main Tab Navigator */}
           <Stack.Screen
