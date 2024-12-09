@@ -13,8 +13,12 @@ import Home from './app/screens/Home/Home';
 import History from './app/screens/History/History';
 import {ScanProvider} from './context/ScanContext';
 import Tips from './app/screens/Tips/Tip';
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import RunScan from './app/components/Scan/RunScan';
+import TabHistoryIcon from './app/components/ui/svgIcons/TabHistoryIcon';
+import { Colors } from './app/constants/Colors';
+import { useColorScheme } from 'react-native';
+
 
 // Define the types for the navigation
 export type RootTabParamList = {
@@ -22,32 +26,70 @@ export type RootTabParamList = {
 
   History: undefined;
 
-  Tips:undefined
+  Tips: undefined;
 };
 export type RootStackParamList = {
   Tabs: undefined; // For the Tab Navigator
-  RunScan:undefined
+  RunScan: undefined;
 };
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
 const TabNavigator: React.FC = () => {
+  const colorScheme = useColorScheme();
   return (
-    <Tab.Navigator initialRouteName="Home">
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].white,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].lightBlue,
+        headerShown: false,
+        // tabBarButton: HapticTab,
+        // tabBarBackground: TabBarBackground,
+        tabBarLabelStyle: {
+          marginTop: 4, // Adjust spacing between the label and icon
+          fontSize: 14, // Optional: Adjust label size
+        },
+        tabBarStyle: {
+          
+            backgroundColor: '#8C46A9',
+            height: 60, // Set background color for other platforms
+          
+        },
+      }}
+      // screenOptions={{
+      //   tabBarStyle: {
+      //     backgroundColor: '#f8f8f8', // Add your desired background color
+      //     borderTopWidth: 0, // Optional: Remove top border for a cleaner look
+      //     height: 70, // Adjust the height if needed
+      //   },
+      //   tabBarActiveTintColor: '#4CAF50', // Color for active tab icons and text
+      //   tabBarInactiveTintColor: '#757575', // Color for inactive tab icons and text
+      // }}
+    >
       <Tab.Screen
         name="Home"
         component={Home}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({color, size}) => <TabHistoryIcon />,
+        }}
       />
       <Tab.Screen
         name="History"
         component={History}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({color, size}) => <TabHistoryIcon />,
+        }}
       />
       <Tab.Screen
         name="Tips"
         component={Tips}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({color, size}) => <TabHistoryIcon />,
+        }}
       />
     </Tab.Navigator>
   );
@@ -56,7 +98,7 @@ const App: React.FC = () => {
   return (
     <ScanProvider>
       <NavigationContainer>
-      <Stack.Navigator initialRouteName="Tabs">
+        <Stack.Navigator initialRouteName="Tabs">
           {/* Main Tab Navigator */}
           <Stack.Screen
             name="Tabs"
@@ -68,9 +110,7 @@ const App: React.FC = () => {
             name="RunScan"
             component={RunScan}
             options={{headerShown: false}}
-            
           />
-          
         </Stack.Navigator>
       </NavigationContainer>
     </ScanProvider>

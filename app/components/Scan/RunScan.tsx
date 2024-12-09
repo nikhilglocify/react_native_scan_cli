@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,23 +8,23 @@ import {
   StyleSheet,
   Modal,
   TouchableWithoutFeedback,
-} from "react-native";
-import { useIsFocused } from "@react-navigation/native";
-import { WebView } from "react-native-webview";
-import urlData from "../../scripts/scanScript/compilation_array2.json";
+} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
+import {WebView} from 'react-native-webview';
+import urlData from '../../scripts/scanScript/compilation_array2.json';
 import uuid from 'react-native-uuid';
-import { useScanContext } from "../../../context/ScanContext";
-import { getRandomURLs } from "../../helpers";
-import { ScheduledScan } from "../../constants/Interface";
-import BrowserTabIcon from "../ui/svgIcons/BrowserTabIcon";
-import CrossIcon from "../ui/svgIcons/CrossIcon";
+import {useScanContext} from '../../../context/ScanContext';
+import {getRandomURLs} from '../../helpers';
+import {ScheduledScan} from '../../constants/Interface';
+import BrowserTabIcon from '../ui/svgIcons/BrowserTabIcon';
+import CrossIcon from '../ui/svgIcons/CrossIcon';
 
 type scannedWebView = {
   webView: JSX.Element;
   url: string;
   id: string;
 };
-const RunScan = ({ navigation }: any) => {
+const RunScan = ({navigation}: any) => {
   const isFocused = useIsFocused();
   const [activeWebView, setActiveWebView] = useState<number | null>(null);
   const [showScannedUrls, setShowScannedUrls] = useState<boolean>(false);
@@ -34,23 +34,19 @@ const RunScan = ({ navigation }: any) => {
   const [isScanCompleted, setIsScanCompleted] = useState<boolean>(false);
   const [selectedUrl, setSelectedUrl] = useState<string | null>();
 
-
-  const { addScan, initNewScan, setInitNewScan, checkForScan } =
-    useScanContext();
-
+  const {addScan, initNewScan, setInitNewScan, checkForScan} = useScanContext();
 
   const selectedUrls = getRandomURLs(urlData.term);
   useEffect(() => {
-    console.log("useEffect 1 RUnning");
-    console.log("values",{isScanCompleted,isFocused,initNewScan})
-    if (!isScanCompleted && initNewScan && isFocused) {
-      console.log("RUN SCAN AGAIN");
+    console.log('useEffect 1 RUnning');
+    if (initNewScan && isFocused) {
+      console.log('RUN SCAN AGAIN');
       runScan(selectedUrls);
     }
   }, [initNewScan, checkForScan]);
 
   const reset = () => {
-    console.log("reset State");
+    console.log('reset State');
     setScannedUrls([]);
     setWebViews([]);
     setCurrentUrl(null);
@@ -64,18 +60,18 @@ const RunScan = ({ navigation }: any) => {
       webView: (
         <WebView
           key={url}
-          source={{ uri: url }}
-          style={{ flex: 1 }}
+          source={{uri: url}}
+          style={{flex: 1}}
           startInLoadingState
-          onError={(e) =>
+          onError={e =>
             console.log(`Error loading WebView for URL ${url}:`, e.nativeEvent)
           }
         />
       ),
       url: url,
     };
-    const activeTab = webViews.filter((tab) => tab.url === url).length
-      ? webViews.filter((tab) => tab.url === url)[0]
+    const activeTab = webViews.filter(tab => tab.url === url).length
+      ? webViews.filter(tab => tab.url === url)[0]
       : defaultWebview;
 
     return activeTab.webView;
@@ -92,24 +88,24 @@ const RunScan = ({ navigation }: any) => {
         const webView = (
           <WebView
             key={index}
-            source={{ uri: url }}
-            style={{ flex: 1 }}
+            source={{uri: url}}
+            style={{flex: 1}}
             startInLoadingState
             onLoad={() => {
               console.log(`Page loaded: ${url}`);
             }}
-            onError={(e) =>
+            onError={e =>
               console.log(
                 `Error loading WebView for URL ${url}:`,
-                e.nativeEvent
+                e.nativeEvent,
               )
             }
           />
         );
         setCurrentUrl(url);
         // setActiveWebView(index);
-        setScannedUrls((prev) => [...prev, url]);
-        setWebViews((prev) => [...prev, { webView, url, id: uuid.v4() }]);
+        setScannedUrls(prev => [...prev, url]);
+        setWebViews(prev => [...prev, {webView, url, id: uuid.v4()}]);
       }, k);
       // console.log("addToScanHistory", index, selectedUrls.length - 1);
 
@@ -117,7 +113,7 @@ const RunScan = ({ navigation }: any) => {
         // setCurrentUrl(null); // Set the WebView to null, effectively "closing" it
         console.log(`Closed: ${url}`);
         if (index == selectedUrls.length - 1) {
-          console.log("SCAN COMPLETED");
+          console.log('SCAN COMPLETED');
           const addToScanHistory: ScheduledScan = {
             id: uuid.v4(),
             time: new Date().toISOString(),
@@ -144,8 +140,8 @@ const RunScan = ({ navigation }: any) => {
   };
 
   const closeTabUrl = (id: string) => {
-    const filteredWebViews = webViews.filter((tab) => tab.url !== id);
-    const updatedUrls = scannedUrls.filter((url) => url !== id);
+    const filteredWebViews = webViews.filter(tab => tab.url !== id);
+    const updatedUrls = scannedUrls.filter(url => url !== id);
     setWebViews(filteredWebViews);
     setScannedUrls(updatedUrls);
 
@@ -155,8 +151,8 @@ const RunScan = ({ navigation }: any) => {
         setSelectedUrl(updatedUrls[0]);
       } else {
         setShowScannedUrls(false);
-       navigation.goBack();
-        reset()
+        navigation.goBack();
+        reset();
       }
     }
   };
@@ -166,18 +162,10 @@ const RunScan = ({ navigation }: any) => {
       <View className="flex items-center justify-between flex-row mb-4 relative">
         <Pressable
           onPress={() => {
-            console.log("Scan completed", isScanCompleted);
-            if (isScanCompleted) {
-              navigation.goBack();
-              reset();
-            } else {
-              navigation.goBack();
-            }
-          }}
-        >
+            navigation.goBack();
+            reset();
+          }}>
           <Text> Back</Text>
-         
-          {/* <MaterialIcons name="arrow-left" /> */}
         </Pressable>
         <Text className="text-2xl font-medium flex-grow text-center pr-6">
           Run Scan
@@ -185,13 +173,12 @@ const RunScan = ({ navigation }: any) => {
         <TouchableOpacity
           className="absolute right-0 p-2 px-2 rounded-lg"
           onPress={() => {
-            console.log("onPress...", showScannedUrls);
+            console.log('onPress...', showScannedUrls);
 
             if (scannedUrls.length) {
               setShowScannedUrls(!showScannedUrls);
             }
-          }}
-        >
+          }}>
           <BrowserTabIcon />
         </TouchableOpacity>
       </View>
@@ -214,9 +201,8 @@ const RunScan = ({ navigation }: any) => {
       <Modal
         animationType="fade"
         transparent={true}
-        visible={scannedUrls.length?showScannedUrls:false}
-        onRequestClose={() => setShowScannedUrls(false)}
-      >
+        visible={scannedUrls.length ? showScannedUrls : false}
+        onRequestClose={() => setShowScannedUrls(false)}>
         <TouchableWithoutFeedback onPress={() => setShowScannedUrls(false)}>
           <View className="flex justify-start pt-28 items-end h-[100vh] bg-black/30">
             <TouchableWithoutFeedback>
@@ -225,8 +211,8 @@ const RunScan = ({ navigation }: any) => {
                 <ScrollView>
                   {scannedUrls.map((url, index) => {
                     const cleanedUrl = url
-                      .replace(/^https?:\/\//, "")
-                      .replace(/^www\./, "");
+                      .replace(/^https?:\/\//, '')
+                      .replace(/^www\./, '');
 
                     const shortenedUrl =
                       cleanedUrl.length > 30
@@ -237,14 +223,13 @@ const RunScan = ({ navigation }: any) => {
                       <View key={index} className="flex relative">
                         <Pressable
                           onPress={() => {
-                            console.log("url", url);
+                            console.log('url', url);
                             setSelectedUrl(url);
                             setCurrentUrl(url);
                             setActiveWebView(index); // Set active WebView
                             setShowScannedUrls(false);
                           }}
-                          className="py-2 border-b border-gray-200"
-                        >
+                          className="py-2 border-b border-gray-200">
                           <Text className="text-base text-blue-500 pr-2 mr-4">
                             {shortenedUrl}
                           </Text>
@@ -252,8 +237,7 @@ const RunScan = ({ navigation }: any) => {
 
                         <Pressable
                           onPress={() => closeTabUrl(url)}
-                          className="absolute top-3 right-1"
-                        >
+                          className="absolute top-3 right-1">
                           <CrossIcon />
                         </Pressable>
                       </View>
@@ -274,14 +258,14 @@ const styles = StyleSheet.create({
     marginRight: 15,
     padding: 10,
     borderRadius: 5,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: '#f0f0f0',
   },
   activeTabButton: {
-    backgroundColor: "#6200EE",
-    color: "#fff",
+    backgroundColor: '#6200EE',
+    color: '#fff',
   },
   visibleTabButton: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: '#4CAF50',
   },
 });
 
