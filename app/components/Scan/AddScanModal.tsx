@@ -21,6 +21,7 @@ import {useScanContext} from '../../../context/ScanContext';
 import {get12HourFormat, getAmPm} from '../../helpers/dateUtils';
 import ClockIcon from '../ui/svgIcons/ClockIcon';
 import { localNotification, scheduleNotification } from '../../services/PushNotificationConfig';
+import { getItem, setItem } from '../../helpers/asyncStorage';
 
 const AddScanModal = ({
   visible,
@@ -41,33 +42,40 @@ const AddScanModal = ({
 
   
 
-  const handleScheduleNotification = (date:Date) => {
+  const handleScheduleNotification = async(id:string,date:Date) => {
     // const date = new Date(Date.now() + 5000); // 5 seconds from now
-    console.log("date",date)
+    console.log("date",date,id)
 
-    localNotification('Test Notification',
-    'This is a scheduled notification',)
     scheduleNotification(
+      id,
       'Test Notification',
       'This is a scheduled notification',
       date,
     );
+    await setItem("NotificationIdCounter", id.toString());
   };
 
 
 
   const handleAddScan = async () => {
-    
+    let currentNotificationId = await getItem("NotificationIdCounter");
+    if (!currentNotificationId) {
+      currentNotificationId = 0;
+    }else{
+      currentNotificationId = parseInt(currentNotificationId) + 1;
+      
+    }
     const obj: ScheduledScan = {
       id: uuid.v4(),
       time: time.toISOString(),
       date: time,
       scanDuration,
       isCompleted: false,
+      notificationId: currentNotificationId.toString(),
     };
 
     await addScan(obj);
-    handleScheduleNotification(time)
+    handleScheduleNotification(currentNotificationId,time)
 
     onClose();
   };

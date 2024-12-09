@@ -4,5 +4,6 @@ export interface ScheduledScan{
     scanDuration:number,
     date:Date  
     visitedSites?:string[],
-    isCompleted:boolean
+    isCompleted:boolean,
+    notificationId?:string
 }

@@ -1,6 +1,8 @@
 import React, {createContext, useState, useContext, ReactNode} from 'react';
 import {ScheduledScan} from '../app/constants/Interface';
 import {addScanLocally, deleteScanLocally} from '../app/helpers/asyncStorage';
+import {deleteNotification} from '../app/services/PushNotificationConfig';
+// import { deleteNotification } from '../app/services/PushNotificationConfig';
 
 interface ScanContextType {
   setScanList: (scans: ScheduledScan[]) => void;
@@ -12,7 +14,7 @@ interface ScanContextType {
   setCheckForScan: any;
   checkForScan: boolean;
   addScan: (scan: ScheduledScan) => void;
-  removeScan: (id: string) => void;
+  removeScan: (id: string, notificationId?: string) => void;
   updateScan: (id: string, updatedScan: Partial<ScheduledScan>) => void;
 }
 
@@ -31,9 +33,15 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
     setScans(scans);
   };
 
-  const removeScan = (id: string) => {
+  const removeScan = (id: string, notificationId?: string) => {
     setScans(prevScans => prevScans.filter(scan => scan.id !== id));
+
+    console.log("removeScan runnin",notificationId)
     deleteScanLocally(id);
+    if (notificationId) {
+      console.log("deleteNotification runnin",notificationId)
+      deleteNotification(notificationId);
+    }
   };
 
   const updateScan = (id: string, updatedScan: Partial<ScheduledScan>) => {

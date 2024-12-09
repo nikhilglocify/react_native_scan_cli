@@ -86,7 +86,9 @@ export default function HomeScreen({navigation}:any) {
                         </Text>
                       </View>
                     </View>
-                    <TouchableOpacity onPress={() => removeScan(scan.id)}>
+                    <TouchableOpacity onPress={() => {
+                      removeScan(scan.id,scan?.notificationId)
+                      }}>
                       <DeleteIcon />
                     </TouchableOpacity>
                   </View>
