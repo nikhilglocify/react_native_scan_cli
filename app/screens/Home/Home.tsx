@@ -18,19 +18,9 @@ import TimerIcon from '../../components/ui/svgIcons/TimerIcon';
 import DeleteIcon from '../../components/ui/svgIcons/DeleteIcon';
 import {useScanContext} from '../../../context/ScanContext';
 import AddScanModal from '../../components/Scan/AddScanModal';
-
-// import Svg, { Path, Rect, Mask, G } from "react-native-svg";
-// import { getScansLocally } from "@/helpers/asyncStorage";
-// import { ScheduledScan } from "@/constants/Interface";
-// import { useScanContext } from "@/context/ScanContext";
-// import { router } from "expo-router";
-// import { ScanIcon } from "@/components/ui/svgIcons/Scan";
-// import TimerIcon from "@/components/ui/svgIcons/TimerIcon";
-// import DeleteIcon from "@/components/ui/svgIcons/DeleteIcon";
-// import AddScanIcon from "@/components/ui/svgIcons/AddScanIcon";
-// import * as BackgroundFetch from "expo-background-fetch";
-// import * as TaskManager from "expo-task-manager";
-export default function HomeScreen({navigation}) {
+import { getScansLocally } from '../../helpers/asyncStorage';
+import { createNotificationChannel } from '../../services/PushNotificationConfig';
+export default function HomeScreen({navigation}:any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
   const {
     scans,
@@ -45,37 +35,20 @@ export default function HomeScreen({navigation}) {
   } = useScanContext();
   const BACKGROUND_FETCH_TASK = 'background-fetch-task';
   const scheduledScans = useMemo(() => getScheduledScans(), [scans.length]);
-  // useEffect(() => {
-  //   const fetchScans = async () => {
-  //     const scanList = await getScansLocally();
-  //     setScanList(scanList || []);
 
-  //     await registerBackgroundFetchAsync()
-  //   };
-  //   fetchScans();
 
-  // }, []);
+  useEffect(() => {
+    const fetchScans = async () => {
+      const scanList = await getScansLocally();
+      setScanList(scanList || []);
+      createNotificationChannel();
+    };
+    fetchScans();
 
-  // // heck every minute
+  }, []);
 
-  // async function registerBackgroundFetchAsync() {
-  //   console.log("registerBackgroundFetchAsync")
-  //   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-  //     minimumInterval: 60, // 15 minutes
-  //     stopOnTerminate: false, // android only,
-  //     startOnBoot: true, // android only
-  //   });
-  // }
-  // // 1. Define the task by providing a name and the function that should be executed
-  // // Note: This needs to be called in the global scope (e.g outside of your React components)
-  // TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-  //   const now = Date.now();
 
-  //   console.log(`Got background fetch call at date: ${new Date(now).toISOString()}`);
-
-  //   // Be sure to return the successful result type!
-  //   return BackgroundFetch.BackgroundFetchResult.NewData;
-  // });
+  
 
   return (
     <>

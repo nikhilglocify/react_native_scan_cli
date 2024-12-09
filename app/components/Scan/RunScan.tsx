@@ -18,6 +18,10 @@ import {getRandomURLs} from '../../helpers';
 import {ScheduledScan} from '../../constants/Interface';
 import BrowserTabIcon from '../ui/svgIcons/BrowserTabIcon';
 import CrossIcon from '../ui/svgIcons/CrossIcon';
+import {
+  createNotificationChannel,
+  scheduleNotification,
+} from '../../services/PushNotificationConfig';
 
 type scannedWebView = {
   webView: JSX.Element;
@@ -41,10 +45,11 @@ const RunScan = ({navigation}: any) => {
     console.log('useEffect 1 RUnning');
     if (initNewScan && isFocused) {
       console.log('RUN SCAN AGAIN');
+      
       runScan(selectedUrls);
     }
   }, [initNewScan, checkForScan]);
-
+  
   const reset = () => {
     console.log('reset State');
     setScannedUrls([]);

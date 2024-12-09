@@ -18,29 +18,7 @@ import { ScheduledScan } from "../../constants/Interface";
 
 const History = () => {
   const {  removeScan, getCompletedScans, scans } = useScanContext();
-  // const scanHistory:ScheduledScan[]=[
-  //   {
-  //   id: "1asdsdfsad",
-  //   scanDuration: 1000,
-  //   isCompleted:true,
-  //   time:"dd",
-  //   date: new Date(),
-  //   visitedSites: ["https://www.google.com", "https://www.facebook.com"],
-  // },{
-  //   id: "1asdsd",
-  //   scanDuration: 1000,
-  //   isCompleted:true,
-  //   time:"dd",
-  //   date: new Date(),
-  //   visitedSites: ["https://www.google.com", "https://www.facebook.com"],
-  // },{
-  //   id: "1asdsfsfad",
-  //   scanDuration: 1000,
-  //   isCompleted:true,
-  //   time:"dd",
-  //   date: new Date(),
-  //   visitedSites: ["https://www.google.com", "https://www.facebook.com"],
-  // }]
+
   const scanHistory = useMemo(() => getCompletedScans(), [scans.length]);
 
   return (
@@ -67,7 +45,7 @@ const History = () => {
 
                       <Text className="text-md text-[#393939] font-medium leading-5">
                         {new Date(scan.date).toDateString()}
-                        {scan.id}
+                       
                       </Text>
 
                       </View>

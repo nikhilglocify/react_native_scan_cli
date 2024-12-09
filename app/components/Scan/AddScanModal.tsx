@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -20,6 +20,7 @@ import {ScheduledScan} from '../../constants/Interface';
 import {useScanContext} from '../../../context/ScanContext';
 import {get12HourFormat, getAmPm} from '../../helpers/dateUtils';
 import ClockIcon from '../ui/svgIcons/ClockIcon';
+import { localNotification, scheduleNotification } from '../../services/PushNotificationConfig';
 
 const AddScanModal = ({
   visible,
@@ -38,6 +39,23 @@ const AddScanModal = ({
     if (selectedTime) setTime(selectedTime);
   };
 
+  
+
+  const handleScheduleNotification = (date:Date) => {
+    // const date = new Date(Date.now() + 5000); // 5 seconds from now
+    console.log("date",date)
+
+    localNotification('Test Notification',
+    'This is a scheduled notification',)
+    scheduleNotification(
+      'Test Notification',
+      'This is a scheduled notification',
+      date,
+    );
+  };
+
+
+
   const handleAddScan = async () => {
     
     const obj: ScheduledScan = {
@@ -49,6 +67,7 @@ const AddScanModal = ({
     };
 
     await addScan(obj);
+    handleScheduleNotification(time)
 
     onClose();
   };
