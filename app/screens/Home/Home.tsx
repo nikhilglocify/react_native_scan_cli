@@ -60,7 +60,6 @@ export default function HomeScreen({navigation}:any) {
 
               <Pressable
                 onPress={() => {
-                  // router.push("/screens/scan/RunScan");
                   navigation.navigate("RunScan")
                   setCheckForScan(!checkForScan);
                 }}>

@@ -48,8 +48,8 @@ const AddScanModal = ({
 
     scheduleNotification(
       id,
-      'Test Notification',
-      'This is a scheduled notification',
+      'Schedule Scan',
+      'Click to start your scheduled scan',
       date,
     );
     await setItem("NotificationIdCounter", id.toString());
