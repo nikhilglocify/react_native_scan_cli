@@ -4,6 +4,7 @@ import React, {
   useContext,
   ReactNode,
   useEffect,
+  Dispatch,
 } from 'react';
 import {ScheduledScan} from '../app/constants/Interface';
 import {
@@ -20,9 +21,9 @@ interface ScanContextType {
   getScheduledScans: () => ScheduledScan[];
   scans: ScheduledScan[];
   initNewScan: boolean;
-  setInitNewScan: any;
-  setCheckForScan: any;
-  setupdatedScanList:any
+ setInitNewScan: Dispatch<React.SetStateAction<boolean>>;
+  setCheckForScan: Dispatch<React.SetStateAction<boolean>>;
+  setupdatedScanList:Dispatch<React.SetStateAction<boolean>>;
   updatedScanList:boolean
   checkForScan: boolean;
   addScan: (scan: ScheduledScan) => void;
