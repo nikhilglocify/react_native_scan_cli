@@ -43,8 +43,7 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   }, [updatedScanList]);
 
   const fetchScans = async () => {
-    const scanList = await getScansLocally();
-    console.log("updating scans",scanList)
+    const scanList = await getScansLocally()
     setScanList(scanList || []);
   };
 

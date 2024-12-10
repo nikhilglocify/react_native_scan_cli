@@ -30,7 +30,7 @@ const History = () => {
         </Text>
        
           {scanHistory && scanHistory.length > 0 ? (
-            <ScrollView >
+            <ScrollView className="mb-[70px]" >
            { scanHistory.map((scan) => {
             return (
               <>

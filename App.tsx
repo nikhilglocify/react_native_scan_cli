@@ -17,7 +17,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import RunScan from './app/components/Scan/RunScan';
 import TabHistoryIcon from './app/components/ui/svgIcons/TabHistoryIcon';
 import {Colors} from './app/constants/Colors';
-import {useColorScheme} from 'react-native';
+import {Alert, useColorScheme} from 'react-native';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 // Define the types for the navigation
 export type RootTabParamList = {
@@ -172,6 +172,28 @@ export const checkPostNotificationPermission = async () => {
 const App: React.FC = () => {
   useEffect(() => {
     checkPostNotificationPermission();
+    // Check if the app was opened by a notification
+    // PushNotificationIOS.getInitialNotification()
+    //   .then((notification) => {
+    //     if (notification) {
+    //       console.log('Initial Notification:', notification);
+    //       Alert.alert("Notification back")
+    //       // Process the notification data
+          
+    //       if (notification?.data) {
+    //         // Navigate to the desired screen
+    //         if (navigationRef.isReady()) {
+    //           navigationRef.navigate('RunScan', notification.data);
+    //         } else {
+    //           console.log('Navigation not ready yet.');
+    //         }
+    //       }
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     Alert.alert("Error back",error)
+    //     console.error('Error getting initial notification:', error);
+    //   });
   }, []);
 
  

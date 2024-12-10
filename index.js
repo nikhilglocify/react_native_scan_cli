@@ -2,44 +2,77 @@
  * @format
  */
 
-import {AppRegistry} from 'react-native';
+import { Alert, AppRegistry, Platform } from 'react-native';
 import App from './App';
-import {name as appName} from './app.json';
+import { name as appName } from './app.json';
 
-import {navigationRef} from './app/navigation/NavigationRef';
+import { navigationRef } from './app/navigation/NavigationRef';
 
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from 'react-native-push-notification';
+
 PushNotification.configure({
   onNotification: function (notification) {
     console.log('NOTIFICATION:', notification);
-
+    Alert.alert("Got the Notifiacio")
     if (notification.foreground) {
-      console.log('FOREGORUN NOTIFIACTON', notification);
+      console.log('FOREGROUND NOTIFICATION:', notification);
     }
+
     if (notification.userInteraction) {
       if (!navigationRef || !navigationRef.isReady()) {
         console.log('Navigation not initialized. Storing pending navigation.');
-        pendingNavigation = notification; // Store the intent
+        const pendingNavigation = notification; // Store the intent
         setTimeout(() => {
           console.log('Navigating to target screen...');
           navigationRef.navigate('RunScan', notification?.data);
-        }, 4000); // A
-        // return;
+        }, 4000); // Delay for navigation
       } else {
-        console.log('Runnin Here ');
+        console.log('Navigating immediately...');
         navigationRef.navigate('RunScan', notification?.data);
       }
     }
 
-    // Perform navigation with a slight delay
-
-    // process the notification
-
-    // (required) Called when a remote is received or opened, or local notification is opened
+    // Finish processing the notification
     notification.finish(PushNotificationIOS.FetchResult.NoData);
   },
+
+  // Register listener for local notifications
   requestPermissions: Platform.OS === 'ios',
+});
+
+
+PushNotificationIOS.getInitialNotification()
+  .then((notification) => {
+    if (notification) {
+      console.log('App launched by notification:', notification);
+
+     
+      if (!navigationRef || !navigationRef.isReady()) {
+        console.log('Navigation not initialized. Storing pending navigation.');
+        const pendingNavigation = notification; // Store the intent
+        setTimeout(() => {
+          console.log('Navigating to target screen...');
+          navigationRef.navigate('RunScan', notification?._data);
+        }, 4000); // Delay for navigation
+      } else {
+        console.log('Navigating immediately...');
+        navigationRef.navigate('RunScan', notification?._data);
+      }
+  }})
+  .catch((error) => {
+    console.error('Error fetching initial notification:', error);
+  });
+
+// Add listener for local notifications
+PushNotificationIOS.addEventListener('localNotification', (notification) => {
+  console.log('Local Notification Received111:', notification);
+  Alert.alert("Got the Notifiacio IOS")
+});
+
+PushNotificationIOS.addEventListener('notification', (notification) => {
+  console.log('Local Notification Received 545454:', notification);
+  Alert.alert("Got the Notifiacio IOS")
 });
 
 AppRegistry.registerComponent(appName, () => App);

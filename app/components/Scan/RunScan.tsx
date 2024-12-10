@@ -51,22 +51,23 @@ const RunScan = ({navigation, route}: any) => {
 
   const data = route.params;
 
-  console.log('data: ', data);
+  console.log("DATA",data)
+
 
   const selectedUrls = data?.scanNow
     ? getRandomURLs(urlData.term)
-    : getUrls(urlData.term, data.scanDuration);
+    : getUrls(urlData.term, data?.scanDuration || 5);
+
+
   useEffect(() => {
-    console.log('useEffect 1 RUnning');
     if (initNewScan && isFocused) {
-      console.log('RUN SCAN AGAIN');
+      
 
       runScan(selectedUrls);
     }
   }, [initNewScan, checkForScan]);
 
   const reset = () => {
-    console.log('reset State');
     setScannedUrls([]);
     setWebViews([]);
     setCurrentUrl(null);
@@ -131,7 +132,6 @@ const RunScan = ({navigation, route}: any) => {
       }, k + 2000);
     };
 
-    // Visit each URL with a delay
     for (let i = 0; i < selectedUrls.length; i++) {
       const url = selectedUrls[i];
       visitUrl(url, i);
@@ -160,7 +160,6 @@ const RunScan = ({navigation, route}: any) => {
 
   const handleAddScan = async () => {
     if (data.id) {
-      console.log('updating data by id', data.id);
       await updateScanStatus(data.id,scannedUrls);
     } else {
       const addToScanHistory: ScheduledScan = {
@@ -219,6 +218,11 @@ const RunScan = ({navigation, route}: any) => {
           </>
         )}
       </View>
+      <TouchableOpacity>
+        <Text className='text-[##FF3D3D] bg-[#FFEBEB] text-center p-4 rounded-lg w-1/2 mx-auto mb-2'>
+        Exit Scan
+        </Text>
+      </TouchableOpacity>
 
       {/* Modal to Select Scanned URL */}
       <Modal
