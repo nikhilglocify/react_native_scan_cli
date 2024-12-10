@@ -6,33 +6,40 @@ import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 
-import { navigationRef } from './app/navigation/NavigationRef';
+import {navigationRef} from './app/navigation/NavigationRef';
 
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
-import PushNotification from "react-native-push-notification";
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import PushNotification from 'react-native-push-notification';
 PushNotification.configure({
-    
-    onNotification: function (notification) {
-    console.log("NOTIFICATION:", notification);
+  onNotification: function (notification) {
+    console.log('NOTIFICATION:', notification);
 
-
-    if (notification.foreground){
-        console.log("FOREGORUN NOTIFIACTON",notification)
+    if (notification.foreground) {
+      console.log('FOREGORUN NOTIFIACTON', notification);
+    }
+    if (notification.userInteraction) {
+      if (!navigationRef || !navigationRef.isReady()) {
+        console.log('Navigation not initialized. Storing pending navigation.');
+        pendingNavigation = notification; // Store the intent
+        setTimeout(() => {
+          console.log('Navigating to target screen...');
+          navigationRef.navigate('RunScan', notification?.data);
+        }, 4000); // A
+        // return;
+      } else {
+        console.log('Runnin Here ');
+        navigationRef.navigate('RunScan', notification?.data);
+      }
     }
 
-    navigationRef.navigate("RunScan",notification?.data)
+    // Perform navigation with a slight delay
 
     // process the notification
 
     // (required) Called when a remote is received or opened, or local notification is opened
     notification.finish(PushNotificationIOS.FetchResult.NoData);
-
-
-
   },
   requestPermissions: Platform.OS === 'ios',
-
-  
-})
+});
 
 AppRegistry.registerComponent(appName, () => App);
