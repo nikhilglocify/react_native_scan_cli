@@ -13,8 +13,8 @@ import PushNotification from 'react-native-push-notification';
 
 PushNotification.configure({
   onNotification: function (notification) {
-    console.log('NOTIFICATION:', notification);
-    Alert.alert("Got the Notifiacio")
+    // console.log('NOTIFICATION:', notification);
+  
     if (notification.foreground) {
       console.log('FOREGROUND NOTIFICATION:', notification);
     }
@@ -54,7 +54,7 @@ PushNotificationIOS.getInitialNotification()
         setTimeout(() => {
           console.log('Navigating to target screen...');
           navigationRef.navigate('RunScan', notification?._data);
-        }, 4000); // Delay for navigation
+        }, 2000); // Delay for navigation
       } else {
         console.log('Navigating immediately...');
         navigationRef.navigate('RunScan', notification?._data);
@@ -64,15 +64,6 @@ PushNotificationIOS.getInitialNotification()
     console.error('Error fetching initial notification:', error);
   });
 
-// Add listener for local notifications
-PushNotificationIOS.addEventListener('localNotification', (notification) => {
-  console.log('Local Notification Received111:', notification);
-  Alert.alert("Got the Notifiacio IOS")
-});
 
-PushNotificationIOS.addEventListener('notification', (notification) => {
-  console.log('Local Notification Received 545454:', notification);
-  Alert.alert("Got the Notifiacio IOS")
-});
 
 AppRegistry.registerComponent(appName, () => App);

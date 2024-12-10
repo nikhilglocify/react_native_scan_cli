@@ -88,41 +88,8 @@ const TabNavigator: React.FC = () => {
 import {PermissionsAndroid, Platform} from 'react-native';
 import {Linking} from 'react-native';
 import {navigationRef} from './app/navigation/NavigationRef';
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
-export const checkExactAlarmPermission = async () => {
-  if (Platform.OS === 'android' && Platform.Version >= 31) {
-    console.log(
-      'SCHEDULE_EXACT_ALARM permission cannot be checked programmatically.',
-    );
-    console.log('Redirecting user to app settings for manual grant.');
-    Linking.openSettings(); // Open the app's settings
-  } else {
-    console.log('Permission not required for this Android version.');
-  }
-};
 
-// Function to check and request the permission
-export const checkAndRequestExactAlarmPermission = async () => {
-  if (Platform.OS === 'android' && Platform.Version >= 31) {
-    try {
-      // Check if permission is granted
-      const isGranted = await PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.SCHEDULE_EXACT_ALARM,
-      );
 
-      if (!isGranted) {
-        console.log('SCHEDULE_EXACT_ALARM not granted. Directing to settings.');
-        Linking.openSettings(); // Open app settings for manual permission grant
-      } else {
-        console.log('SCHEDULE_EXACT_ALARM permission granted.');
-      }
-    } catch (error) {
-      console.error('Error checking or requesting permission:', error);
-    }
-  } else {
-    console.log('Permission not required for this Android version.');
-  }
-};
 
 export const checkPostNotificationPermission = async () => {
   if (Platform.OS === 'android' && Platform.Version >= 33) {
@@ -172,28 +139,6 @@ export const checkPostNotificationPermission = async () => {
 const App: React.FC = () => {
   useEffect(() => {
     checkPostNotificationPermission();
-    // Check if the app was opened by a notification
-    // PushNotificationIOS.getInitialNotification()
-    //   .then((notification) => {
-    //     if (notification) {
-    //       console.log('Initial Notification:', notification);
-    //       Alert.alert("Notification back")
-    //       // Process the notification data
-          
-    //       if (notification?.data) {
-    //         // Navigate to the desired screen
-    //         if (navigationRef.isReady()) {
-    //           navigationRef.navigate('RunScan', notification.data);
-    //         } else {
-    //           console.log('Navigation not ready yet.');
-    //         }
-    //       }
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     Alert.alert("Error back",error)
-    //     console.error('Error getting initial notification:', error);
-    //   });
   }, []);
 
  
