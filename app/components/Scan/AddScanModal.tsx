@@ -50,7 +50,6 @@ const AddScanModal = ({
   ) => {
     // const date = new Date(Date.now() + 5000); // 5 seconds from now
     console.log('date', date, id);
-    localNotification('cecj', 'chec');
     scheduleNotification(
       id,
       'Schedule Scan',

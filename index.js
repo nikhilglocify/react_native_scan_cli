@@ -42,27 +42,29 @@ PushNotification.configure({
 });
 
 
-PushNotificationIOS.getInitialNotification()
-  .then((notification) => {
-    if (notification) {
-      console.log('App launched by notification:', notification);
+if (Platform.OS === 'ios') {
+  PushNotificationIOS.getInitialNotification()
+    .then((notification) => {
+      if (notification) {
+        console.log('App launched by notification:', notification);
 
-     
-      if (!navigationRef || !navigationRef.isReady()) {
-        console.log('Navigation not initialized. Storing pending navigation.');
-        const pendingNavigation = notification; // Store the intent
-        setTimeout(() => {
-          console.log('Navigating to target screen...');
+        if (!navigationRef || !navigationRef.isReady()) {
+          console.log('Navigation not initialized. Storing pending navigation.');
+          const pendingNavigation = notification; // Store the intent
+          setTimeout(() => {
+            console.log('Navigating to target screen...');
+            navigationRef.navigate('RunScan', notification?._data);
+          }, 2000); // Delay for navigation
+        } else {
+          console.log('Navigating immediately...');
           navigationRef.navigate('RunScan', notification?._data);
-        }, 2000); // Delay for navigation
-      } else {
-        console.log('Navigating immediately...');
-        navigationRef.navigate('RunScan', notification?._data);
+        }
       }
-  }})
-  .catch((error) => {
-    console.error('Error fetching initial notification:', error);
-  });
+    })
+    .catch((error) => {
+      console.error('Error fetching initial notification:', error);
+    });
+}
 
 
 
