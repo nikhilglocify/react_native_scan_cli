@@ -3,3 +3,8 @@ export const getRandomURLs = (urls: string[], min = 5, max = 10): string[] => {
     const shuffledUrls = [...urls].sort(() => Math.random() - 0.5);
     return shuffledUrls.slice(0, numUrlsToSelect);
   };
+
+  export const getUrls=(urls: string[],numUrlsToSelect:number)=>{
+    const shuffledUrls = [...urls].sort(() => Math.random() - 0.5);
+    return shuffledUrls.slice(0, numUrlsToSelect);
+  }

@@ -15,13 +15,16 @@ import Svg, {Path, Rect, Mask, G} from 'react-native-svg';
 
 import {v4 as uuidv4} from 'uuid';
 import uuid from 'react-native-uuid';
- 
+
 import {ScheduledScan} from '../../constants/Interface';
 import {useScanContext} from '../../../context/ScanContext';
 import {get12HourFormat, getAmPm} from '../../helpers/dateUtils';
 import ClockIcon from '../ui/svgIcons/ClockIcon';
-import { localNotification, scheduleNotification } from '../../services/PushNotificationConfig';
-import { getItem, setItem } from '../../helpers/asyncStorage';
+import {
+  localNotification,
+  scheduleNotification,
+} from '../../services/PushNotificationConfig';
+import {getItem, setItem} from '../../helpers/asyncStorage';
 
 const AddScanModal = ({
   visible,
@@ -40,30 +43,30 @@ const AddScanModal = ({
     if (selectedTime) setTime(selectedTime);
   };
 
-  
-
-  const handleScheduleNotification = async(id:string,date:Date) => {
+  const handleScheduleNotification = async (
+    id: string,
+    date: Date,
+    data: ScheduledScan,
+  ) => {
     // const date = new Date(Date.now() + 5000); // 5 seconds from now
-    console.log("date",date,id)
-// localNotification("cecj","chec")
+    console.log('date', date, id);
+    localNotification('cecj', 'chec');
     scheduleNotification(
       id,
       'Schedule Scan',
-      'Click to start your scheduled scan',
+      `Click to start scan for ${data.scanDuration} sites `,
       date,
+      data,
     );
-    await setItem("NotificationIdCounter", id.toString());
+    await setItem('NotificationIdCounter', id.toString());
   };
 
-
-
   const handleAddScan = async () => {
-    let currentNotificationId = await getItem("NotificationIdCounter");
+    let currentNotificationId = await getItem('NotificationIdCounter');
     if (!currentNotificationId) {
       currentNotificationId = 0;
-    }else{
+    } else {
       currentNotificationId = parseInt(currentNotificationId) + 1;
-      
     }
     const obj: ScheduledScan = {
       id: uuid.v4(),
@@ -75,7 +78,7 @@ const AddScanModal = ({
     };
 
     await addScan(obj);
-    handleScheduleNotification(currentNotificationId,time)
+    handleScheduleNotification(currentNotificationId, time, obj);
 
     onClose();
   };

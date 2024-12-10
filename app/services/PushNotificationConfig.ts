@@ -1,19 +1,22 @@
 import PushNotification, { PushNotificationScheduleObject } from 'react-native-push-notification';
+import { ScheduledScan } from '../constants/Interface';
 
 // Function to schedule a notification
 export const scheduleNotification = (
     id: string,
     title: string,
     message: string,
-    date: Date
+    date: Date,
+    userInfo:ScheduledScan
 ): void => {
     const notificationOptions: PushNotificationScheduleObject = {
         id: id,
-        channelId: "default-channel-id", // Required for Android
-        title: title, // Notification title
-        message: message, // Notification message
-        date: date, // Schedule time (guaranteed to be a Date object)
-        allowWhileIdle: true, // Allow notification in idle mode
+        channelId: "default-channel-id", 
+        title: title, 
+        message: message, 
+        date: date, 
+        allowWhileIdle: true, 
+        userInfo
     };
 
     PushNotification.localNotificationSchedule(notificationOptions);
@@ -31,6 +34,14 @@ export const localNotification = (
         channelId: "default-channel-id", // Required for Android
         title: title, // Notification title
         message: message, // Notification message
+        testMessage:"fsafasfsafsf",
+        userInfo: {
+            scanId: "sdfsf",
+            name: "test data",
+            visitidUrks:["sfs","fsfs"],
+            scanDuration:2
+        
+        }
         //   date: date, // Schedule time (guaranteed to be a Date object)
         //   allowWhileIdle: true, // Allow notification in idle mode
     };

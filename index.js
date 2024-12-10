@@ -20,7 +20,7 @@ PushNotification.configure({
         console.log("FOREGORUN NOTIFIACTON",notification)
     }
 
-    navigationRef.navigate("RunScan")
+    navigationRef.navigate("RunScan",notification?.data)
 
     // process the notification
 

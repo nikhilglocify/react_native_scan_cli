@@ -14,7 +14,7 @@ import {WebView} from 'react-native-webview';
 import urlData from '../../scripts/scanScript/compilation_array2.json';
 import uuid from 'react-native-uuid';
 import {useScanContext} from '../../../context/ScanContext';
-import {getRandomURLs} from '../../helpers';
+import {getRandomURLs, getUrls} from '../../helpers';
 import {ScheduledScan} from '../../constants/Interface';
 import BrowserTabIcon from '../ui/svgIcons/BrowserTabIcon';
 import CrossIcon from '../ui/svgIcons/CrossIcon';
@@ -23,13 +23,14 @@ import {
   scheduleNotification,
 } from '../../services/PushNotificationConfig';
 import BackIconSvg from '../ui/svgIcons/BackIconSvg';
+import {updateScanStatus} from '../../helpers/asyncStorage';
 
 type scannedWebView = {
   webView: JSX.Element;
   url: string;
   id: string;
 };
-const RunScan = ({navigation}: any) => {
+const RunScan = ({navigation, route}: any) => {
   const isFocused = useIsFocused();
   const [activeWebView, setActiveWebView] = useState<number | null>(null);
   const [showScannedUrls, setShowScannedUrls] = useState<boolean>(false);
@@ -39,9 +40,22 @@ const RunScan = ({navigation}: any) => {
   const [isScanCompleted, setIsScanCompleted] = useState<boolean>(false);
   const [selectedUrl, setSelectedUrl] = useState<string | null>();
 
-  const {addScan, initNewScan, setInitNewScan, checkForScan} = useScanContext();
+  const {
+    addScan,
+    initNewScan,
+    setInitNewScan,
+    checkForScan,
+    setupdatedScanList,
+    updatedScanList,
+  } = useScanContext();
 
-  const selectedUrls = getRandomURLs(urlData.term);
+  const data = route.params;
+
+  console.log('data: ', data);
+
+  const selectedUrls = data?.scanNow
+    ? getRandomURLs(urlData.term)
+    : getUrls(urlData.term, data.scanDuration);
   useEffect(() => {
     console.log('useEffect 1 RUnning');
     if (initNewScan && isFocused) {
@@ -84,12 +98,10 @@ const RunScan = ({navigation}: any) => {
   };
 
   const runScan = async (selectedUrls: string[]) => {
-    // console.log("Scanning", selectedUrls.length);
     let k = 0;
     setInitNewScan(false);
 
     const visitUrl = async (url: string, index: number) => {
-      // console.log("visit url running", index, k);
       setTimeout(() => {
         const webView = (
           <WebView
@@ -109,31 +121,14 @@ const RunScan = ({navigation}: any) => {
           />
         );
         setCurrentUrl(url);
-        // setActiveWebView(index);
+
         setScannedUrls(prev => [...prev, url]);
         setWebViews(prev => [...prev, {webView, url, id: uuid.v4()}]);
       }, k);
-      // console.log("addToScanHistory", index, selectedUrls.length - 1);
 
       setTimeout(() => {
-        // setCurrentUrl(null); // Set the WebView to null, effectively "closing" it
-        console.log(`Closed: ${url}`);
-        if (index == selectedUrls.length - 1) {
-          console.log('SCAN COMPLETED');
-          // const addToScanHistory: ScheduledScan = {
-          //   id: uuid.v4(),
-          //   time: new Date().toISOString(),
-          //   date: new Date(),
-          //   scanDuration: selectedUrls.length,
-          //   isCompleted: true,
-          //   visitedSites: selectedUrls,
-          // };
-
-          // setIsScanCompleted(true);
-
-          // addScan(addToScanHistory);
-        }
-      }, k + 2000); // Close after 2 seconds
+        setCurrentUrl(null);
+      }, k + 2000);
     };
 
     // Visit each URL with a delay
@@ -163,19 +158,24 @@ const RunScan = ({navigation}: any) => {
     }
   };
 
-  const handleAddScan = () => {
-    const addToScanHistory: ScheduledScan = {
-      id: uuid.v4(),
-      time: new Date().toISOString(),
-      date: new Date(),
-      scanDuration: scannedUrls.length,
-      isCompleted: true,
-      visitedSites: scannedUrls,
-    };
+  const handleAddScan = async () => {
+    if (data.id) {
+      console.log('updating data by id', data.id);
+      await updateScanStatus(data.id,scannedUrls);
+    } else {
+      const addToScanHistory: ScheduledScan = {
+        id: uuid.v4(),
+        time: new Date().toISOString(),
+        date: new Date(),
+        scanDuration: scannedUrls.length,
+        isCompleted: true,
+        visitedSites: scannedUrls,
+      };
+      addScan(addToScanHistory);
+    }
 
     setIsScanCompleted(true);
-
-    addScan(addToScanHistory);
+    setupdatedScanList(!updatedScanList);
   };
 
   return (
@@ -188,7 +188,7 @@ const RunScan = ({navigation}: any) => {
             reset();
           }}>
           {/* <Text> Back</Text> */}
-          <BackIconSvg/>
+          <BackIconSvg />
         </Pressable>
         <Text className="text-2xl font-medium flex-grow text-center pr-6">
           Run Scan

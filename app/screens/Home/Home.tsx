@@ -24,23 +24,23 @@ export default function HomeScreen({navigation}:any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
   const {
     scans,
-    addScan,
+   
     removeScan,
     getScheduledScans,
     setScanList,
-    setInitNewScan,
-    initNewScan,
+    updatedScanList,
+  
     checkForScan,
     setCheckForScan,
   } = useScanContext();
   const BACKGROUND_FETCH_TASK = 'background-fetch-task';
-  const scheduledScans = useMemo(() => getScheduledScans(), [scans.length]);
+  const scheduledScans = useMemo(() => getScheduledScans(), [scans,updatedScanList]);
 
 
   useEffect(() => {
     const fetchScans = async () => {
-      const scanList = await getScansLocally();
-      setScanList(scanList || []);
+      
+      setScanList(scans||[]);
       createNotificationChannel();
     };
     fetchScans();
@@ -60,7 +60,7 @@ export default function HomeScreen({navigation}:any) {
 
               <Pressable
                 onPress={() => {
-                  navigation.navigate("RunScan")
+                  navigation.navigate("RunScan",{scanNow:true})
                   setCheckForScan(!checkForScan);
                 }}>
                 <ScanIcon />

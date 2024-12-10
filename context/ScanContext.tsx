@@ -1,6 +1,16 @@
-import React, {createContext, useState, useContext, ReactNode} from 'react';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from 'react';
 import {ScheduledScan} from '../app/constants/Interface';
-import {addScanLocally, deleteScanLocally} from '../app/helpers/asyncStorage';
+import {
+  addScanLocally,
+  deleteScanLocally,
+  getScansLocally,
+} from '../app/helpers/asyncStorage';
 import {deleteNotification} from '../app/services/PushNotificationConfig';
 // import { deleteNotification } from '../app/services/PushNotificationConfig';
 
@@ -12,6 +22,8 @@ interface ScanContextType {
   initNewScan: boolean;
   setInitNewScan: any;
   setCheckForScan: any;
+  setupdatedScanList:any
+  updatedScanList:boolean
   checkForScan: boolean;
   addScan: (scan: ScheduledScan) => void;
   removeScan: (id: string, notificationId?: string) => void;
@@ -24,6 +36,18 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const [scans, setScans] = useState<ScheduledScan[]>([]);
   const [initNewScan, setInitNewScan] = useState(true);
   const [checkForScan, setCheckForScan] = useState(true);
+  const [updatedScanList, setupdatedScanList] = useState(false);
+
+  useEffect(() => {
+    fetchScans();
+  }, [updatedScanList]);
+
+  const fetchScans = async () => {
+    const scanList = await getScansLocally();
+    console.log("updating scans",scanList)
+    setScanList(scanList || []);
+  };
+
   const addScan = (scan: ScheduledScan) => {
     setScans(prevScans => [...prevScans, scan]);
     addScanLocally(scan);
@@ -36,10 +60,10 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const removeScan = (id: string, notificationId?: string) => {
     setScans(prevScans => prevScans.filter(scan => scan.id !== id));
 
-    console.log("removeScan runnin",notificationId)
+    console.log('removeScan runnin', notificationId);
     deleteScanLocally(id);
     if (notificationId) {
-      console.log("deleteNotification runnin",notificationId)
+      console.log('deleteNotification runnin', notificationId);
       deleteNotification(notificationId);
     }
   };
@@ -59,6 +83,9 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   const getScheduledScans = () => {
+
+    console.log("getScheduledScans running")
+    
     return scans.filter(scan => scan.isCompleted === false);
   };
 
@@ -76,6 +103,8 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
         setInitNewScan,
         setCheckForScan,
         checkForScan,
+        setupdatedScanList,
+        updatedScanList
       }}>
       {children}
     </ScanContext.Provider>
