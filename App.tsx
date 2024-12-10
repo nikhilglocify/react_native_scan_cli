@@ -43,26 +43,19 @@ const TabNavigator: React.FC = () => {
         tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].white,
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].lightBlue,
         headerShown: false,
-        // tabBarButton: HapticTab,
-        // tabBarBackground: TabBarBackground,
+       
         tabBarLabelStyle: {
           marginTop: 4, // Adjust spacing between the label and icon
           fontSize: 14, // Optional: Adjust label size
+          
         },
         tabBarStyle: {
           backgroundColor: '#8C46A9',
-          height: 60, // Set background color for other platforms
+          height: 70, // Set background color for other platforms
+          paddingBottom: 20, // Adjust padding to avoid overlapping with the tab bar
+
         },
       }}
-      // screenOptions={{
-      //   tabBarStyle: {
-      //     backgroundColor: '#f8f8f8', // Add your desired background color
-      //     borderTopWidth: 0, // Optional: Remove top border for a cleaner look
-      //     height: 70, // Adjust the height if needed
-      //   },
-      //   tabBarActiveTintColor: '#4CAF50', // Color for active tab icons and text
-      //   tabBarInactiveTintColor: '#757575', // Color for inactive tab icons and text
-      // }}
     >
       <Tab.Screen
         name="Home"

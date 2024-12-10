@@ -6,7 +6,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 
-@interface AppDelegate : RCTAppDelegate <UNUserNotificationCenterDelegate>
+//@interface AppDelegate : RCTAppDelegate <UNUserNotificationCenterDelegate>
 
 @implementation AppDelegate
 
@@ -19,9 +19,9 @@
 
   // Define UNUserNotificationCenter
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-  center.delegate = self;
+ center.delegate = self;
 
- 
+// 
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }

@@ -179,7 +179,7 @@ const RunScan = ({navigation}: any) => {
   };
 
   return (
-    <View className="flex-1 h-screen mt-[40px] px-4">
+    <View className="flex-1 h-screen mt-[60px] px-4">
       <View className="flex items-center justify-between flex-row mb-4 relative">
         <Pressable
           onPress={() => {

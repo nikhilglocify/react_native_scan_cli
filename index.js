@@ -15,6 +15,13 @@ PushNotification.configure({
     onNotification: function (notification) {
     console.log("NOTIFICATION:", notification);
 
+
+    if (notification.foreground){
+        console.log("FOREGORUN NOTIFIACTON",notification)
+    }
+
+    navigationRef.navigate("RunScan")
+
     // process the notification
 
     // (required) Called when a remote is received or opened, or local notification is opened
@@ -25,8 +32,7 @@ PushNotification.configure({
   },
   requestPermissions: Platform.OS === 'ios',
 
-  requestPermissions: true,
-
+  
 })
 
 AppRegistry.registerComponent(appName, () => App);

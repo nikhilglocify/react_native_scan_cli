@@ -5,7 +5,7 @@ import TipHomeIcon from '../../components/ui/svgIcons/TipHomeIcon'
 
 const Tips = () => {
   return (
-    <View className="flex-1 h-screen mt-[40px] px-4">
+    <View className="flex-1 h-screen mt-[45px] px-4">
       <Text className="text-2xl font-medium">Daily Tip</Text>
       <View className="flex justify-center items-center h-[410px]  box-content  p-3 rounded-lg bg-white  mt-4">
       <TipHomeIcon />

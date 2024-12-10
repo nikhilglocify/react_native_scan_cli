@@ -45,7 +45,7 @@ const AddScanModal = ({
   const handleScheduleNotification = async(id:string,date:Date) => {
     // const date = new Date(Date.now() + 5000); // 5 seconds from now
     console.log("date",date,id)
-localNotification("cecj","chec")
+// localNotification("cecj","chec")
     scheduleNotification(
       id,
       'Schedule Scan',
