@@ -22,7 +22,7 @@ const History = () => {
   const scanHistory = useMemo(() => getCompletedScans(), [scans.length]);
 
   return (
-    <View className="flex-1 h-screen mt-[45px] px-6">
+    <View className="flex-1 h-screen mt-[80px] px-6">
       <View>
         <Text className="text-2xl font-medium">Scan History</Text>
         <Text className="my-2">

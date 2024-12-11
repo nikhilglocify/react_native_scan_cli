@@ -51,21 +51,24 @@ const RunScan = ({navigation, route}: any) => {
 
   const data = route.params;
 
-  console.log("DATA",data)
-
 
   const selectedUrls = data?.scanNow
     ? getRandomURLs(urlData.term)
     : getUrls(urlData.term, data?.scanDuration || 5);
 
-
   useEffect(() => {
     if (initNewScan && isFocused) {
-      
-
       runScan(selectedUrls);
     }
   }, [initNewScan, checkForScan]);
+
+  const handleExitScan = () => {
+    navigation.goBack();
+    handleAddScan();
+    reset();
+
+    console.log("handleExitScan")
+  };
 
   const reset = () => {
     setScannedUrls([]);
@@ -128,7 +131,7 @@ const RunScan = ({navigation, route}: any) => {
       }, k);
 
       setTimeout(() => {
-        setCurrentUrl(null);
+        // setCurrentUrl(null);
       }, k + 2000);
     };
 
@@ -160,7 +163,7 @@ const RunScan = ({navigation, route}: any) => {
 
   const handleAddScan = async () => {
     if (data.id) {
-      await updateScanStatus(data.id,scannedUrls);
+      await updateScanStatus(data.id, scannedUrls);
     } else {
       const addToScanHistory: ScheduledScan = {
         id: uuid.v4(),
@@ -178,13 +181,11 @@ const RunScan = ({navigation, route}: any) => {
   };
 
   return (
-    <View className="flex-1 h-screen mt-[60px] px-4">
+    <View className="flex-1 h-screen mt-[80px] px-4">
       <View className="flex items-center justify-between flex-row mb-4 relative">
         <Pressable
           onPress={() => {
-            navigation.goBack();
-            handleAddScan();
-            reset();
+            handleExitScan()
           }}>
           {/* <Text> Back</Text> */}
           <BackIconSvg />
@@ -218,9 +219,9 @@ const RunScan = ({navigation, route}: any) => {
           </>
         )}
       </View>
-      <TouchableOpacity>
-        <Text className='text-[##FF3D3D] bg-[#FFEBEB] text-center p-4 rounded-lg w-1/2 mx-auto mb-2'>
-        Exit Scan
+      <TouchableOpacity className="text-right pb-5 px-2 pt-2" onPress={()=>handleExitScan()}>
+        <Text className="text-[##FF3D3D] bg-[#FFEBEB] shadow-[0_5px_15px_0_rgba(0,0,0,0.8)] text-center px-3 py-3 w-[100px] ml-[auto] rounded-lg    ">
+          Exit Scan
         </Text>
       </TouchableOpacity>
 

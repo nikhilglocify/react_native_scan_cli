@@ -42,6 +42,10 @@ const AddScanModal = ({
     setShowPicker(false);
     if (selectedTime) setTime(selectedTime);
   };
+  useEffect(() => {
+    setTime(new Date());
+    console.log("Modal useEffect")
+  }, []);
 
   const handleScheduleNotification = async (
     id: string,

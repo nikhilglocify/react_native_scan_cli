@@ -52,8 +52,8 @@ export default function HomeScreen({navigation}:any) {
 
   return (
     <>
-      <View className="flex-1 h-screen mt-[40px]">
-        <SafeAreaView className="flex-1">
+      <View className="flex-1 h-screen mt-[80px]">
+      
           <View className="px-4">
             <View className="flex flex-row items-center justify-between mb-9">
               <Text className="text-2xl font-medium">Scheduled Scans</Text>
@@ -99,7 +99,7 @@ export default function HomeScreen({navigation}:any) {
               No Scheduled Scans Found...
             </Text>
           )}
-        </SafeAreaView>
+       
         <View className="position-absolute bottom-[2px] left-0 right-0 mx-auto">
           <Pressable onPress={() => setVisibleScanModal(true)}>
             <AddScanIcon />
