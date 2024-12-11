@@ -25,6 +25,8 @@ import {
   scheduleNotification,
 } from '../../services/PushNotificationConfig';
 import {getItem, setItem} from '../../helpers/asyncStorage';
+import { Notifications } from 'react-native-notifications';
+import notifee, { EventType, TriggerType } from '@notifee/react-native';
 
 const AddScanModal = ({
   visible,
@@ -42,11 +44,34 @@ const AddScanModal = ({
     setShowPicker(false);
     if (selectedTime) setTime(selectedTime);
   };
-  useEffect(() => {
-    setTime(new Date());
-    console.log("Modal useEffect")
-  }, []);
+  
 
+  const scheduleNotifeeNotification = async (date:Date) => {
+    // Create a trigger to show notification 5 seconds from now
+    // const date = new Date(Date.now());
+    const trigger = {
+      type: TriggerType.TIMESTAMP,
+      timestamp:date.getTime() , // 5 seconds later
+      
+    };
+
+    // Create the notification
+    await notifee.createTriggerNotification(
+      {
+        title: 'Scheduled Notification',
+        body: 'This notification is scheduled using Notifee.',
+        android: {
+          channelId: 'default',
+          pressAction: {
+            id: 'default',
+            launchActivity: 'default',
+          },
+        },
+      },
+      trigger,
+      
+    );
+  };
   const handleScheduleNotification = async (
     id: string,
     date: Date,
@@ -81,7 +106,8 @@ const AddScanModal = ({
     };
 
     await addScan(obj);
-    handleScheduleNotification(currentNotificationId, time, obj);
+    // handleScheduleNotification(currentNotificationId, time, obj);
+    await scheduleNotifeeNotification(time)
 
     onClose();
   };

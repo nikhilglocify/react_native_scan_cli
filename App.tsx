@@ -19,6 +19,7 @@ import TabHistoryIcon from './app/components/ui/svgIcons/TabHistoryIcon';
 import {Colors} from './app/constants/Colors';
 import {Alert, useColorScheme} from 'react-native';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import notifee from '@notifee/react-native';
 // Define the types for the navigation
 export type RootTabParamList = {
   Home: undefined;
@@ -139,7 +140,13 @@ export const checkPostNotificationPermission = async () => {
 const App: React.FC = () => {
   useEffect(() => {
     checkPostNotificationPermission();
+    checkInitalNotification()
   }, []);
+
+  const checkInitalNotification=async()=>{
+    const initialNotification = await notifee.getInitialNotification();
+  console.log("initialNotification",initialNotification)
+  }
 
  
   return (

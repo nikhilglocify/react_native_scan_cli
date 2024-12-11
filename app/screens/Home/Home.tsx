@@ -7,10 +7,11 @@ import {
   Pressable,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
-
+import notifee, { AndroidImportance, EventType, TriggerType } from '@notifee/react-native';
 import {useEffect, useMemo, useState} from 'react';
 import {ScanIcon} from '../../components/ui/svgIcons/Scan';
 import AddScanIcon from '../../components/ui/svgIcons/AddScanIcon';
@@ -20,6 +21,7 @@ import {useScanContext} from '../../../context/ScanContext';
 import AddScanModal from '../../components/Scan/AddScanModal';
 import { getScansLocally } from '../../helpers/asyncStorage';
 import { createNotificationChannel } from '../../services/PushNotificationConfig';
+import { Notifications } from 'react-native-notifications';
 export default function HomeScreen({navigation}:any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
   const {
@@ -41,10 +43,68 @@ export default function HomeScreen({navigation}:any) {
     const fetchScans = async () => {
       
       setScanList(scans||[]);
-      createNotificationChannel();
+
+
+      // createNotificationChannel();
     };
     fetchScans();
 
+  }, []);
+
+  useEffect(() => {
+
+    async function createChannel() {
+      await notifee.createChannel({
+        id: 'default',
+        name: 'Default Channel',
+        importance: AndroidImportance.HIGH, // High importance
+      });
+    }
+
+    createChannel(); 
+    // Register foreground event listener
+    const unsubscribeForeground = notifee.onForegroundEvent(({ type, detail }) => {
+      if (type === EventType.DELIVERED) {
+        console.log('Notification Delivered in Foreground:', detail.notification);
+        Alert.alert('Notification Delivered', 'A scheduled notification was received in the foreground!');
+      }
+
+      if (type === EventType.PRESS) {
+        console.log('Notification Delivered in Foreground:', detail.notification);
+        Alert.alert('PRESS Foreground', 'A scheduled notification was received in the foreground!');
+      }
+
+      if(type==EventType.UNKNOWN){
+        console.log('Notification Unknown in Foreround:', detail.notification);
+        Alert.alert('Notification Unknown in Foreround', detail?.notification?.body || 'No message');
+      }
+    });
+
+    // Register background event listener
+    // notifee.onBackgroundEvent(async ({ type, detail }) => {
+    //   if (type === EventType.DELIVERED) {
+    //     console.log('Notification Delivered in Background:', detail.notification);
+    //     // Handle the background notification logic here
+    //     // You can use the notification data to perform background tasks
+    //     Alert.alert('Notification Delivered in Background', detail?.notification?.body || 'No message');
+    //   }
+
+    //   if (type === EventType.PRESS){
+    //     console.log('Notification Pressed in Background:', detail.notification);
+
+    //     navigation.navigate('RunScan');
+
+    //   }
+    //   if(type==EventType.UNKNOWN){
+    //     console.log('Notification Unknown in Background:', detail.notification);
+    //     Alert.alert('Notification Unknown in Background', detail?.notification?.body || 'No message');
+    //   }
+    // });
+
+    // Clean up the foreground listener when the component unmounts
+    return () => {
+      // unsubscribeForeground(); // Only unsubscribe foreground listener
+    };
   }, []);
 
 
