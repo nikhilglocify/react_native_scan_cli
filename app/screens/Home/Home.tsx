@@ -122,7 +122,6 @@ export default function HomeScreen({navigation}:any) {
               <Pressable
                 onPress={() => {
                   navigation.navigate("RunScan",{scanNow:true})
-                  // setItem(Scan.scan_list,[])
                   setCheckForScan(!checkForScan);
                 }}>
                 <ScanIcon />

@@ -35,7 +35,7 @@ const AddScanModal = ({
   visible: boolean;
   onClose: () => void;
 }) => {
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState<Date|null>(new Date());
   const [scanDuration, setScanDuration] = useState(5);
   const [showPicker, setShowPicker] = useState(false);
   const {scans, addScan, removeScan, updateScan} = useScanContext();
@@ -95,19 +95,23 @@ const AddScanModal = ({
     } else {
       currentNotificationId = parseInt(currentNotificationId) + 1;
     }
-    const obj: ScheduledScan = {
-      id: uuid.v4(),
-      time: time.toISOString(),
-      date: time,
-      scanDuration,
-      isCompleted: false,
-      notificationId: currentNotificationId.toString(),
-    };
-
-    await addScan(obj);
-    handleScheduleNotification(currentNotificationId, time, obj);
-    // await scheduleNotifeeNotification(time)
-    onClose();
+    if(time){
+      const obj: ScheduledScan = {
+        id: uuid.v4(),
+        time: time.toISOString(),
+        date: time,
+        scanDuration,
+        isCompleted: false,
+        notificationId: currentNotificationId.toString(),
+      };
+  
+      await addScan(obj);
+      handleScheduleNotification(currentNotificationId, time, obj);
+      // await scheduleNotifeeNotification(time)
+      onClose();
+      setTime(null)
+    }
+    
   };
 
   return (
@@ -125,7 +129,7 @@ const AddScanModal = ({
               <View className="flex items-center gap-3 justify-center flex-row">
                 <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[84px] max-h-[84px] text-center mx-auto">
                   <Text className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center">
-                    {get12HourFormat(time)}
+                    {time?get12HourFormat(time):get12HourFormat(new Date())}
                   </Text>
                   <View className="border-b-[1.5px] border-solid border-[#8C46A9]/15"></View>
                   <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5">
@@ -134,7 +138,7 @@ const AddScanModal = ({
                 </View>
                 <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[84px] max-h-[84px] text-center mx-auto">
                   <Text className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center">
-                    {time.getMinutes()}
+                    {time?time.getMinutes():new Date().getMinutes()}
                   </Text>
                   <View className="border-b-[1.5px] border-solid border-[#8C46A9]/15"></View>
                   <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5">
@@ -143,11 +147,11 @@ const AddScanModal = ({
                 </View>
                 <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[84px] max-h-[84px] text-center mx-auto">
                   <Text className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center">
-                    {getAmPm(time)}
+                    {time?getAmPm(time):getAmPm(new Date())}
                   </Text>
                   <View className="border-b-[1.5px] border-solid border-[#8C46A9]/15"></View>
                   <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5">
-                    {getAmPm(time) == 'AM' ? 'PM' : 'AM'}
+                    {getAmPm(time?time:new Date()) == 'AM' ? 'PM' : 'AM'}
                   </Text>
                 </View>
               </View>
@@ -157,7 +161,7 @@ const AddScanModal = ({
           {Platform.OS === 'android' && showPicker && (
             <TouchableOpacity onPress={() => setTime(new Date())}>
               <DateTimePicker
-                value={time}
+                value={time?time:new Date()}
                 mode="time"
                 is24Hour={false}
                 display="clock"
@@ -174,7 +178,7 @@ const AddScanModal = ({
                 overflow: 'hidden',
               }}>
               <DateTimePicker
-                value={time}
+               value={time?time:new Date()}
                 mode="time"
                 is24Hour={false}
                 display="spinner"
@@ -240,7 +244,12 @@ const AddScanModal = ({
             <View className="flex items-center flex-row gap-2">
               <TouchableOpacity
                 className="bg-[#ECECEC] border border-solid border-[#D4D4D4] py-3 min-w-[86px] rounded-lg"
-                onPress={onClose}>
+                onPress={()=>{
+                  onClose()
+
+                  setTime(null)
+                  
+                  }}>
                 <Text className="text-center text-base text-[#393939] font-semibold leading-6">
                   Cancel
                 </Text>
@@ -301,10 +310,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
   },
-  //   buttonContainer: {
-  //     flexDirection: "row",
-  //     marginTop: 30,
-  //     width: "100%",
-  //     // justifyContent: "space-between",
-  //   },
+  
 });
