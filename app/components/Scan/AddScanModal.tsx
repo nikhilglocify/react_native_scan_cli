@@ -27,6 +27,7 @@ import {
 import {getItem, setItem} from '../../helpers/asyncStorage';
 import { Notifications } from 'react-native-notifications';
 import notifee, { EventType, TriggerType } from '@notifee/react-native';
+import { generateNotificationId } from '../../helpers';
 
 const AddScanModal = ({
   visible,
@@ -96,14 +97,16 @@ const AddScanModal = ({
   };
 
   const handleAddScan = async () => {
-    console.log("handleAddScan")
-    let currentNotificationId = await getItem('NotificationIdCounter');
-    console.log("handleAddScan =94",currentNotificationId,time)
-    if (!currentNotificationId) {
-      currentNotificationId = 0;
-    } else {
-      currentNotificationId = parseInt(currentNotificationId) + 1;
-    }
+    // console.log("handleAddScan")
+   const notificationId= await generateNotificationId(3)
+    console.log("notificationId",notificationId)
+    // let currentNotificationId = await getItem('NotificationIdCounter');
+    // // console.log("handleAddScan =94",currentNotificationId,time)
+    // if (!currentNotificationId) {
+    //   currentNotificationId = 0;
+    // } else {
+    //   currentNotificationId = parseInt(currentNotificationId) + 1;
+    // }
     const scanTime=time?time:new Date()
     console.log("scanTime",scanTime)
     const obj: ScheduledScan = {
@@ -112,11 +115,12 @@ const AddScanModal = ({
       date: scanTime,
       scanDuration,
       isCompleted: false,
-      notificationId: currentNotificationId.toString(),
+      // notificationId: currentNotificationId.toString(),
+      notificationId
     };
 
     await addScan(obj);
-    handleScheduleNotification(currentNotificationId, scanTime, obj);
+    handleScheduleNotification(notificationId, scanTime, obj);
     // await scheduleNotifeeNotification(time)
     onClose();
     resetState()
