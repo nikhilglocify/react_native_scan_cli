@@ -11,7 +11,7 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
-import io.invertase.notifee.NotifeePackage // Added import
+
 
 class MainApplication : Application(), ReactApplication {
 
@@ -20,7 +20,7 @@ class MainApplication : Application(), ReactApplication {
         override fun getPackages(): List<ReactPackage> =
             PackageList(this).packages.apply {
               // Add the Notifee package here
-              add(NotifeePackage())
+            //  add(NotifeePackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

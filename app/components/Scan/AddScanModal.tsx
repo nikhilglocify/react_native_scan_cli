@@ -25,9 +25,10 @@ import {
   scheduleNotification,
 } from '../../services/PushNotificationConfig';
 import {getItem, setItem} from '../../helpers/asyncStorage';
-import { Notifications } from 'react-native-notifications';
+// import { Notifications } from 'react-native-notifications';
 import notifee, { EventType, TriggerType } from '@notifee/react-native';
 import { generateNotificationId } from '../../helpers';
+import { fontFamily } from '../../constants/theme';
 
 const AddScanModal = ({
   visible,
@@ -137,26 +138,26 @@ const AddScanModal = ({
       onRequestClose={onClose}>
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
-          <Text style={styles.title}>Select Time</Text>
+          <Text style={styles.title} >Select Time</Text>
 
           {Platform.OS == 'android' && (
             <Pressable onPress={() => setShowPicker(true)}>
               <View className="flex items-center gap-3 justify-center flex-row">
                 <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[84px] max-h-[84px] text-center mx-auto">
-                  <Text className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center">
+                  <Text className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center" style={{fontFamily:fontFamily.nunitoBold}}>
                     {time?get12HourFormat(time):get12HourFormat(new Date())}
                   </Text>
                   <View className="border-b-[1.5px] border-solid border-[#8C46A9]/15"></View>
-                  <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5">
+                  <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5" style={{fontFamily:fontFamily.nunitoBold}}>
                     Hour
                   </Text>
                 </View>
-                <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[84px] max-h-[84px] text-center mx-auto">
-                  <Text className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center">
+                <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[84px] max-h-[84px] text-center mx-auto" >
+                  <Text className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center" style={{fontFamily:fontFamily.nunitoBold}}>
                     {time?time.getMinutes():new Date().getMinutes()}
                   </Text>
                   <View className="border-b-[1.5px] border-solid border-[#8C46A9]/15"></View>
-                  <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5">
+                  <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5" style={{fontFamily:fontFamily.nunitoBold}}>
                     Min
                   </Text>
                 </View>
@@ -165,7 +166,7 @@ const AddScanModal = ({
                     {time?getAmPm(time):getAmPm(new Date())}
                   </Text>
                   <View className="border-b-[1.5px] border-solid border-[#8C46A9]/15"></View>
-                  <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5">
+                  <Text className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5" style={{fontFamily:fontFamily.nunitoBold}}>
                     {getAmPm(time?time:new Date()) == 'AM' ? 'PM' : 'AM'}
                   </Text>
                 </View>
@@ -204,7 +205,7 @@ const AddScanModal = ({
 
           
           <View className="mt-[36px] mb-[36px] flex flex-row items-center gap-2">
-            <Text className="text-base text-[#393939] font-semibold leading-5">
+            <Text className="text-base text-[#393939] font-semibold leading-5" style={{fontFamily:fontFamily.nunitoBold}}>
               Scan Duration:
             </Text>
             <View className="flex items-center flex-row justify-between px-3 p-1 text-left bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg relative min-w-[64px] h-[44px] max-w-[65px]">
@@ -246,7 +247,7 @@ const AddScanModal = ({
                 </Pressable>
               </View>
             </View>
-            <Text className="text-base text-[#393939] font-semibold leading-5">
+            <Text className="text-base text-[#393939] font-semibold leading-5" style={{fontFamily:fontFamily.nunitoBold}}>
               Site
             </Text>
           </View>
@@ -265,7 +266,7 @@ const AddScanModal = ({
                   resetState()
                   
                   }}>
-                <Text className="text-center text-base text-[#393939] font-semibold leading-6">
+                <Text className="text-center text-base text-[#393939] font-semibold leading-6" style={{fontFamily:fontFamily.nunitoBold}}>
                   Cancel
                 </Text>
               </TouchableOpacity>
@@ -274,7 +275,7 @@ const AddScanModal = ({
                 onPress={() => {
                   handleAddScan();
                 }}>
-                <Text className="text-center text-base text-white font-semibold leading-6">
+                <Text className="text-center text-base text-white font-semibold leading-6" style={{fontFamily:fontFamily.nunitoBold}}>
                   OK
                 </Text>
               </TouchableOpacity>
@@ -305,8 +306,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     marginBottom: 20,
+    fontFamily:fontFamily.nunitoSemiBold
   },
   durationContainer: {
     flexDirection: 'row',

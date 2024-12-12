@@ -21,8 +21,9 @@ import {useScanContext} from '../../../context/ScanContext';
 import AddScanModal from '../../components/Scan/AddScanModal';
 import { getScansLocally, setItem } from '../../helpers/asyncStorage';
 import { createNotificationChannel } from '../../services/PushNotificationConfig';
-import { Notifications } from 'react-native-notifications';
+// import { Notifications } from 'react-native-notifications';
 import { Scan } from '../../constants/enums';
+import { fontFamily } from '../../constants/theme';
 export default function HomeScreen({navigation}:any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
   const {
@@ -117,7 +118,7 @@ export default function HomeScreen({navigation}:any) {
       
           <View className="px-4">
             <View className="flex flex-row items-center justify-between mb-9">
-              <Text className="text-2xl font-medium">Scheduled Scans</Text>
+              <Text className="text-2xl font-medium" style={{fontFamily:fontFamily.nunitoSemiBold}}>Scheduled Scans</Text>
 
               <Pressable
                 onPress={() => {
@@ -137,11 +138,11 @@ export default function HomeScreen({navigation}:any) {
                   <View className="flex flex-row p-2 gap-3 items-center justify-between">
                     <View className="flex flex-row gap-3 items-center">
                       <TimerIcon />
-                      <View>
-                        <Text className="text-md text-[#393939] leading-5">
+                      <View >
+                        <Text className="text-md text-[#393939] leading-5" style={{fontFamily:fontFamily.nunitoRegular}}>
                           {new Date(scan.time).toLocaleTimeString()}
                         </Text>
-                        <Text className="text-md text-[#393939] leading-5">
+                        <Text className="text-md text-[#393939] leading-5" style={{fontFamily:fontFamily.nunitoRegular}}>
                           Duration: {scan.scanDuration} sites
                         </Text>
                       </View>
@@ -156,7 +157,7 @@ export default function HomeScreen({navigation}:any) {
               ))}
             </ScrollView>
           ) : (
-            <Text className="text-center my-auto text-lg">
+            <Text className="text-center my-auto text-lg" style={{fontFamily:fontFamily.nunitoRegular}}>
               No Scheduled Scans Found...
             </Text>
           )}

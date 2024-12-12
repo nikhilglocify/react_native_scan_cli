@@ -1,15 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import TipHomeIcon from '../../components/ui/svgIcons/TipHomeIcon'
+import { fontFamily } from '../../constants/theme'
 // import TipHomeIcon from '@/components/ui/svgIcons/TipHomeIcon'
 
 const Tips = () => {
   return (
     <View className="flex-1 h-screen mt-[80px] px-4">
-      <Text className="text-2xl font-medium">Daily Tip</Text>
+      <Text className="text-2xl font-medium" style={{fontFamily:fontFamily.nunitoSemiBold}}>Daily Tip</Text>
       <View className="flex justify-center items-center h-[410px]  box-content  p-3 rounded-lg bg-white  mt-4">
       <TipHomeIcon />
-      <Text className="text-lg text-gray-700 mt-12  text-center">
+      <Text className="text-lg text-gray-700 mt-12  text-center" style={{fontFamily:fontFamily.nunitoRegular}}>
       (A png image and caption below that changes on a daily basis, controlled by app adminisstrator remotly)
       </Text>
       </View>

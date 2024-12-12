@@ -48,7 +48,7 @@ const TabNavigator: React.FC = () => {
         tabBarLabelStyle: {
           marginTop: 4, // Adjust spacing between the label and icon
           fontSize: 14, // Optional: Adjust label size
-          
+          fontFamily:fontFamily.nunitoSemiBold
         },
         tabBarStyle: {
           backgroundColor: '#8C46A9',
@@ -89,6 +89,7 @@ const TabNavigator: React.FC = () => {
 import {PermissionsAndroid, Platform} from 'react-native';
 import {Linking} from 'react-native';
 import {navigationRef} from './app/navigation/NavigationRef';
+import { fontFamily } from './app/constants/theme';
 
 
 
