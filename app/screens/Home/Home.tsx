@@ -19,9 +19,10 @@ import TimerIcon from '../../components/ui/svgIcons/TimerIcon';
 import DeleteIcon from '../../components/ui/svgIcons/DeleteIcon';
 import {useScanContext} from '../../../context/ScanContext';
 import AddScanModal from '../../components/Scan/AddScanModal';
-import { getScansLocally } from '../../helpers/asyncStorage';
+import { getScansLocally, setItem } from '../../helpers/asyncStorage';
 import { createNotificationChannel } from '../../services/PushNotificationConfig';
 import { Notifications } from 'react-native-notifications';
+import { Scan } from '../../constants/enums';
 export default function HomeScreen({navigation}:any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
   const {
@@ -45,67 +46,67 @@ export default function HomeScreen({navigation}:any) {
       setScanList(scans||[]);
 
 
-      // createNotificationChannel();
+      createNotificationChannel();
     };
     fetchScans();
 
   }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    async function createChannel() {
-      await notifee.createChannel({
-        id: 'default',
-        name: 'Default Channel',
-        importance: AndroidImportance.HIGH, // High importance
-      });
-    }
+  //   async function createChannel() {
+  //     await notifee.createChannel({
+  //       id: 'default',
+  //       name: 'Default Channel',
+  //       importance: AndroidImportance.HIGH, // High importance
+  //     });
+  //   }
 
-    createChannel(); 
-    // Register foreground event listener
-    const unsubscribeForeground = notifee.onForegroundEvent(({ type, detail }) => {
-      if (type === EventType.DELIVERED) {
-        console.log('Notification Delivered in Foreground:', detail.notification);
-        Alert.alert('Notification Delivered', 'A scheduled notification was received in the foreground!');
-      }
+  //   createChannel(); 
+  //   // Register foreground event listener
+  //   const unsubscribeForeground = notifee.onForegroundEvent(({ type, detail }) => {
+  //     if (type === EventType.DELIVERED) {
+  //       console.log('Notification Delivered in Foreground:', detail.notification);
+  //       Alert.alert('Notification Delivered', 'A scheduled notification was received in the foreground!');
+  //     }
 
-      if (type === EventType.PRESS) {
-        console.log('Notification Delivered in Foreground:', detail.notification);
-        Alert.alert('PRESS Foreground', 'A scheduled notification was received in the foreground!');
-      }
+  //     if (type === EventType.PRESS) {
+  //       console.log('Notification Delivered in Foreground:', detail.notification);
+  //       Alert.alert('PRESS Foreground', 'A scheduled notification was received in the foreground!');
+  //     }
 
-      if(type==EventType.UNKNOWN){
-        console.log('Notification Unknown in Foreround:', detail.notification);
-        Alert.alert('Notification Unknown in Foreround', detail?.notification?.body || 'No message');
-      }
-    });
+  //     if(type==EventType.UNKNOWN){
+  //       console.log('Notification Unknown in Foreround:', detail.notification);
+  //       Alert.alert('Notification Unknown in Foreround', detail?.notification?.body || 'No message');
+  //     }
+  //   });
 
-    // Register background event listener
-    // notifee.onBackgroundEvent(async ({ type, detail }) => {
-    //   if (type === EventType.DELIVERED) {
-    //     console.log('Notification Delivered in Background:', detail.notification);
-    //     // Handle the background notification logic here
-    //     // You can use the notification data to perform background tasks
-    //     Alert.alert('Notification Delivered in Background', detail?.notification?.body || 'No message');
-    //   }
+  //   // Register background event listener
+  //   // notifee.onBackgroundEvent(async ({ type, detail }) => {
+  //   //   if (type === EventType.DELIVERED) {
+  //   //     console.log('Notification Delivered in Background:', detail.notification);
+  //   //     // Handle the background notification logic here
+  //   //     // You can use the notification data to perform background tasks
+  //   //     Alert.alert('Notification Delivered in Background', detail?.notification?.body || 'No message');
+  //   //   }
 
-    //   if (type === EventType.PRESS){
-    //     console.log('Notification Pressed in Background:', detail.notification);
+  //   //   if (type === EventType.PRESS){
+  //   //     console.log('Notification Pressed in Background:', detail.notification);
 
-    //     navigation.navigate('RunScan');
+  //   //     navigation.navigate('RunScan');
 
-    //   }
-    //   if(type==EventType.UNKNOWN){
-    //     console.log('Notification Unknown in Background:', detail.notification);
-    //     Alert.alert('Notification Unknown in Background', detail?.notification?.body || 'No message');
-    //   }
-    // });
+  //   //   }
+  //   //   if(type==EventType.UNKNOWN){
+  //   //     console.log('Notification Unknown in Background:', detail.notification);
+  //   //     Alert.alert('Notification Unknown in Background', detail?.notification?.body || 'No message');
+  //   //   }
+  //   // });
 
-    // Clean up the foreground listener when the component unmounts
-    return () => {
-      // unsubscribeForeground(); // Only unsubscribe foreground listener
-    };
-  }, []);
+  //   // Clean up the foreground listener when the component unmounts
+  //   return () => {
+  //     // unsubscribeForeground(); // Only unsubscribe foreground listener
+  //   };
+  // }, []);
 
 
   
@@ -121,6 +122,7 @@ export default function HomeScreen({navigation}:any) {
               <Pressable
                 onPress={() => {
                   navigation.navigate("RunScan",{scanNow:true})
+                  // setItem(Scan.scan_list,[])
                   setCheckForScan(!checkForScan);
                 }}>
                 <ScanIcon />
@@ -128,7 +130,7 @@ export default function HomeScreen({navigation}:any) {
             </View>
           </View>{' '}
           {scheduledScans.length > 0 ? (
-            <ScrollView className="p-4">
+            <ScrollView className="p-4 mb-[36px] pb-10">
               {scheduledScans.map((scan: any) => (
                 <View
                   key={scan.id}
@@ -160,7 +162,7 @@ export default function HomeScreen({navigation}:any) {
             </Text>
           )}
        
-        <View className="position-absolute bottom-[2px] left-0 right-0 mx-auto">
+        <View className="absolute bottom-[2px] right-[24px]">
           <Pressable onPress={() => setVisibleScanModal(true)}>
             <AddScanIcon />
           </Pressable>

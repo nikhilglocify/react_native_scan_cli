@@ -24,13 +24,8 @@ import {
   scheduleNotification,
 } from '../../services/PushNotificationConfig';
 import BackIconSvg from '../ui/svgIcons/BackIconSvg';
-import {
-  clearScannedUrls,
-  getItem,
-  updateScanStatus,
-  updateScannedUrls,
-} from '../../helpers/asyncStorage';
-import {Scan} from '../../constants/enums';
+import {getItem, updateScanStatus} from '../../helpers/asyncStorage';
+import { Scan } from '../../constants/enums';
 
 type scannedWebView = {
   webView: JSX.Element;
@@ -57,6 +52,7 @@ const RunScan = ({navigation, route}: any) => {
   } = useScanContext();
 
   const data = route.params;
+  
 
   const selectedUrls = data?.scanNow
     ? getRandomURLs(urlData.term)
@@ -68,23 +64,26 @@ const RunScan = ({navigation, route}: any) => {
     }
   }, [initNewScan, checkForScan]);
 
+
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', nextAppState => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (
         appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
+        nextAppState === "active"
       ) {
         // console.log("App has come to the foreground!");
+     
       }
-      if (nextAppState === 'inactive') {
+      if (nextAppState === "inactive") {
         // console.log("the app is closed");
       }
       // console.log(nextAppState, "nextAppState");
       appState.current = nextAppState;
       // console.log("AppState", appState.current);
-      if (nextAppState === 'background') {
-        console.log('App is in background CLOSED');
+      if (nextAppState === "background") {
+        console.log("App is in background CLOSED");
         handleAppStateAddScan();
+       
       }
     });
 
@@ -92,25 +91,37 @@ const RunScan = ({navigation, route}: any) => {
       subscription.remove();
     };
   }, []);
-
   const handleAppStateAddScan = async () => {
-    const storedScans = await getItem(Scan.currenScanUrls);
-    const currenScanUrls: string[] = storedScans ? JSON.parse(storedScans) : [];
-    if (!Array.isArray(currenScanUrls)) {
-      console.error('Stored currenScanUrls is corrupted');
-      throw new Error('currenScanUrls scans data is corrupted');
-    }
 
-    handleExitScan();
+    const currenScanUrls=await getItem(Scan.currenScanUrls)
+    console.log("data handleAppStateAddScan ",data,currenScanUrls.length)
+    if (data && data?.id) {
+      console.log("data.id",data.id,currenScanUrls.length)
+      await updateScanStatus(data.id, currenScanUrls);
+    } else {
+    
+      const addToScanHistory: ScheduledScan = {
+        id: uuid.v4(),
+        time: new Date().toISOString(),
+        date: new Date(),
+        scanDuration: currenScanUrls.length,
+        isCompleted: true,
+        visitedSites: currenScanUrls,
+      };
+      addScan(addToScanHistory);
+    }
+  
+    setIsScanCompleted(true);
+    setupdatedScanList(!updatedScanList);
+    
   };
 
-  const handleExitScan = async () => {
+  const handleExitScan = () => {
     navigation.goBack();
     handleAddScan();
     reset();
-    await clearScannedUrls();
 
-    console.log('handleExitScan');
+    console.log("handleExitScan")
   };
 
   const reset = () => {
@@ -149,7 +160,7 @@ const RunScan = ({navigation, route}: any) => {
     setInitNewScan(false);
 
     const visitUrl = async (url: string, index: number) => {
-      setTimeout(async () => {
+      setTimeout(() => {
         const webView = (
           <WebView
             key={index}
@@ -168,7 +179,7 @@ const RunScan = ({navigation, route}: any) => {
           />
         );
         setCurrentUrl(url);
-        await updateScannedUrls(url);
+
         setScannedUrls(prev => [...prev, url]);
         setWebViews(prev => [...prev, {webView, url, id: uuid.v4()}]);
       }, k);
@@ -228,7 +239,7 @@ const RunScan = ({navigation, route}: any) => {
       <View className="flex items-center justify-between flex-row mb-4 relative">
         <Pressable
           onPress={() => {
-            handleExitScan();
+            handleExitScan()
           }}>
           {/* <Text> Back</Text> */}
           <BackIconSvg />
@@ -262,9 +273,7 @@ const RunScan = ({navigation, route}: any) => {
           </>
         )}
       </View>
-      <TouchableOpacity
-        className="text-right pb-5 px-2 pt-2"
-        onPress={() => handleExitScan()}>
+      <TouchableOpacity className="text-right pb-5 px-2 pt-2" onPress={()=>handleExitScan()}>
         <Text className="text-[##FF3D3D] bg-[#FFEBEB] shadow-[0_5px_15px_0_rgba(0,0,0,0.8)] text-center px-3 py-3 w-[100px] ml-[auto] rounded-lg    ">
           Exit Scan
         </Text>

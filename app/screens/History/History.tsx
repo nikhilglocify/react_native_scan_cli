@@ -58,7 +58,7 @@ const History = () => {
                         {scan.visitedSites && (
                           <ScrollView >
                             <View>
-                              {scan.visitedSites.map((url, index) => (
+                              {scan.visitedSites?.map((url, index) => (
                                 <View
                                   className="flex flex-row gap-2 mt-1 font-light break-all"
                                   key={index}

@@ -106,8 +106,8 @@ const AddScanModal = ({
     };
 
     await addScan(obj);
-    // handleScheduleNotification(currentNotificationId, time, obj);
-    await scheduleNotifeeNotification(time)
+    handleScheduleNotification(currentNotificationId, time, obj);
+    // await scheduleNotifeeNotification(time)
 
     onClose();
   };

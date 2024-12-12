@@ -27,14 +27,14 @@ export const addScanLocally = async (value: ScheduledScan) => {
     const storedScans = await AsyncStorage.getItem(Scan.scan_list);
     let scans = storedScans ? JSON.parse(storedScans) : [];
 
-    // Ensure `scans` is an array
+    
     if (!Array.isArray(scans)) {
       scans = [];
     }
 
-    scans.push(value); // Push the new object directly
+    scans.push(value); 
 
-    // Save updated array back to AsyncStorage
+   
     await AsyncStorage.setItem(Scan.scan_list, JSON.stringify(scans));
   } catch (err) {
     console.error(`Error saving scan:`, err);
@@ -46,11 +46,8 @@ export const addScanLocally = async (value: ScheduledScan) => {
 export const getScansLocally = async (): Promise<ScheduledScan[]> => {
   try {
     const storedScans = await AsyncStorage.getItem(Scan.scan_list);
-    // console.log("storedScans",storedScans)
-    const scans :ScheduledScan= storedScans ? JSON.parse(storedScans) : [];
-    // console.log("parsed get scans",scans)
-
-    // Ensure `scans` is an array
+   
+    const scans: ScheduledScan = storedScans ? JSON.parse(storedScans) : [];
     if (!Array.isArray(scans)) {
       throw new Error('Stored scans data is corrupted');
     }
@@ -58,22 +55,22 @@ export const getScansLocally = async (): Promise<ScheduledScan[]> => {
     return scans;
   } catch (err) {
     console.error('Error retrieving scans:', err);
-    return []; // Return an empty array in case of an error
+    return []; 
   }
 };
 
-// Delete a scan by index or some unique property
+
 export const deleteScanLocally = async (identifier: string | number): Promise<void> => {
   try {
     const storedScans = await AsyncStorage.getItem(Scan.scan_list);
     let scans = storedScans ? JSON.parse(storedScans) : [];
 
-   
+
     if (!Array.isArray(scans)) {
       throw new Error('Stored scans data is corrupted');
     }
 
-    
+
     scans = scans.filter((scan: ScheduledScan, index: number) =>
       typeof identifier === 'number' ? index !== identifier : scan.id !== identifier
     );
@@ -88,43 +85,39 @@ export const deleteScanLocally = async (identifier: string | number): Promise<vo
 export const getScansHistoryLocally = async (): Promise<ScheduledScan[]> => {
   try {
     const storedScans = await AsyncStorage.getItem(Scan.scan_list);
+
+    const scans: ScheduledScan[] = storedScans ? JSON.parse(storedScans) : [];
    
-    const scans :ScheduledScan[]= storedScans ? JSON.parse(storedScans) : [];
-console.log("getScansHistoryLocally",scans);
-    
     if (!Array.isArray(scans)) {
       throw new Error('Stored scans data is corrupted');
     }
 
-    return scans.filter((scan)=>scan.isCompleted==true);
+    return scans.filter((scan) => scan.isCompleted == true);
   } catch (err) {
     console.error('Error retrieving scans:', err);
-    return []; // Return an empty array in case of an error
+    return []; 
   }
 };
 
 
-export const getScanByIdLocally = async (id:string): Promise<ScheduledScan[]> => {
+export const getScanByIdLocally = async (id: string): Promise<ScheduledScan[]> => {
   try {
     const storedScans = await AsyncStorage.getItem(Scan.scan_list);
-    // console.log("storedScans",storedScans)
-    const scans :ScheduledScan= storedScans ? JSON.parse(storedScans) : [];
-    // console.log("parsed get scans",scans)
-
-    // Ensure `scans` is an array
+    const scans: ScheduledScan = storedScans ? JSON.parse(storedScans) : [];
+   
     if (!Array.isArray(scans)) {
       throw new Error('Stored scans data is corrupted');
     }
 
-    return scans.filter((scan)=>scan.id==id)[0] || [];
+    return scans.filter((scan) => scan.id == id)[0] || [];
   } catch (err) {
     console.error('Error retrieving scans:', err);
-    return []; // Return an empty array in case of an error
+    return []; 
   }
 };
 
 
-export const updateScanStatus = async (id: string,urls:string[]): Promise<boolean> => {
+export const updateScanStatus = async (id: string, urls: string[]): Promise<boolean> => {
   try {
     const storedScans = await AsyncStorage.getItem(Scan.scan_list);
     const scans: ScheduledScan[] = storedScans ? JSON.parse(storedScans) : [];
@@ -132,23 +125,42 @@ export const updateScanStatus = async (id: string,urls:string[]): Promise<boolea
     if (!Array.isArray(scans)) {
       throw new Error('Stored scans data is corrupted');
     }
-
-    
-    const updatedScans = scans.map((scan) => 
-      scan.id === id 
-        ? { ...scan, isCompleted: true,visitedSites:urls } 
+    const updatedScans = scans.map((scan) =>
+      scan.id === id
+        ? { ...scan, isCompleted: true, visitedSites: urls, date: new Date() }
         : scan
     );
 
-    console.log("updatedScans",updatedScans)
-
-   
     await AsyncStorage.setItem(Scan.scan_list, JSON.stringify(updatedScans));
 
     return true;
   } catch (err) {
     console.error('Error updating scan status:', err);
-    return false; 
+    return false;
   }
 };
+
+
+export const updateScannedUrls = async (url: string): Promise<boolean> => {
+  try {
+
+    const storedScans = await getItem(Scan.currenScanUrls);
+    const scans: string[] = storedScans ? JSON.parse(storedScans) : [];
+    if (!Array.isArray(scans)) {
+      throw new Error('Stored scans data is corrupted');
+    }
+    let updatedScans: string[];
+    scans.push(url)
+    updatedScans = scans
+    await setItem(Scan.currenScanUrls, JSON.stringify(updatedScans));
+    return true;
+  } catch (err) {
+    console.error('Error updating scan status:', err);
+    return false;
+  }
+};
+
+export const clearScannedUrls = async () => {
+  await setItem(Scan.currenScanUrls, null)
+}
 

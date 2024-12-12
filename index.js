@@ -11,35 +11,35 @@ import notifee, { EventType } from '@notifee/react-native';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from 'react-native-push-notification';
 
-// PushNotification.configure({
-//   onNotification: function (notification) {
-//     // console.log('NOTIFICATION:', notification);
+PushNotification.configure({
+  onNotification: function (notification) {
+    // console.log('NOTIFICATION:', notification);
   
-//     if (notification.foreground) {
-//       console.log('FOREGROUND NOTIFICATION:', notification);
-//     }
+    if (notification.foreground) {
+      console.log('FOREGROUND NOTIFICATION:', notification);
+    }
 
-//     if (notification.userInteraction) {
-//       if (!navigationRef || !navigationRef.isReady()) {
-//         console.log('Navigation not initialized. Storing pending navigation.');
-//         const pendingNavigation = notification; // Store the intent
-//         setTimeout(() => {
-//           console.log('Navigating to target screen...');
-//           navigationRef.navigate('RunScan', notification?.data);
-//         }, 4000); // Delay for navigation
-//       } else {
-//         console.log('Navigating immediately...');
-//         navigationRef.navigate('RunScan', notification?.data);
-//       }
-//     }
+    if (notification.userInteraction) {
+      if (!navigationRef || !navigationRef.isReady()) {
+        console.log('Navigation not initialized. Storing pending navigation.');
+        const pendingNavigation = notification; // Store the intent
+        setTimeout(() => {
+          console.log('Navigating to target screen...');
+          navigationRef.navigate('RunScan', notification?.data);
+        }, 2000); // Delay for navigation
+      } else {
+        console.log('Navigating immediately...');
+        navigationRef.navigate('RunScan', notification?.data);
+      }
+    }
 
-//     // Finish processing the notification
-//     notification.finish(PushNotificationIOS.FetchResult.NoData);
-//   },
+    // Finish processing the notification
+    notification.finish(PushNotificationIOS.FetchResult.NoData);
+  },
 
-//   // Register listener for local notifications
-//   requestPermissions: Platform.OS === 'ios',
-// });
+  // Register listener for local notifications
+  requestPermissions: Platform.OS === 'ios',
+});
 
 
 if (Platform.OS === 'ios') {
