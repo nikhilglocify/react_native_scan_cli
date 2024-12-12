@@ -59,11 +59,8 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
 
   const removeScan = (id: string, notificationId?: string) => {
     setScans(prevScans => prevScans.filter(scan => scan.id !== id));
-
-    console.log('removeScan runnin', notificationId);
     deleteScanLocally(id);
     if (notificationId) {
-      console.log('deleteNotification runnin', notificationId);
       deleteNotification(notificationId);
     }
   };
@@ -82,10 +79,7 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   };
 
-  const getScheduledScans = () => {
-
-    console.log("getScheduledScans running")
-    
+  const getScheduledScans = () => {  
     return scans.filter(scan => scan.isCompleted === false);
   };
 

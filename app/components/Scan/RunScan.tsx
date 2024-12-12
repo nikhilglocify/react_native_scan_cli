@@ -39,7 +39,6 @@ type scannedWebView = {
 };
 const RunScan = ({navigation, route}: any) => {
   const isFocused = useIsFocused();
-  const [activeWebView, setActiveWebView] = useState<number | null>(null);
   const [showScannedUrls, setShowScannedUrls] = useState<boolean>(false);
   const [webViews, setWebViews] = useState<scannedWebView[]>([]);
   const [scannedUrls, setScannedUrls] = useState<string[]>([]);
@@ -70,18 +69,7 @@ const RunScan = ({navigation, route}: any) => {
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        // console.log("App has come to the foreground!");
-      }
-      if (nextAppState === 'inactive') {
-        // console.log("the app is closed");
-      }
-      // console.log(nextAppState, "nextAppState");
       appState.current = nextAppState;
-      // console.log("AppState", appState.current);
       if (nextAppState === 'background') {
         console.log('App is in background CLOSED');
         handleAppStateAddScan();
@@ -109,8 +97,6 @@ const RunScan = ({navigation, route}: any) => {
     handleAddScan();
     reset();
     await clearScannedUrls();
-
-    console.log('handleExitScan');
   };
 
   const reset = () => {
@@ -240,7 +226,6 @@ const RunScan = ({navigation, route}: any) => {
           className="absolute right-0 p-2 px-2 rounded-lg"
           onPress={() => {
             console.log('onPress...', showScannedUrls);
-
             if (scannedUrls.length) {
               setShowScannedUrls(!showScannedUrls);
             }
@@ -269,8 +254,7 @@ const RunScan = ({navigation, route}: any) => {
           Exit Scan
         </Text>
       </TouchableOpacity>
-
-      {/* Modal to Select Scanned URL */}
+      
       <Modal
         animationType="fade"
         transparent={true}
@@ -299,7 +283,6 @@ const RunScan = ({navigation, route}: any) => {
                             console.log('url', url);
                             setSelectedUrl(url);
                             setCurrentUrl(url);
-                            setActiveWebView(index); // Set active WebView
                             setShowScannedUrls(false);
                           }}
                           className="py-2 border-b border-gray-200">

@@ -39,7 +39,7 @@ const AddScanModal = ({
   const [scanDuration, setScanDuration] = useState(5);
   const [showPicker, setShowPicker] = useState(false);
   const {scans, addScan, removeScan, updateScan} = useScanContext();
-  // Handler for time change
+
   const onChangeTime = (event: any, selectedTime?: Date) => {
     setShowPicker(false);
     if (selectedTime) setTime(selectedTime);
@@ -77,8 +77,7 @@ const AddScanModal = ({
     date: Date,
     data: ScheduledScan,
   ) => {
-    // const date = new Date(Date.now() + 5000); // 5 seconds from now
-    console.log('date', date, id);
+  
     scheduleNotification(
       id,
       'Schedule Scan',
@@ -108,7 +107,6 @@ const AddScanModal = ({
     await addScan(obj);
     handleScheduleNotification(currentNotificationId, time, obj);
     // await scheduleNotifeeNotification(time)
-
     onClose();
   };
 
