@@ -45,6 +45,13 @@ const AddScanModal = ({
     if (selectedTime) setTime(selectedTime);
   };
   
+  const resetState=()=>{
+    setTimeout(() =>{
+      setTime(null);
+      setScanDuration(5);
+    },1000)
+
+  }
 
   const scheduleNotifeeNotification = async (date:Date) => {
     // Create a trigger to show notification 5 seconds from now
@@ -89,30 +96,34 @@ const AddScanModal = ({
   };
 
   const handleAddScan = async () => {
+    console.log("handleAddScan")
     let currentNotificationId = await getItem('NotificationIdCounter');
+    console.log("handleAddScan =94",currentNotificationId,time)
     if (!currentNotificationId) {
       currentNotificationId = 0;
     } else {
       currentNotificationId = parseInt(currentNotificationId) + 1;
     }
-    if(time){
-      const obj: ScheduledScan = {
-        id: uuid.v4(),
-        time: time.toISOString(),
-        date: time,
-        scanDuration,
-        isCompleted: false,
-        notificationId: currentNotificationId.toString(),
-      };
-  
-      await addScan(obj);
-      handleScheduleNotification(currentNotificationId, time, obj);
-      // await scheduleNotifeeNotification(time)
-      onClose();
-      setTime(null)
-    }
+    const scanTime=time?time:new Date()
+    console.log("scanTime",scanTime)
+    const obj: ScheduledScan = {
+      id: uuid.v4(),
+      time: scanTime.toISOString(),
+      date: scanTime,
+      scanDuration,
+      isCompleted: false,
+      notificationId: currentNotificationId.toString(),
+    };
+
+    await addScan(obj);
+    handleScheduleNotification(currentNotificationId, scanTime, obj);
+    // await scheduleNotifeeNotification(time)
+    onClose();
+    resetState()
     
   };
+
+
 
   return (
     <Modal
@@ -187,7 +198,7 @@ const AddScanModal = ({
             </View>
           )}
 
-          {/* Scan Duration Picker */}
+          
           <View className="mt-[36px] mb-[36px] flex flex-row items-center gap-2">
             <Text className="text-base text-[#393939] font-semibold leading-5">
               Scan Duration:
@@ -247,7 +258,7 @@ const AddScanModal = ({
                 onPress={()=>{
                   onClose()
 
-                  setTime(null)
+                  resetState()
                   
                   }}>
                 <Text className="text-center text-base text-[#393939] font-semibold leading-6">

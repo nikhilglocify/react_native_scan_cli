@@ -89,12 +89,12 @@ const RunScan = ({navigation, route}: any) => {
       throw new Error('currenScanUrls scans data is corrupted');
     }
 
-    handleExitScan();
+    handleExitScan(currenScanUrls);
   };
 
-  const handleExitScan = async () => {
+  const handleExitScan = async (urls?:string[]) => {
     navigation.goBack();
-    handleAddScan();
+    handleAddScan(urls);
     reset();
     await clearScannedUrls();
   };
@@ -190,17 +190,21 @@ const RunScan = ({navigation, route}: any) => {
     }
   };
 
-  const handleAddScan = async () => {
-    if (data.id) {
-      await updateScanStatus(data.id, scannedUrls);
+  const handleAddScan = async (urls?:string[]) => {
+    console.log("data",data,urls)
+    const visitedUrls=urls?.length?urls:scannedUrls
+    if (data?.id && !data?.scanNow) {
+      console.log("updating the scan")
+      await updateScanStatus(data?.id, visitedUrls);
     } else {
+      console.log("Adding  the scan")
       const addToScanHistory: ScheduledScan = {
         id: uuid.v4(),
         time: new Date().toISOString(),
         date: new Date(),
-        scanDuration: scannedUrls.length,
+        scanDuration: visitedUrls.length,
         isCompleted: true,
-        visitedSites: scannedUrls,
+        visitedSites:visitedUrls ,
       };
       addScan(addToScanHistory);
     }
