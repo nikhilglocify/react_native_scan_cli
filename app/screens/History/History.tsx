@@ -6,13 +6,10 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
-
-
-import { Path, Rect, Svg } from "react-native-svg";
 import { useScanContext } from "../../../context/ScanContext";
 import GreenDot from "../../components/ui/svgIcons/GreenDot";
 import CrossIcon from "../../components/ui/svgIcons/CrossIcon";
-import { ScheduledScan } from "../../constants/Interface";
+
 
 
 
@@ -61,7 +58,7 @@ const History = () => {
                               {scan.visitedSites?.map((url, index) => (
                                 <View
                                   className="flex flex-row gap-2 mt-1 font-light break-all"
-                                  key={index}
+                                  key={`${url}-${index}`}
                                 >
                                   <Text className="font-light">
                                     {index + 1}.
