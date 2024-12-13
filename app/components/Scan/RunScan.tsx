@@ -9,6 +9,8 @@ import {
   Modal,
   TouchableWithoutFeedback,
   AppState,
+  BackHandler,
+  Alert,
 } from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {WebView} from 'react-native-webview';
@@ -31,7 +33,7 @@ import {
   updateScannedUrls,
 } from '../../helpers/asyncStorage';
 import {Scan} from '../../constants/enums';
-import { fontFamily } from '../../constants/theme';
+import {fontFamily} from '../../constants/theme';
 
 type scannedWebView = {
   webView: JSX.Element;
@@ -76,9 +78,19 @@ const RunScan = ({navigation, route}: any) => {
         handleAppStateAddScan();
       }
     });
+    const backAction = () => {
+      handleAppStateAddScan();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
 
     return () => {
       subscription.remove();
+      backHandler.remove();
     };
   }, []);
 
@@ -91,9 +103,11 @@ const RunScan = ({navigation, route}: any) => {
     }
 
     handleExitScan(currenScanUrls);
+
+    return true;
   };
 
-  const handleExitScan = async (urls?:string[]) => {
+  const handleExitScan = async (urls?: string[]) => {
     navigation.goBack();
     handleAddScan(urls);
     reset();
@@ -191,21 +205,21 @@ const RunScan = ({navigation, route}: any) => {
     }
   };
 
-  const handleAddScan = async (urls?:string[]) => {
-    console.log("data",data,urls)
-    const visitedUrls=urls?.length?urls:scannedUrls
+  const handleAddScan = async (urls?: string[]) => {
+    console.log('data', data, urls);
+    const visitedUrls = urls?.length ? urls : scannedUrls;
     if (data?.id && !data?.scanNow) {
-      console.log("updating the scan")
+      console.log('updating the scan');
       await updateScanStatus(data?.id, visitedUrls);
     } else {
-      console.log("Adding  the scan")
+      console.log('Adding  the scan');
       const addToScanHistory: ScheduledScan = {
         id: uuid.v4(),
         time: new Date().toISOString(),
         date: new Date(),
         scanDuration: visitedUrls.length,
         isCompleted: true,
-        visitedSites:visitedUrls ,
+        visitedSites: visitedUrls,
       };
       addScan(addToScanHistory);
     }
@@ -224,7 +238,9 @@ const RunScan = ({navigation, route}: any) => {
           {/* <Text> Back</Text> */}
           <BackIconSvg />
         </Pressable>
-        <Text className="text-2xl font-medium flex-grow text-center pr-6" style={{fontFamily:fontFamily.nunitoSemiBold}}>
+        <Text
+          className="text-2xl font-medium flex-grow text-center pr-6"
+          style={{fontFamily: fontFamily.nunitoSemiBold}}>
           Run Scan
         </Text>
         <TouchableOpacity
@@ -245,7 +261,9 @@ const RunScan = ({navigation, route}: any) => {
         ) : (
           <>
             <View className="flex items-center justify-center flex-1">
-              <Text className="text-lg text-gray-600" style={{fontFamily:fontFamily.nunitoRegular}}>
+              <Text
+                className="text-lg text-gray-600"
+                style={{fontFamily: fontFamily.nunitoRegular}}>
                 Select a Tab to view site
               </Text>
             </View>
@@ -255,11 +273,13 @@ const RunScan = ({navigation, route}: any) => {
       <TouchableOpacity
         className="text-right pb-5 px-2 pt-2"
         onPress={() => handleExitScan()}>
-        <Text className="text-[##FF3D3D] bg-[#FFEBEB] shadow-[0_5px_15px_0_rgba(0,0,0,0.8)] text-center px-3 py-3 w-[100px] ml-[auto] rounded-lg  " style={{fontFamily:fontFamily.nunitoRegular}}>
+        <Text
+          className="text-[##FF3D3D] bg-[#FFEBEB] shadow-[0_5px_15px_0_rgba(0,0,0,0.8)] text-center px-3 py-3 w-[100px] ml-[auto] rounded-lg  "
+          style={{fontFamily: fontFamily.nunitoRegular}}>
           Exit Scan
         </Text>
       </TouchableOpacity>
-      
+
       <Modal
         animationType="fade"
         transparent={true}
@@ -291,7 +311,9 @@ const RunScan = ({navigation, route}: any) => {
                             setShowScannedUrls(false);
                           }}
                           className="py-2 border-b border-gray-200">
-                          <Text className="text-base text-blue-500 pr-2 mr-4" style={{fontFamily:fontFamily.nunitoRegular}}>
+                          <Text
+                            className="text-base text-blue-500 pr-2 mr-4"
+                            style={{fontFamily: fontFamily.nunitoRegular}}>
                             {shortenedUrl}
                           </Text>
                         </Pressable>
