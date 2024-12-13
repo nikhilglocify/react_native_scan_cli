@@ -41,11 +41,12 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
 
   useEffect(() => {
     fetchScans();
+    console.log("fetch scans")
   }, [updatedScanList]);
 
   const fetchScans = async () => {
-    const scanList = await getScansLocally()
-    setScanList(scanList || []);
+    const scanData = await getScansLocally()
+    setScanList(scanData || []);
   };
 
   const addScan = (scan: ScheduledScan) => {
@@ -74,9 +75,13 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   const getCompletedScans = () => {
-    return scans
+    
+    const filteredScans= scans
       .filter(scan => scan.isCompleted === true)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      console.log("getCompletedScans Rnning",filteredScans.length)
+
+      return filteredScans
   };
 
   const getScheduledScans = () => {  

@@ -15,9 +15,10 @@ import { fontFamily } from "../../constants/theme";
 
 
 const History = () => {
-  const {  removeScan, getCompletedScans, scans } = useScanContext();
+  const {  removeScan, getCompletedScans, scans,updatedScanList } = useScanContext();
 
-  const scanHistory = useMemo(() => getCompletedScans(), [scans.length]);
+  const scanHistory = useMemo(() => getCompletedScans(), [updatedScanList]);
+console.log("scanHistory",scanHistory.length)
 
   return (
     <View className="flex-1 h-screen mt-[80px] px-6">
