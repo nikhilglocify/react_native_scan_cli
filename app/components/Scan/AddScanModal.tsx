@@ -99,7 +99,7 @@ const AddScanModal = ({
 
   const handleAddScan = async () => {
     // console.log("handleAddScan")
-   const notificationId= await generateNotificationId(3)
+   const notificationId= await generateNotificationId()
     console.log("notificationId",notificationId)
     // let currentNotificationId = await getItem('NotificationIdCounter');
     // // console.log("handleAddScan =94",currentNotificationId,time)

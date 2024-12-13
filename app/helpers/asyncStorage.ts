@@ -110,7 +110,25 @@ export const getScanByIdLocally = async (id: string): Promise<ScheduledScan[]> =
       throw new Error('Stored scans data is corrupted');
     }
     const scanFound = scans.filter((scan) => scan.id == id);
-    console.log("Scan", scanFound)
+    
+    return scanFound.length ? scanFound : [];
+  } catch (err) {
+    console.error('Error retrieving scans:', err);
+    return [];
+  }
+};
+
+export const getScanByNotificationIdLocally = async (id: string): Promise<ScheduledScan[]> => {
+  try {
+    const storedScans = await AsyncStorage.getItem(Scan.scan_list);
+    // console.log("storedScans saa",storedScans)
+    const scans: ScheduledScan = storedScans ? JSON.parse(storedScans) : [];
+    //  console.log("storedScans",storedScans)
+    if (!Array.isArray(scans)) {
+      throw new Error('Stored scans data is corrupted');
+    }
+    const scanFound = scans.filter((scan:ScheduledScan) => scan?.notificationId == id);
+    
     return scanFound.length ? scanFound : [];
   } catch (err) {
     console.error('Error retrieving scans:', err);
