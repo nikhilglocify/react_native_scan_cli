@@ -28,8 +28,12 @@ PushNotification.configure({
           navigationRef.navigate('RunScan', notification?.data);
         }, 2000); // Delay for navigation
       } else {
-        console.log('Navigating immediately...');
-        navigationRef.navigate('RunScan', notification?.data);
+        console.log('Navigating immediately...',notification?.data);
+        // navigationRef.navigate('RunScan', notification?.data);
+        setTimeout(() => {
+          console.log('Navigating to target screen...');
+          navigationRef.navigate('RunScan', notification?.data);
+        }, 4000); // Delay for navigation
       }
     }
 

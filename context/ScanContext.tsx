@@ -40,18 +40,21 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const [updatedScanList, setupdatedScanList] = useState(false);
 
   useEffect(() => {
+    
     fetchScans();
     console.log("fetch scans")
-  }, [updatedScanList]);
+  }, []);
 
   const fetchScans = async () => {
     const scanData = await getScansLocally()
+    console.log("scanData",scanData.length)
     setScanList(scanData || []);
   };
 
   const addScan = (scan: ScheduledScan) => {
     setScans(prevScans => [...prevScans, scan]);
     addScanLocally(scan);
+    setupdatedScanList(!updatedScanList);
   };
 
   const setScanList = (scans: ScheduledScan[]) => {
@@ -64,6 +67,7 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
     if (notificationId) {
       deleteNotification(notificationId);
     }
+    setupdatedScanList(!updatedScanList);
   };
 
   const updateScan = (id: string, updatedScan: Partial<ScheduledScan>) => {
@@ -75,13 +79,11 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   const getCompletedScans = () => {
-    
-    const filteredScans= scans
+    console.log("getCompletedScans Rnning",scans
+    .filter(scan => scan.isCompleted === true).length)
+    return scans
       .filter(scan => scan.isCompleted === true)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      console.log("getCompletedScans Rnning",filteredScans.length)
-
-      return filteredScans
   };
 
   const getScheduledScans = () => {  

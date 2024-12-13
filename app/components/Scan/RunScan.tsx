@@ -56,9 +56,11 @@ const RunScan = ({navigation, route}: any) => {
     checkForScan,
     setupdatedScanList,
     updatedScanList,
+    updateScan
   } = useScanContext();
 
   const data = route.params;
+  console.log("DATA RECIVED",data);
 
   const selectedUrls = data?.scanNow
     ? getRandomURLs(urlData.term)
@@ -210,6 +212,7 @@ const RunScan = ({navigation, route}: any) => {
     const visitedUrls = urls?.length ? urls : scannedUrls;
     if (data?.id && !data?.scanNow) {
       console.log('updating the scan');
+      updateScan(data?.id,{visitedSites:visitedUrls,isCompleted:true})
       await updateScanStatus(data?.id, visitedUrls);
     } else {
       console.log('Adding  the scan');
@@ -225,7 +228,7 @@ const RunScan = ({navigation, route}: any) => {
     }
 
     setIsScanCompleted(true);
-    setupdatedScanList(!updatedScanList);
+    
   };
 
   return (

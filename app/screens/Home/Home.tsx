@@ -42,14 +42,8 @@ export default function HomeScreen({navigation}:any) {
 
 
   useEffect(() => {
-    const fetchScans = async () => {
-      
-      setScanList(scans||[]);
-
-
-      createNotificationChannel();
-    };
-    fetchScans();
+    
+    createNotificationChannel();
 
   }, []);
 
