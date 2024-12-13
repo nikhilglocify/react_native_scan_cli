@@ -16,7 +16,12 @@ export const scheduleNotification = (
         message: message, 
         date: date, 
         allowWhileIdle: true, 
+        vibrate:true, 
+        vibration: 3000, 
+        importance: "high", 
+        priority: "high", 
         userInfo
+
     };
 
     PushNotification.localNotificationSchedule(notificationOptions);
