@@ -16,7 +16,7 @@ const History = () => {
     useScanContext();
 
   const scanHistory = useMemo(() => getCompletedScans(), [scans]);
-  console.log('scanHistory', scanHistory.length);
+
 
   return (
     <View className="flex-1 h-screen mt-[80px] px-6">
