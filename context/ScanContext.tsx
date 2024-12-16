@@ -5,6 +5,7 @@ import React, {
   ReactNode,
   useEffect,
   Dispatch,
+  useRef,
 } from 'react';
 import {ScheduledScan} from '../app/constants/Interface';
 import {
@@ -13,6 +14,8 @@ import {
   getScansLocally,
 } from '../app/helpers/asyncStorage';
 import {deleteNotification} from '../app/services/PushNotificationConfig';
+import {getUrlData} from '../app/api/script';
+import {Alert} from 'react-native';
 // import { deleteNotification } from '../app/services/PushNotificationConfig';
 
 interface ScanContextType {
@@ -21,10 +24,10 @@ interface ScanContextType {
   getScheduledScans: () => ScheduledScan[];
   scans: ScheduledScan[];
   initNewScan: boolean;
- setInitNewScan: Dispatch<React.SetStateAction<boolean>>;
+  setInitNewScan: Dispatch<React.SetStateAction<boolean>>;
   setCheckForScan: Dispatch<React.SetStateAction<boolean>>;
-  setupdatedScanList:Dispatch<React.SetStateAction<boolean>>;
-  updatedScanList:boolean
+  setupdatedScanList: Dispatch<React.SetStateAction<boolean>>;
+  updatedScanList: boolean;
   checkForScan: boolean;
   addScan: (scan: ScheduledScan) => void;
   removeScan: (id: string, notificationId?: string) => void;
@@ -38,16 +41,37 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const [initNewScan, setInitNewScan] = useState(true);
   const [checkForScan, setCheckForScan] = useState(true);
   const [updatedScanList, setupdatedScanList] = useState(false);
+  const initialized = useRef(false);
+  const [urlData, setUrlData] = useState(false);
+
+  const fetchScriptData = async () => {
+    try {
+      const data = await getUrlData();
+      // setUrlData(data);
+    } catch (error) {
+      Alert.alert('error fetchScriptData ');
+    }
+  };
 
   useEffect(() => {
-    
-    fetchScans();
-    console.log("fetch scans")
+    console.log('RUNNING USEFECT');
+    const initialize = async () => {
+      try {
+        await Promise.all([fetchScans(), fetchScriptData()]);
+        console.log('Initialization completed');
+      } catch (error) {
+        console.error('Initialization failed:', error);
+      }
+    };
+    if (!initialized.current) {
+      initialized.current = true;
+      initialize();
+    }
   }, []);
 
   const fetchScans = async () => {
-    const scanData = await getScansLocally()
-    console.log("scanData",scanData.length)
+    const scanData = await getScansLocally();
+    console.log('scanData', scanData.length);
     setScanList(scanData || []);
   };
 
@@ -79,14 +103,16 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   const getCompletedScans = () => {
-    console.log("getCompletedScans Rnning",scans
-    .filter(scan => scan.isCompleted === true).length)
+    console.log(
+      'getCompletedScans Rnning',
+      scans.filter(scan => scan.isCompleted === true).length,
+    );
     return scans
       .filter(scan => scan.isCompleted === true)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   };
 
-  const getScheduledScans = () => {  
+  const getScheduledScans = () => {
     return scans.filter(scan => scan.isCompleted === false);
   };
 
@@ -105,7 +131,7 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
         setCheckForScan,
         checkForScan,
         setupdatedScanList,
-        updatedScanList
+        updatedScanList,
       }}>
       {children}
     </ScanContext.Provider>

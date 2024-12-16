@@ -141,7 +141,7 @@ export const checkPostNotificationPermission = async () => {
 const App: React.FC = () => {
   useEffect(() => {
     checkPostNotificationPermission();
-    checkInitalNotification()
+    // checkInitalNotification()
   }, []);
 
   const checkInitalNotification=async()=>{
