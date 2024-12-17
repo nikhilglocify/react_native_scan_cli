@@ -23,6 +23,7 @@
     "nativewind": "^4.1.23",
     "react": "18.3.1",
     "react-native": "0.76.3",
+    "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "^2.21.2",
     "react-native-permissions": "^5.2.1",
     "react-native-push-notification": "^8.1.1",

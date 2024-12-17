@@ -10,7 +10,9 @@ import {
   TouchableWithoutFeedback,
   AppState,
   BackHandler,
+  Image,
   Alert,
+  Dimensions,
 } from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {WebView} from 'react-native-webview';
@@ -21,6 +23,8 @@ import {getRandomURLs, getUrls} from '../../helpers';
 import {ScheduledScan} from '../../constants/Interface';
 import BrowserTabIcon from '../ui/svgIcons/BrowserTabIcon';
 import CrossIcon from '../ui/svgIcons/CrossIcon';
+import FastImage from 'react-native-fast-image';
+
 import {
   createNotificationChannel,
   scheduleNotification,
@@ -34,6 +38,7 @@ import {
 } from '../../helpers/asyncStorage';
 import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
+// import { Image } from 'react-native-svg';
 
 type scannedWebView = {
   webView: JSX.Element;
@@ -42,12 +47,16 @@ type scannedWebView = {
 };
 const RunScan = ({navigation, route}: any) => {
   const isFocused = useIsFocused();
+  const screenWidth = Dimensions.get('window').width;
+  const screenHeight = Dimensions.get('window').height;
+
   const [showScannedUrls, setShowScannedUrls] = useState<boolean>(false);
   const [webViews, setWebViews] = useState<scannedWebView[]>([]);
   const [scannedUrls, setScannedUrls] = useState<string[]>([]);
   const [currentUrl, setCurrentUrl] = useState<string | null>();
   const [isScanCompleted, setIsScanCompleted] = useState<boolean>(false);
   const [selectedUrl, setSelectedUrl] = useState<string | null>();
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const appState = useRef(AppState.currentState);
   const {
     addScan,
@@ -56,11 +65,11 @@ const RunScan = ({navigation, route}: any) => {
     checkForScan,
     setupdatedScanList,
     updatedScanList,
-    updateScan
+    updateScan,
   } = useScanContext();
 
   const data = route.params;
-  console.log("DATA RECIVED",data);
+  console.log('DATA RECIVED', data);
 
   const selectedUrls = data?.scanNow
     ? getRandomURLs(urlData.term)
@@ -68,7 +77,10 @@ const RunScan = ({navigation, route}: any) => {
 
   useEffect(() => {
     if (initNewScan && isFocused) {
-      runScan(selectedUrls);
+      setTimeout(() => {
+        runScan(selectedUrls);
+        setIsInitialized(true);
+      }, 1450);
     }
   }, [initNewScan, checkForScan]);
 
@@ -174,14 +186,12 @@ const RunScan = ({navigation, route}: any) => {
         await updateScannedUrls(url);
         setScannedUrls(prev => [...prev, url]);
         setWebViews(prev => [...prev, {webView, url, id: uuid.v4()}]);
-        if(index === selectedUrls.length-1) {
-          setIsScanCompleted(true)
-          Alert.alert("Scan completed")
-
+        if (index === selectedUrls.length - 1) {
+          setIsScanCompleted(true);
+          // Alert.alert('Scan completed');
+          setCurrentUrl(null);
         }
       }, k);
-
-
 
       setTimeout(() => {
         // setCurrentUrl(null);
@@ -219,7 +229,7 @@ const RunScan = ({navigation, route}: any) => {
     const visitedUrls = urls?.length ? urls : scannedUrls;
     if (data?.id && !data?.scanNow) {
       console.log('updating the scan');
-      updateScan(data?.id,{visitedSites:visitedUrls,isCompleted:true})
+      updateScan(data?.id, {visitedSites: visitedUrls, isCompleted: true});
       await updateScanStatus(data?.id, visitedUrls);
     } else {
       console.log('Adding  the scan');
@@ -235,7 +245,6 @@ const RunScan = ({navigation, route}: any) => {
     }
 
     setIsScanCompleted(true);
-    
   };
 
   return (
@@ -253,6 +262,7 @@ const RunScan = ({navigation, route}: any) => {
           style={{fontFamily: fontFamily.nunitoSemiBold}}>
           Run Scan
         </Text>
+
         <TouchableOpacity
           className="absolute right-0 p-2 px-2 rounded-lg"
           onPress={() => {
@@ -265,30 +275,48 @@ const RunScan = ({navigation, route}: any) => {
         </TouchableOpacity>
       </View>
 
-      <View className="flex-1 mt-4">
-        {currentUrl && !isScanCompleted? (
-          getRenderActiveTab(selectedUrl ? selectedUrl : currentUrl!)
-        ) :isScanCompleted?
-        <View className='flex flex-1 items-center'>
-          <Text style={{fontFamily:fontFamily.nunitoRegular}} className='text-center my-auto text-lg'>
-          "Scan complete! Tap icon in upper right to see which sites were visited and to re-visit any sites you'd like. Tap Exit to return to Home. And don't forget to visit today's Tip!"
-          </Text>
-          <Text>
-
-          </Text>
-        </View> :(
-          <>
-            <View className="flex items-center justify-center flex-1">
+     
+      {!isInitialized ? (
+        <View style={styles.container}>
+          <FastImage
+            style={{
+              width: screenWidth * 0.8, // 80% of the screen width
+              height: screenHeight * 0.4, // 40% of the screen height
+            }}
+            source={require('../../assets/gifs/scanGif.gif')}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+        </View>
+      ) : (
+        <View className="flex-1 mt-4">
+          {currentUrl?   (
+            getRenderActiveTab(selectedUrl ? selectedUrl : currentUrl!)
+          ) : isScanCompleted ? (
+            <View className="flex flex-1 items-center justify-center">
+              <Text style={{fontFamily:fontFamily.nunitoSemiBold}} className="text-center  text-2xl mb-2">Scan complete!</Text>
               <Text
-                className="text-lg text-gray-600"
-                style={{fontFamily: fontFamily.nunitoRegular}}>
-                Select a Tab to view site
+                style={{fontFamily: fontFamily.nunitoRegular}}
+                className="text-center text-lg">
+                "Tap icon in upper right to see which sites were
+                visited and to re-visit any sites you'd like. Tap Exit to return
+                to Home. And don't forget to visit today's Tip!"
               </Text>
+              <Text></Text>
             </View>
-          </>
-        )}
-      </View>
-      <TouchableOpacity
+          ) : (
+            <>
+              <View className="flex items-center justify-center flex-1">
+                <Text
+                  className="text-lg text-gray-600"
+                  style={{fontFamily: fontFamily.nunitoRegular}}>
+                 {!isInitialized? "Select a Tab to view site":""}
+                </Text>
+              </View>
+            </>
+          )}
+        </View>
+      )}
+       <TouchableOpacity
         className="text-right pb-5 px-2 pt-2"
         onPress={() => handleExitScan()}>
         <Text
@@ -367,6 +395,12 @@ const styles = StyleSheet.create({
   },
   visibleTabButton: {
     backgroundColor: '#4CAF50',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center', // Centers vertically
+    alignItems: 'center', // Centers horizontally
+    backgroundColor: '#fff', // Optional: Adds a background color
   },
 });
 
