@@ -174,7 +174,14 @@ const RunScan = ({navigation, route}: any) => {
         await updateScannedUrls(url);
         setScannedUrls(prev => [...prev, url]);
         setWebViews(prev => [...prev, {webView, url, id: uuid.v4()}]);
+        if(index === selectedUrls.length-1) {
+          setIsScanCompleted(true)
+          Alert.alert("Scan completed")
+
+        }
       }, k);
+
+
 
       setTimeout(() => {
         // setCurrentUrl(null);
@@ -259,9 +266,17 @@ const RunScan = ({navigation, route}: any) => {
       </View>
 
       <View className="flex-1 mt-4">
-        {currentUrl ? (
+        {currentUrl && !isScanCompleted? (
           getRenderActiveTab(selectedUrl ? selectedUrl : currentUrl!)
-        ) : (
+        ) :isScanCompleted?
+        <View className='flex flex-1 items-center'>
+          <Text style={{fontFamily:fontFamily.nunitoRegular}} className='text-center my-auto text-lg'>
+          "Scan complete! Tap icon in upper right to see which sites were visited and to re-visit any sites you'd like. Tap Exit to return to Home. And don't forget to visit today's Tip!"
+          </Text>
+          <Text>
+
+          </Text>
+        </View> :(
           <>
             <View className="flex items-center justify-center flex-1">
               <Text

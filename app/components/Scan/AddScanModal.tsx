@@ -38,7 +38,7 @@ const AddScanModal = ({
   onClose: () => void;
 }) => {
   const [time, setTime] = useState<Date|null>(new Date());
-  const [scanDuration, setScanDuration] = useState(5);
+  const [scanDuration, setScanDuration] = useState(10);
   const [showPicker, setShowPicker] = useState(false);
   const {scans, addScan, removeScan, updateScan} = useScanContext();
 
@@ -50,7 +50,7 @@ const AddScanModal = ({
   const resetState=()=>{
     setTimeout(() =>{
       setTime(null);
-      setScanDuration(5);
+      setScanDuration(10);
     },1000)
 
   }
@@ -208,17 +208,20 @@ const AddScanModal = ({
             <Text className="text-base text-[#393939] font-semibold leading-5" style={{fontFamily:fontFamily.nunitoBold}}>
               Scan Duration:
             </Text>
-            <View className="flex items-center flex-row justify-between px-3 p-1 text-left bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg relative min-w-[64px] h-[44px] max-w-[65px]">
+            <View className="flex items-center flex-row justify-between px-3 p-1 text-left bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg relative min-w-[66px] h-[48px] max-w-[65px]">
               <Text className="text-[16px] inline-block">{scanDuration}</Text>
               <View className="flex flex-col gap-3 justify-end text-right">
                 {/* up arrow */}
 
                 <Pressable
                   onPress={() => {
-                    setScanDuration(prev => prev + 1);
+                    if(scanDuration<20){
+                      setScanDuration(prev => prev + 1);
+                    }
+                  
                   }}>
                   <View>
-                    <Svg width="12" height="12" viewBox="0 0 5 4" fill="none">
+                    <Svg width="15" height="15" viewBox="0 0 5 4" fill="none">
                       <Path
                         d="M0.250151 4L4.75028 4C4.79584 3.99985 4.8405 3.98642 4.87945 3.96116C4.9184 3.93591 4.95017 3.89978 4.97133 3.85666C4.9925 3.81355 5.00226 3.76508 4.99956 3.71648C4.99687 3.66789 4.98182 3.62099 4.95603 3.58085L2.70597 0.107993C2.61272 -0.0359975 2.38821 -0.0359975 2.29471 0.107993L0.0446447 3.58085C0.0186002 3.62091 0.00332707 3.66783 0.000484745 3.71651C-0.00235758 3.76519 0.00733961 3.81377 0.0285227 3.85697C0.0497059 3.90018 0.0815647 3.93635 0.120638 3.96157C0.159711 3.98678 0.204504 4.00008 0.250151 4Z"
                         fill="#464646"
@@ -232,12 +235,12 @@ const AddScanModal = ({
                 <Pressable
                   onPress={() => {
                     console.log('scanDurection', scanDuration);
-                    if (scanDuration > 1) {
+                    if (scanDuration >5) {
                       setScanDuration(prev => prev - 1);
                     }
                   }}>
                   <View>
-                    <Svg width="12" height="12" viewBox="0 0 5 4" fill="none">
+                    <Svg width="15" height="15" viewBox="0 0 5 4" fill="none">
                       <Path
                         d="M4.74985 6.93387e-07L0.249721 2.99973e-07C0.20416 0.000152884 0.1595 0.0135806 0.120549 0.0388372C0.0815977 0.0640939 0.0498303 0.100223 0.0286664 0.143337C0.00750241 0.18645 -0.00225702 0.234916 0.000439015 0.283515C0.00313457 0.332114 0.0181835 0.379008 0.0439657 0.419148L2.29403 3.89201C2.38728 4.036 2.61179 4.036 2.70529 3.89201L4.95536 0.419148C4.9814 0.379092 4.99667 0.332175 4.99952 0.283494C5.00236 0.234814 4.99266 0.186232 4.97148 0.143027C4.95029 0.0998225 4.91844 0.0636465 4.87936 0.0384309C4.84029 0.0132153 4.7955 -7.5835e-05 4.74985 6.93387e-07Z"
                         fill="#464646"
@@ -248,7 +251,7 @@ const AddScanModal = ({
               </View>
             </View>
             <Text className="text-base text-[#393939] font-semibold leading-5" style={{fontFamily:fontFamily.nunitoBold}}>
-              Site
+              Sites
             </Text>
           </View>
 
