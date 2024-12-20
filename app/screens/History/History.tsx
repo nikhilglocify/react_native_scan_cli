@@ -13,7 +13,9 @@ import {fontFamily} from '../../constants/theme';
 import {MaterialIcons} from '../../components/ui/TabIcons';
 import DownArrow from '../../components/ui/svgIcons/DownArrow';
 import UpArrow from '../../components/ui/svgIcons/UpArrow';
-
+import Clipboard from '@react-native-clipboard/clipboard';
+import {copyToClipboard} from '../../helpers';
+import CopyIcon from '../../components/ui/svgIcons/CopyIcon';
 const History = () => {
   type showHistoryCollapse = {
     show: boolean;
@@ -24,7 +26,7 @@ const History = () => {
   const [showHistory, setShowHistory] = useState<showHistoryCollapse[]>([]);
 
   const scanHistory = useMemo(() => getCompletedScans(), [scans]);
-  console.log('showHistory', showHistory);
+  // console.log('showHistory', showHistory);
   useEffect(() => {
     setShowHistory(scans.map(scan => ({show: false})));
   }, [scans.length]);
@@ -37,9 +39,6 @@ const History = () => {
           style={{fontFamily: fontFamily.nunitoSemiBold}}>
           Scan History
         </Text>
-        {/* <Text className="my-2" style={{fontFamily: fontFamily.nunitoRegular}}>
-          Address bar cannot be typed in white the scan is running
-        </Text> */}
 
         {scanHistory && scanHistory.length > 0 ? (
           <ScrollView className="mb-[70px] mt-4">
@@ -62,7 +61,7 @@ const History = () => {
                           </Text>
                         </View>
 
-                        <View className='flex flex-row gap-4'>
+                        <View className="flex flex-row gap-4">
                           <TouchableOpacity
                             onPress={() => {
                               setShowHistory(prevState =>
@@ -87,13 +86,14 @@ const History = () => {
                       </View>
 
                       {showHistory[index]?.show && (
-                        <View className="mt-2 ms-4">
+                        <View className="mt-2  p-0">
                           <ScrollView>
                             <View>
                               {scan.visitedSites.map((url, idx) => (
                                 <View
                                   key={`${url}-${idx}`}
-                                  className="flex flex-row gap-2 mt-1 font-light break-all">
+                                  className="flex-row gap-1 mt-1 font-light w-[100%] justify-between">
+                                    <View className='flex-row gap-2 break-all w-[88%]'>
                                   <Text
                                     className="font-light"
                                     style={{
@@ -102,12 +102,17 @@ const History = () => {
                                     {idx + 1}.
                                   </Text>
                                   <Text
-                                    className="text-left font-light break-all whitespace-pre-wrap relative"
+                                    className="text-left font-light break-all relative"
                                     style={{
                                       fontFamily: fontFamily.nunitoRegular,
                                     }}>
                                     {url}
                                   </Text>
+                                  </View>
+                                  <TouchableOpacity className='float-right'
+                                    onPress={() => copyToClipboard(url)}>
+                                    <CopyIcon height={18} width={18} />
+                                  </TouchableOpacity>
                                 </View>
                               ))}
                             </View>

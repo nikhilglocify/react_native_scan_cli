@@ -1,4 +1,5 @@
 import uuid from "react-native-uuid"
+import Clipboard from '@react-native-clipboard/clipboard';
 import { getScanByIdLocally, getScanByNotificationIdLocally } from "./asyncStorage";
 export const getRandomURLs = (urls: string[], min = 5, max = 10): string[] => {
   const numUrlsToSelect = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -38,4 +39,10 @@ export const generateNotificationId = async (): Promise<string> => {
     console.error("Error generating notification ID:", error);
     throw new Error("Failed to generate a unique notification ID.");
   }
+};
+
+
+export const copyToClipboard = (text:string) => {
+  console.log("Copying to clipboard")
+  Clipboard.setString(text);
 };
