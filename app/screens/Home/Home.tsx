@@ -10,8 +10,7 @@ import {
   Alert,
 } from 'react-native';
 
-import {SafeAreaView} from 'react-native-safe-area-context';
-import notifee, { AndroidImportance, EventType, TriggerType } from '@notifee/react-native';
+
 import {useEffect, useMemo, useState} from 'react';
 import {ScanIcon} from '../../components/ui/svgIcons/Scan';
 import AddScanIcon from '../../components/ui/svgIcons/AddScanIcon';
