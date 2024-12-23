@@ -28,16 +28,14 @@ export default function HomeScreen({navigation}:any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
   const {
     scans,
-   
     removeScan,
     getScheduledScans,
     setScanList,
     updatedScanList,
-  
     checkForScan,
     setCheckForScan,
   } = useScanContext();
-  const BACKGROUND_FETCH_TASK = 'background-fetch-task';
+
   const scheduledScans = useMemo(() => getScheduledScans(), [scans,updatedScanList]);
 
 
@@ -47,65 +45,7 @@ export default function HomeScreen({navigation}:any) {
 
   }, []);
 
-  // useEffect(() => {
-
-  //   async function createChannel() {
-  //     await notifee.createChannel({
-  //       id: 'default',
-  //       name: 'Default Channel',
-  //       importance: AndroidImportance.HIGH, // High importance
-  //     });
-  //   }
-
-  //   createChannel(); 
-  //   // Register foreground event listener
-  //   const unsubscribeForeground = notifee.onForegroundEvent(({ type, detail }) => {
-  //     if (type === EventType.DELIVERED) {
-  //       console.log('Notification Delivered in Foreground:', detail.notification);
-  //       Alert.alert('Notification Delivered', 'A scheduled notification was received in the foreground!');
-  //     }
-
-  //     if (type === EventType.PRESS) {
-  //       console.log('Notification Delivered in Foreground:', detail.notification);
-  //       Alert.alert('PRESS Foreground', 'A scheduled notification was received in the foreground!');
-  //     }
-
-  //     if(type==EventType.UNKNOWN){
-  //       console.log('Notification Unknown in Foreround:', detail.notification);
-  //       Alert.alert('Notification Unknown in Foreround', detail?.notification?.body || 'No message');
-  //     }
-  //   });
-
-  //   // Register background event listener
-  //   // notifee.onBackgroundEvent(async ({ type, detail }) => {
-  //   //   if (type === EventType.DELIVERED) {
-  //   //     console.log('Notification Delivered in Background:', detail.notification);
-  //   //     // Handle the background notification logic here
-  //   //     // You can use the notification data to perform background tasks
-  //   //     Alert.alert('Notification Delivered in Background', detail?.notification?.body || 'No message');
-  //   //   }
-
-  //   //   if (type === EventType.PRESS){
-  //   //     console.log('Notification Pressed in Background:', detail.notification);
-
-  //   //     navigation.navigate('RunScan');
-
-  //   //   }
-  //   //   if(type==EventType.UNKNOWN){
-  //   //     console.log('Notification Unknown in Background:', detail.notification);
-  //   //     Alert.alert('Notification Unknown in Background', detail?.notification?.body || 'No message');
-  //   //   }
-  //   // });
-
-  //   // Clean up the foreground listener when the component unmounts
-  //   return () => {
-  //     // unsubscribeForeground(); // Only unsubscribe foreground listener
-  //   };
-  // }, []);
-
-
   
-
   return (
     <>
       <View className="flex-1 h-screen mt-[80px]">
