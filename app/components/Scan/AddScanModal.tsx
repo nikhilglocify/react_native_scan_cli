@@ -26,7 +26,7 @@ import {
 } from '../../services/PushNotificationConfig';
 import {getItem, setItem} from '../../helpers/asyncStorage';
 // import { Notifications } from 'react-native-notifications';
-import notifee, { EventType, TriggerType } from '@notifee/react-native';
+import notifee, { AndroidStyle, EventType, TriggerType } from '@notifee/react-native';
 import { generateNotificationId } from '../../helpers';
 import { fontFamily } from '../../constants/theme';
 
@@ -55,32 +55,71 @@ const AddScanModal = ({
 
   }
 
-  const scheduleNotifeeNotification = async (date:Date) => {
-    // Create a trigger to show notification 5 seconds from now
-    // const date = new Date(Date.now());
+  
+const scheduleNotifeeNotification = async (data: any, date: Date) => {
+  try {
+    console.log('scheduleNotifeeNotification', data);
+
     const trigger = {
       type: TriggerType.TIMESTAMP,
-      timestamp:date.getTime() , // 5 seconds later
-      
+      timestamp: date.getTime(), // trigger time
     };
 
-    // Create the notification
+    // Create the notification with action buttons for both iOS and Android
     await notifee.createTriggerNotification(
       {
-        title: 'Scheduled Notification',
-        body: 'This notification is scheduled using Notifee.',
+        id: data?.id,
+        data,
+        title: 'Schedule Scan',
+        body: `Click to start scan for ${data.scanDuration} sites `,
         android: {
           channelId: 'default',
-          pressAction: {
-            id: 'default',
-            launchActivity: 'default',
-          },
+          // pressAction: {
+          //   id: 'default',
+          //   launchActivity: 'default',
+          // },
+          // style: AndroidStyle.BIGPICTURE,
+          actions: [
+            {
+              title: 'Open Now',
+              pressAction: {
+                id: 'open_now', // Action ID for "Open Now"
+                launchActivity: 'default',
+              },
+            },
+            {
+              title: 'Ignore',
+              pressAction: {
+                id: 'ignore', // Action ID for "Ignore"
+                launchActivity: 'default',
+              },
+            },
+          ],
+        },
+        ios: {
+          categoryId: 'scan_actions', // Category for iOS actions
+          actions: [
+            {
+              id: 'open_now', // Action ID for "Open Now"
+              title: 'Open Now',
+              authenticationRequired: false, // Optional: Set if authentication is required
+              destructive: false, // Optional: Set if the action should be considered destructive
+            },
+            {
+              id: 'ignore', // Action ID for "Ignore"
+              title: 'Ignore',
+              authenticationRequired: false,
+              destructive: true, // Optional: Set if this is a destructive action (e.g., deleting)
+            },
+          ],
         },
       },
       trigger,
-      
     );
-  };
+  } catch (error) {
+    console.log('Error creating notification', error);
+  }
+};
   const handleScheduleNotification = async (
     id: string,
     date: Date,
@@ -115,13 +154,14 @@ const AddScanModal = ({
       time: scanTime.toISOString(),
       date: scanTime,
       scanDuration,
-      isCompleted: false,
+      // isCompleted: "false",
       // notificationId: currentNotificationId.toString(),
       notificationId
     };
 
     await addScan(obj);
-    handleScheduleNotification(notificationId, scanTime, obj);
+    // handleScheduleNotification(notificationId, scanTime, obj);
+    scheduleNotifeeNotification(obj,scanTime)
     // await scheduleNotifeeNotification(time)
     onClose();
     resetState()

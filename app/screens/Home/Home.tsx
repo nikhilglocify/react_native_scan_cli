@@ -10,7 +10,11 @@ import {
   Alert,
 } from 'react-native';
 
-
+import notifee, {
+  AndroidImportance,
+  EventType,
+  TriggerType,
+} from '@notifee/react-native';
 import {useEffect, useMemo, useState} from 'react';
 import {ScanIcon} from '../../components/ui/svgIcons/Scan';
 import AddScanIcon from '../../components/ui/svgIcons/AddScanIcon';
@@ -42,6 +46,88 @@ export default function HomeScreen({navigation}:any) {
     
     createNotificationChannel();
 
+  }, []);
+  useEffect(() => {
+    async function createChannel() {
+      await notifee.createChannel({
+        id: 'default',
+        name: 'Default Channel',
+        importance: AndroidImportance.HIGH, // High importance
+        sound: 'hollow',
+      });
+    }
+
+    createChannel();
+
+    // Register foreground event listener
+    const unsubscribeForeground = notifee.onForegroundEvent(
+      ({ type, detail }) => {
+        if (type === EventType.DELIVERED) {
+          // console.log('Notification Delivered in Foreground:', detail.notification);
+          // Handle notification delivered logic here
+        }
+        // if (type === EventType.ACTION_PRESS) {
+        //   console.log('Foreground Notification ACTION_PRESS in Background:', detail.notification?.android?.actions);
+        //   // Handle background notification logic here
+        //   // You can perform background tasks using the notification data
+        // }
+        if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
+          console.log('User pressed an action with the id: ', detail.pressAction.id);
+        }
+
+        if (type === EventType.PRESS) {
+          console.log('Notification PRESS in Foreground:', detail.notification);
+          
+          // Check which action was pressed (Open Now or Ignore)
+          const actionId = detail?.pressAction?.id;
+          if (actionId === 'open_now') {
+            // Handle "Open Now" action
+            // navigation.navigate('RunScan', detail.notification?.data);
+            Alert.alert('Scan Ignored', 'You have ignored the scan request.');
+          } else if (actionId === 'ignore') {
+            // Handle "Ignore" action
+            Alert.alert('Scan Ignored', 'You have ignored the scan request.');
+          }
+        }
+      },
+    );
+
+    // Register background event listener
+    notifee.onBackgroundEvent(async ({ type, detail }) => {
+      if (type === EventType.DELIVERED) {
+        console.log('Notification Delivered in Background:', detail.notification);
+        // Handle background notification logic here
+        // You can perform background tasks using the notification data
+      }
+      // if (type === EventType.ACTION_PRESS) {
+      //   console.log('Background Notification ACTION_PRESS in Background:', detail.notification?.android?.actions);
+      //   // Handle background notification logic here
+      //   // You can perform background tasks using the notification data
+      // }
+      // }
+      if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
+        console.log('Background User pressed an action with the id: ', detail.pressAction.id);
+      }
+
+      if (type === EventType.PRESS) {
+        console.log('Notification Pressed in Background:', detail.notification);
+
+        // Check which action was pressed (Open Now or Ignore)
+        const actionId = detail?.pressAction?.id;
+        if (actionId === 'open_now') {
+          // Handle "Open Now" action
+          navigation.navigate('RunScan', detail.notification?.data);
+        } else if (actionId === 'ignore') {
+          // Handle "Ignore" action
+          Alert.alert('Scan Ignored', 'You have ignored the scan request.');
+        }
+      }
+    });
+
+    // Clean up the foreground listener when the component unmounts
+    return () => {
+      unsubscribeForeground(); // Unsubscribe from the foreground listener
+    };
   }, []);
 
   
