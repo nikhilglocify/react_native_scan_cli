@@ -61,7 +61,7 @@ export default function HomeScreen({navigation}:any) {
 
     // Register foreground event listener
     const unsubscribeForeground = notifee.onForegroundEvent(
-      ({ type, detail }) => {
+    async  ({ type, detail }) => {
         if (type === EventType.DELIVERED) {
           // console.log('Notification Delivered in Foreground:', detail.notification);
           // Handle notification delivered logic here
@@ -73,6 +73,7 @@ export default function HomeScreen({navigation}:any) {
         // }
         if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
           console.log('User pressed an action with the id: ', detail.pressAction.id);
+          Alert.alert("Foreground Pressed",detail.pressAction.id)
         }
 
         if (type === EventType.PRESS) {
@@ -107,6 +108,7 @@ export default function HomeScreen({navigation}:any) {
       // }
       if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
         console.log('Background User pressed an action with the id: ', detail.pressAction.id);
+        Alert.alert("Background Pressed",detail.pressAction.id)
       }
 
       if (type === EventType.PRESS) {

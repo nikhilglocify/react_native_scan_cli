@@ -19,7 +19,7 @@ import TabHistoryIcon from './app/components/ui/svgIcons/TabHistoryIcon';
 import {Colors} from './app/constants/Colors';
 import {Alert, useColorScheme} from 'react-native';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import notifee from '@notifee/react-native';
+import notifee, { AuthorizationStatus } from '@notifee/react-native';
 // Define the types for the navigation
 export type RootTabParamList = {
   Home: undefined;
@@ -137,11 +137,28 @@ export const checkPostNotificationPermission = async () => {
     console.log('Permission not required for this Android version.');
   }
 };
+async function requestUserPermission() {
+  const settings = await notifee.requestPermission();
+
+  // if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+  //   console.log('Permission settings:', settings);
+  // } else {
+  //   console.log('User declined permissions');
+  // }
+  if (settings.authorizationStatus === AuthorizationStatus.DENIED) {
+    console.log('User denied permissions request');
+  } else if (settings.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
+     console.log('User granted permissions request');
+  } else if (settings.authorizationStatus === AuthorizationStatus.PROVISIONAL) {
+     console.log('User provisionally granted permissions request');
+  }
+}
 
 const App: React.FC = () => {
   useEffect(() => {
-    checkPostNotificationPermission();
-    checkInitalNotification()
+    // checkPostNotificationPermission();
+    requestUserPermission()
+    // checkInitalNotification()
   }, []);
 
   const checkInitalNotification=async()=>{

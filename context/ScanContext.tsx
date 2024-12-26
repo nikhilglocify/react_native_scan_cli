@@ -87,8 +87,8 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   const getScheduledScans = () => {  
-    return scans.filter(scan => scan.isCompleted === false);
-  };
+    return scans
+  }
 
   return (
     <ScanContext.Provider
