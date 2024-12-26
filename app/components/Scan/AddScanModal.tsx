@@ -76,10 +76,10 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
         body: `Click to start scan for ${data.scanDuration} sites `,
         android: {
           channelId: 'default',
-          // pressAction: {
-          //   id: 'default',
-          //   launchActivity: 'default',
-          // },
+          pressAction: {
+            id: 'default',
+            launchActivity: 'default',
+          },
           // style: AndroidStyle.BIGPICTURE,
           actions: [
             {
