@@ -132,7 +132,7 @@ export default function HomeScreen({navigation}: any) {
         );
         const actionId = detail?.pressAction?.id;
         setTimeout(() => {
-          if (actionId === 'open_now') {
+          if (actionId === 'open_now' ||actionId == 'default') {
             // Handle "Open Now" action
             navigation.navigate('RunScan', detail.notification?.data);
             // Alert.alert('Scan Opened', 'You have accepted the scan request.');
@@ -143,19 +143,17 @@ export default function HomeScreen({navigation}: any) {
         }, 1000);
       }
 
-      // if (type === EventType.PRESS) {
-      //   console.log('Notification Pressed in Background:', detail.notification);
+      if (type === EventType.PRESS) {
+        console.log('Notification  EventType.PRESS Pressed in Background:', detail.notification);
 
-      //   // Check which action was pressed (Open Now or Ignore)
-      //   const actionId = detail?.pressAction?.id;
-      //   if (actionId === 'open_now') {
-      //     // Handle "Open Now" action
-      //     navigation.navigate('RunScan', detail.notification?.data);
-      //   } else if (actionId === 'ignore') {
-      //     // Handle "Ignore" action
-      //     Alert.alert('Scan Ignored', 'You have ignored the scan request.');
-      //   }
-      // }
+        // Check which action was pressed (Open Now or Ignore)
+        const actionId = detail?.pressAction?.id;
+        console.log("actionId",actionId)
+        if (actionId === 'open_now' ||actionId == 'default') {
+          // Handle "Open Now" action
+          navigation.navigate('RunScan', detail.notification?.data);
+        } 
+      }
     });
 
     // Clean up the foreground listener when the component unmounts
