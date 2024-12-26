@@ -62,15 +62,7 @@ export default function HomeScreen({navigation}: any) {
     // Register foreground event listener
     const unsubscribeForeground = notifee.onForegroundEvent(
       async ({type, detail}) => {
-        if (type === EventType.DELIVERED) {
-          console.log('Notification Delivered in Foreground:', detail.notification);
-          // Handle notification delivered logic here
-        }
-        // if (type === EventType.ACTION_PRESS) {
-        //   console.log('Foreground Notification ACTION_PRESS in Background:', detail.notification?.android?.actions);
-        //   // Handle background notification logic here
-        //   // You can perform background tasks using the notification data
-        // }
+      
         if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
           const actionId = detail?.pressAction?.id;
           // Alert.alert('Foreground Pressed');
@@ -111,20 +103,7 @@ export default function HomeScreen({navigation}: any) {
 
     // Register background event listener
     notifee.onBackgroundEvent(async ({type, detail}) => {
-      if (type === EventType.DELIVERED) {
-        console.log(
-          'Notification Delivered in Background:',
-          detail.notification,
-        );
-        // Handle background notification logic here
-        // You can perform background tasks using the notification data
-      }
-      // if (type === EventType.ACTION_PRESS) {
-      //   console.log('Background Notification ACTION_PRESS in Background:', detail.notification?.android?.actions);
-      //   // Handle background notification logic here
-      //   // You can perform background tasks using the notification data
-      // }
-      // }
+      
       if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
         console.log(
           'Background User pressed an action with the id: ',
@@ -148,7 +127,7 @@ export default function HomeScreen({navigation}: any) {
 
         // Check which action was pressed (Open Now or Ignore)
         const actionId = detail?.pressAction?.id;
-        console.log("actionId",actionId)
+        
         if (actionId === 'open_now' ||actionId == 'default') {
           // Handle "Open Now" action
           navigation.navigate('RunScan', detail.notification?.data);
