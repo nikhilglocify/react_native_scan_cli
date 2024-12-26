@@ -194,7 +194,7 @@ const App: React.FC = () => {
 
     setTimeout(() => {
       if (actionId == 'open_now' || actionId == 'default') {
-        console.log('init Opend with', actionId);
+        
         if (!navigationRef || !navigationRef.isReady()) {
           console.log(
             'Navigation not initialized. Storing pending navigation.',

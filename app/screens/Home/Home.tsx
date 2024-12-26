@@ -90,13 +90,10 @@ export default function HomeScreen({navigation}: any) {
           const actionId = detail?.pressAction?.id;
           console.log("actionId",actionId)
           if (actionId === 'open_now' ||actionId == 'default') {
-            // Handle "Open Now" action
-            // navigation.navigate('RunScan', detail.notification?.data);
-            Alert.alert('Scan Ignored', 'You have ignored the scan request.');
-          } else if (actionId === 'ignore') {
-            // Handle "Ignore" action
-            Alert.alert('Scan Ignored', 'You have ignored the scan request.');
-          }
+            
+            navigation.navigate('RunScan', detail.notification?.data);
+           
+          } 
         }
       },
     );
@@ -114,11 +111,8 @@ export default function HomeScreen({navigation}: any) {
           if (actionId === 'open_now' ||actionId == 'default') {
             // Handle "Open Now" action
             navigation.navigate('RunScan', detail.notification?.data);
-            // Alert.alert('Scan Opened', 'You have accepted the scan request.');
-          } else if (actionId === 'ignore') {
-            // Handle "Ignore" action
-            // Alert.alert('Scan Ignored', 'You have ignored the scan request.');
-          }
+            
+          } 
         }, 1000);
       }
 
