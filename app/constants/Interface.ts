@@ -5,5 +5,6 @@ export interface ScheduledScan{
     date:Date  
     visitedSites?:string[],
     isCompleted?:boolean,
+    type?:"scheduled" |"history"
     notificationId?:string
 }

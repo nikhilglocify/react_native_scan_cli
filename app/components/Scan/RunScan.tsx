@@ -227,22 +227,33 @@ const RunScan = ({navigation, route}: any) => {
   const handleAddScan = async (urls?: string[]) => {
     console.log('data', data, urls);
     const visitedUrls = urls?.length ? urls : scannedUrls;
-    if (data?.id && !data?.scanNow) {
-      console.log('updating the scan');
-      updateScan(data?.id, {visitedSites: visitedUrls, isCompleted: true});
-      await updateScanStatus(data?.id, visitedUrls);
-    } else {
-      console.log('Adding  the scan');
-      const addToScanHistory: ScheduledScan = {
-        id: uuid.v4(),
-        time: new Date().toISOString(),
-        date: new Date(),
-        scanDuration: visitedUrls.length,
-        isCompleted: true,
-        visitedSites: visitedUrls,
-      };
-      addScan(addToScanHistory);
-    }
+    console.log('Adding  the scan');
+    const addToScanHistory: ScheduledScan = {
+      id: uuid.v4(),
+      time: new Date().toISOString(),
+      date: new Date(),
+      scanDuration: visitedUrls.length,
+      isCompleted: true,
+      visitedSites: visitedUrls,
+      type:"history"
+    };
+    addScan(addToScanHistory);
+    // if (data?.id && !data?.scanNow) {
+    //   console.log('updating the scan');
+    //   updateScan(data?.id, {visitedSites: visitedUrls, isCompleted: true});
+    //   await updateScanStatus(data?.id, visitedUrls);
+    // } else {
+    //   console.log('Adding  the scan');
+    //   const addToScanHistory: ScheduledScan = {
+    //     id: uuid.v4(),
+    //     time: new Date().toISOString(),
+    //     date: new Date(),
+    //     scanDuration: visitedUrls.length,
+    //     isCompleted: true,
+    //     visitedSites: visitedUrls,
+    //   };
+    //   addScan(addToScanHistory);
+    // }
 
     setIsScanCompleted(true);
   };

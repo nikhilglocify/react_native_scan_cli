@@ -26,7 +26,7 @@ import {
 } from '../../services/PushNotificationConfig';
 import {getItem, setItem} from '../../helpers/asyncStorage';
 // import { Notifications } from 'react-native-notifications';
-import notifee, { AndroidStyle, EventType, TriggerType } from '@notifee/react-native';
+import notifee, { AndroidStyle, EventType, RepeatFrequency, TimestampTrigger, TriggerType } from '@notifee/react-native';
 import { generateNotificationId } from '../../helpers';
 import { fontFamily } from '../../constants/theme';
 
@@ -60,9 +60,11 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
   try {
     console.log('scheduleNotifeeNotification', data);
 
-    const trigger = {
+    const trigger:TimestampTrigger = {
       type: TriggerType.TIMESTAMP,
       timestamp: date.getTime(), // trigger time
+      repeatFrequency:RepeatFrequency.DAILY
+      
     };
 
     // Create the notification with action buttons for both iOS and Android
@@ -113,6 +115,7 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
             },
           ],
         },
+        
       },
       trigger,
     );
@@ -154,6 +157,7 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
       time: scanTime.toISOString(),
       date: scanTime,
       scanDuration,
+      type:"scheduled",
       // isCompleted: "false",
       // notificationId: currentNotificationId.toString(),
       notificationId

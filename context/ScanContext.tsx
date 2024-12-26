@@ -79,15 +79,14 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   const getCompletedScans = () => {
-    console.log("getCompletedScans Rnning",scans
-    .filter(scan => scan.isCompleted === true).length)
+    
     return scans
       .filter(scan => scan.isCompleted === true)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   };
 
   const getScheduledScans = () => {  
-    return scans
+    return scans.filter((scan)=>scan?.type=="scheduled")
   }
 
   return (
