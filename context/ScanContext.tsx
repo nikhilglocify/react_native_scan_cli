@@ -12,7 +12,7 @@ import {
   deleteScanLocally,
   getScansLocally,
 } from '../app/helpers/asyncStorage';
-import {deleteNotification} from '../app/services/PushNotificationConfig';
+import {deleteNotifeeNotification, deleteNotification} from '../app/services/PushNotificationConfig';
 // import { deleteNotification } from '../app/services/PushNotificationConfig';
 
 interface ScanContextType {
@@ -65,7 +65,8 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
     setScans(prevScans => prevScans.filter(scan => scan.id !== id));
     deleteScanLocally(id);
     if (notificationId) {
-      deleteNotification(notificationId);
+      // deleteNotification(notificationId);
+      deleteNotifeeNotification(notificationId)
     }
     setupdatedScanList(!updatedScanList);
   };

@@ -1,6 +1,6 @@
 import PushNotification, { PushNotificationScheduleObject } from 'react-native-push-notification';
 import { ScheduledScan } from '../constants/Interface';
-
+import notifee from '@notifee/react-native';
 // Function to schedule a notification
 export const scheduleNotification = (
     id: string,
@@ -26,6 +26,10 @@ export const scheduleNotification = (
 
     PushNotification.localNotificationSchedule(notificationOptions);
 };
+export const deleteNotifeeNotification = (id: string) => {
+    console.log("deleteNotifeeNotification function runnin",id)
+    notifee.cancelNotification(id); 
+}
 export const deleteNotification = (id: string) => {
     console.log("deleteNotification function runnin",id)
     PushNotification.cancelLocalNotification(id); 

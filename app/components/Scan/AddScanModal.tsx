@@ -143,13 +143,7 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
     // console.log("handleAddScan")
    const notificationId= await generateNotificationId()
     console.log("notificationId",notificationId)
-    // let currentNotificationId = await getItem('NotificationIdCounter');
-    // // console.log("handleAddScan =94",currentNotificationId,time)
-    // if (!currentNotificationId) {
-    //   currentNotificationId = 0;
-    // } else {
-    //   currentNotificationId = parseInt(currentNotificationId) + 1;
-    // }
+    
     const scanTime=time?time:new Date()
     console.log("scanTime",scanTime)
     const obj: ScheduledScan = {
@@ -159,7 +153,6 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
       scanDuration,
       type:"scheduled",
       // isCompleted: "false",
-      // notificationId: currentNotificationId.toString(),
       notificationId
     };
 
