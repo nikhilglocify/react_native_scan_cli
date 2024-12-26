@@ -64,9 +64,9 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const removeScan = (id: string, notificationId?: string) => {
     setScans(prevScans => prevScans.filter(scan => scan.id !== id));
     deleteScanLocally(id);
-    if (notificationId) {
+    if (id) {
       // deleteNotification(notificationId);
-      deleteNotifeeNotification(notificationId)
+      deleteNotifeeNotification(id)
     }
     setupdatedScanList(!updatedScanList);
   };
