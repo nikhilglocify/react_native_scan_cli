@@ -152,12 +152,39 @@ async function requestUserPermission() {
     console.log('User provisionally granted permissions request');
   }
 }
+async function registerNotificationCategories() {
+  console.log("Settingios categories")
+  await notifee.setNotificationCategories([
+    {
+      id: 'scan_actions', // This must match the `categoryId` in the notification
+      actions: [
+        {
+          id: 'open_now',
+          title: 'Run Now',
+          foreground: true, // Bring the app to the foreground
+        },
+        {
+          id: 'ignore',
+          title: 'Ignore',
+          foreground: false, // Do not bring the app to the foreground
+          destructive: true, // Mark as a destructive action (optional)
+        },
+      ],
+    },
+  ]);
+}
+
+
 
 const App: React.FC = () => {
   useEffect(() => {
     // checkPostNotificationPermission();
     requestUserPermission();
     checkInitalNotification();
+
+    if(Platform.OS=="ios"){
+      registerNotificationCategories();
+    }
   }, []);
 
   const checkInitalNotification = async () => {

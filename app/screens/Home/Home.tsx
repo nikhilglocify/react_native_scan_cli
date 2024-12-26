@@ -63,7 +63,7 @@ export default function HomeScreen({navigation}: any) {
     const unsubscribeForeground = notifee.onForegroundEvent(
       async ({type, detail}) => {
         if (type === EventType.DELIVERED) {
-          // console.log('Notification Delivered in Foreground:', detail.notification);
+          console.log('Notification Delivered in Foreground:', detail.notification);
           // Handle notification delivered logic here
         }
         // if (type === EventType.ACTION_PRESS) {
@@ -91,20 +91,21 @@ export default function HomeScreen({navigation}: any) {
           }, 1000);
         }
 
-        // if (type === EventType.PRESS) {
-        //   console.log('Notification PRESS in Foreground:', detail.notification);
+        if (type === EventType.PRESS) {
+          console.log('Notification PRESS IOs in Foreground:', detail.notification);
 
-        //   // Check which action was pressed (Open Now or Ignore)
-        //   const actionId = detail?.pressAction?.id;
-        //   if (actionId === 'open_now') {
-        //     // Handle "Open Now" action
-        //     // navigation.navigate('RunScan', detail.notification?.data);
-        //     Alert.alert('Scan Ignored', 'You have ignored the scan request.');
-        //   } else if (actionId === 'ignore') {
-        //     // Handle "Ignore" action
-        //     Alert.alert('Scan Ignored', 'You have ignored the scan request.');
-        //   }
-        // }
+          // Check which action was pressed (Open Now or Ignore)
+          const actionId = detail?.pressAction?.id;
+          console.log("actionId",actionId)
+          if (actionId === 'open_now') {
+            // Handle "Open Now" action
+            // navigation.navigate('RunScan', detail.notification?.data);
+            Alert.alert('Scan Ignored', 'You have ignored the scan request.');
+          } else if (actionId === 'ignore') {
+            // Handle "Ignore" action
+            Alert.alert('Scan Ignored', 'You have ignored the scan request.');
+          }
+        }
       },
     );
 

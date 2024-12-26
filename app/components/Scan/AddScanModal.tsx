@@ -83,7 +83,7 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
           // style: AndroidStyle.BIGPICTURE,
           actions: [
             {
-              title: 'Open Now',
+              title: 'Run Now',
               pressAction: {
                 id: 'open_now', // Action ID for "Open Now"
                 launchActivity: 'default',
@@ -100,20 +100,20 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
         },
         ios: {
           categoryId: 'scan_actions', // Category for iOS actions
-          actions: [
-            {
-              id: 'open_now', // Action ID for "Open Now"
-              title: 'Open Now',
-              authenticationRequired: false, // Optional: Set if authentication is required
-              destructive: false, // Optional: Set if the action should be considered destructive
-            },
-            {
-              id: 'ignore', // Action ID for "Ignore"
-              title: 'Ignore',
-              authenticationRequired: false,
-              destructive: true, // Optional: Set if this is a destructive action (e.g., deleting)
-            },
-          ],
+          // actions: [
+          //   {
+          //     id: 'open_now', // Action ID for "Open Now"
+          //     title: 'Run Now',
+          //     authenticationRequired: false, // Optional: Set if authentication is required
+          //     destructive: false, // Optional: Set if the action should be considered destructive
+          //   },
+          //   {
+          //     id: 'ignore', // Action ID for "Ignore"
+          //     title: 'Ignore',
+          //     authenticationRequired: false,
+          //     destructive: true, // Optional: Set if this is a destructive action (e.g., deleting)
+          //   },
+          // ],
         },
         
       },
