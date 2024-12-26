@@ -80,7 +80,7 @@ export default function HomeScreen({navigation}: any) {
             detail.notification?.data,
           );
           setTimeout(() => {
-            if (actionId === 'open_now') {
+            if (actionId === 'open_now' ||actionId == 'default') {
               // Handle "Open Now" action
               navigation.navigate('RunScan', detail.notification?.data);
               // Alert.alert('Scan Opened', 'You have accepted the scan request.');
@@ -97,7 +97,7 @@ export default function HomeScreen({navigation}: any) {
           // Check which action was pressed (Open Now or Ignore)
           const actionId = detail?.pressAction?.id;
           console.log("actionId",actionId)
-          if (actionId === 'open_now') {
+          if (actionId === 'open_now' ||actionId == 'default') {
             // Handle "Open Now" action
             // navigation.navigate('RunScan', detail.notification?.data);
             Alert.alert('Scan Ignored', 'You have ignored the scan request.');

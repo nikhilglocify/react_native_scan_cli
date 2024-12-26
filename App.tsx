@@ -193,7 +193,7 @@ const App: React.FC = () => {
     const actionId = initialNotification?.pressAction.id;
 
     setTimeout(() => {
-      if (actionId == 'open_now') {
+      if (actionId == 'open_now' || actionId == 'default') {
         console.log('init Opend with', actionId);
         if (!navigationRef || !navigationRef.isReady()) {
           console.log(
