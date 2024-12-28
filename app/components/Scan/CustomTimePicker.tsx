@@ -39,25 +39,45 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
     // if (onTimeChange) onTimeChange(updatedTime);
   };
 
-  const renderScrollOptions = (range: number[], selectedValue: number, onChange: (value: number) => void) => (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.scrollViewContent}
-    >
-      {range.map((value) => (
-        <Pressable key={value} onPress={() => onChange(value)}>
-          <Text
-            style={[
-              styles.scrollOption,
-              selectedValue === value && styles.selectedOption,
-            ]}
-          >
-            {value}
-          </Text>
-        </Pressable>
-      ))}
-    </ScrollView>
-  );
+  const renderScrollOptions = (
+    range: number[],
+    selectedValue: number,
+    onChange: (value: number) => void
+  ) => {
+    const itemHeight = 48; // Height of each item, adjust this as per your design
+    const handleScrollEnd = (event: any) => {
+      const offsetY = event.nativeEvent.contentOffset.y;
+      const index = Math.round(offsetY / itemHeight);
+      const selected = range[index];
+      console.log("selected",selected)
+      if (selected !== selectedValue) {
+        onChange(selected);
+      }
+    };
+  
+    return (
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        snapToInterval={itemHeight} // Ensures smooth snapping to each item
+        decelerationRate="fast"
+        contentContainerStyle={styles.scrollViewContent}
+        onMomentumScrollEnd={handleScrollEnd}
+      >
+        {range.map((value) => (
+          <Pressable key={value} onPress={() => onChange(value)}>
+            <Text
+              style={[
+                styles.scrollOption,
+                selectedValue === value && styles.selectedOption,
+              ]}
+            >
+              {value}
+            </Text>
+          </Pressable>
+        ))}
+      </ScrollView>
+    );
+  };
 
   const hours = Array.from({ length: 12 }, (_, i) => i + 1);
   const minutes = Array.from({ length: 60 }, (_, i) => i);
