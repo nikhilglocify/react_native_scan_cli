@@ -29,6 +29,7 @@ import {getItem, setItem} from '../../helpers/asyncStorage';
 import notifee, { AndroidStyle, EventType, RepeatFrequency, TimestampTrigger, TriggerType } from '@notifee/react-native';
 import { generateNotificationId } from '../../helpers';
 import { fontFamily } from '../../constants/theme';
+import CustomTimePicker from './CustomTimePicker';
 
 const AddScanModal = ({
   visible,
@@ -44,6 +45,13 @@ const AddScanModal = ({
 
   const onChangeTime = (event: any, selectedTime?: Date) => {
     setShowPicker(false);
+    console.log("Time selected",selectedTime?.toLocaleTimeString())
+    if (selectedTime) setTime(selectedTime);
+  };
+
+  const onChangeTimeNew = ( selectedTime?: Date) => {
+    setShowPicker(false);
+    console.log("Time selected",selectedTime?.toLocaleTimeString())
     if (selectedTime) setTime(selectedTime);
   };
   
@@ -129,9 +137,10 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
     // console.log("handleAddScan")
    const notificationId= await generateNotificationId()
     console.log("notificationId",notificationId)
+    console.log("timeState",time)
     
     const scanTime=time?time:new Date()
-    console.log("scanTime",scanTime)
+    console.log("scanTime",scanTime.toLocaleTimeString())
     const obj: ScheduledScan = {
       id: uuid.v4(),
       time: scanTime.toISOString(),
@@ -162,8 +171,8 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
           <Text style={styles.title} >Select Time</Text>
-
-          {Platform.OS == 'android' && (
+    <CustomTimePicker onTimeChange={onChangeTimeNew}/>
+          {/* {Platform.OS == 'android' && (
             <Pressable onPress={() => setShowPicker(true)}>
               <View className="flex items-center gap-3 justify-center flex-row">
                 <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[84px] max-h-[84px] text-center mx-auto">
@@ -195,7 +204,7 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
                 </View>
               </View>
             </Pressable>
-          )}
+          )} */}
 
           {Platform.OS === 'android' && showPicker && (
             <TouchableOpacity onPress={() => setTime(new Date())}>
