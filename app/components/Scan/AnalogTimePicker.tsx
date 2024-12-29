@@ -5,11 +5,9 @@ import Svg, { Circle, Line, Text as SvgText } from 'react-native-svg'; // Text a
 const AnalogTimePicker = () => {
   const [time, setTime] = useState(new Date());
 
-  const get12HourFormat = (date: Date) =>
-    date.getHours() % 12 || 12;
+  const get12HourFormat = (date: Date) => date.getHours() % 12 || 12;
 
-  const getAmPm = (date: Date) =>
-    date.getHours() >= 12 ? 'PM' : 'AM';
+  const getAmPm = (date: Date) => (date.getHours() >= 12 ? 'PM' : 'AM');
 
   const handleTimeSelect = (hour: number, minute: number) => {
     const selectedTime = new Date();
@@ -25,16 +23,8 @@ const AnalogTimePicker = () => {
           value={get12HourFormat(time)}
           color="#8C46A9"
         />
-        <TimeDisplay
-          label="Min"
-          value={time.getMinutes()}
-          color="#8C46A9"
-        />
-        <TimeDisplay
-          label={getAmPm(time)}
-          value={getAmPm(time)}
-          color="#8C46A9"
-        />
+        <TimeDisplay label="Min" value={time.getMinutes()} color="#8C46A9" />
+        <TimeDisplay label={getAmPm(time)} value={getAmPm(time)} color="#8C46A9" />
       </View>
       <AnalogClock
         onTimeSelect={handleTimeSelect}
@@ -70,15 +60,39 @@ const AnalogClock = ({
   const [selectedHour, setSelectedHour] = useState(
     initialTime.getHours() % 12 || 12
   );
-  const [selectedMinute, setSelectedMinute] = useState(
-    initialTime.getMinutes()
-  );
+  const [selectedMinute, setSelectedMinute] = useState(initialTime.getMinutes());
 
   const handleClockPress = (hour: number, minute: number) => {
     setSelectedHour(hour);
     setSelectedMinute(minute);
     onTimeSelect(hour, minute);
   };
+
+  const createInteractiveCircles = (
+    count: number,
+    radius: number,
+    isHour: boolean
+  ) =>
+    [...Array(count)].map((_, index) => {
+      const angle = (index * 2 * Math.PI) / count;
+      const x = 150 + radius * Math.sin(angle);
+      const y = 150 - radius * Math.cos(angle);
+      const value = isHour ? (index === 0 ? 12 : index) : index;
+      return (
+        <Circle
+          key={index}
+          cx={x}
+          cy={y}
+          r="10"
+          fill="transparent"
+          onPressIn={() =>
+            isHour
+              ? handleClockPress(value, selectedMinute)
+              : handleClockPress(selectedHour, value)
+          }
+        />
+      );
+    });
 
   return (
     <Svg width="300" height="300" viewBox="0 0 300 300">
@@ -118,21 +132,10 @@ const AnalogClock = ({
         stroke="#8C46A9"
         strokeWidth="2"
       />
-      {/* Interactable regions for hour and minute selection */}
-      {[...Array(12)].map((_, index) => {
-        const angle = (index * Math.PI) / 6;
-        const hour = index === 0 ? 12 : index;
-        return (
-          <Circle
-            key={index}
-            cx={150 + 120 * Math.sin(angle)}
-            cy={150 - 120 * Math.cos(angle)}
-            r="15"
-            fill="transparent"
-            onPressIn={() => handleClockPress(hour, selectedMinute)}
-          />
-        );
-      })}
+      {/* Interactable regions for hour selection */}
+      {createInteractiveCircles(12, 120, true)}
+      {/* Interactable regions for minute selection */}
+      {createInteractiveCircles(60, 100, false)}
     </Svg>
   );
 };
