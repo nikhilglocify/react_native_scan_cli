@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Svg, { Circle, Line, Text as SvgText } from 'react-native-svg'; // Text as SvgText for SVG
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, PanResponder } from 'react-native';
+import Svg, { Circle, Line, Text as SvgText } from 'react-native-svg';
 
 const AnalogTimePicker = () => {
   const [time, setTime] = useState(new Date());
-
-  const get12HourFormat = (date: Date) => date.getHours() % 12 || 12;
-
-  const getAmPm = (date: Date) => (date.getHours() >= 12 ? 'PM' : 'AM');
 
   const handleTimeSelect = (hour: number, minute: number) => {
     const selectedTime = new Date();
@@ -15,20 +11,34 @@ const AnalogTimePicker = () => {
     setTime(selectedTime);
   };
 
+  const get12HourFormat = (date: Date) => date.getHours() % 12 || 12;
+  const getAmPm = (date: Date) => (date.getHours() >= 12 ? 'PM' : 'AM');
+
   return (
     <View style={styles.container}>
+      {/* Time Display */}
       <View style={styles.timeDisplayContainer}>
         <TimeDisplay
           label="Hour"
           value={get12HourFormat(time)}
           color="#8C46A9"
         />
-        <TimeDisplay label="Min" value={time.getMinutes()} color="#8C46A9" />
-        <TimeDisplay label={getAmPm(time)} value={getAmPm(time)} color="#8C46A9" />
+        <TimeDisplay
+          label="Min"
+          value={time.getMinutes()}
+          color="#8C46A9"
+        />
+        <TimeDisplay
+          label={getAmPm(time)}
+          value={getAmPm(time)}
+          color="#8C46A9"
+        />
       </View>
+
+      {/* Analog Clock */}
       <AnalogClock
-        onTimeSelect={handleTimeSelect}
         initialTime={time}
+        onTimeSelect={handleTimeSelect}
       />
     </View>
   );
@@ -51,92 +61,93 @@ const TimeDisplay = ({
 );
 
 const AnalogClock = ({
-  onTimeSelect,
   initialTime,
+  onTimeSelect,
 }: {
-  onTimeSelect: (hour: number, minute: number) => void;
   initialTime: Date;
+  onTimeSelect: (hour: number, minute: number) => void;
 }) => {
   const [selectedHour, setSelectedHour] = useState(
     initialTime.getHours() % 12 || 12
   );
   const [selectedMinute, setSelectedMinute] = useState(initialTime.getMinutes());
+  const center = { x: 150, y: 150 }; // Center of the clock
 
-  const handleClockPress = (hour: number, minute: number) => {
-    setSelectedHour(hour);
-    setSelectedMinute(minute);
-    onTimeSelect(hour, minute);
-  };
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: (_, gestureState) => {
+        const { dx, dy } = gestureState;
 
-  const createInteractiveCircles = (
-    count: number,
-    radius: number,
-    isHour: boolean
-  ) =>
-    [...Array(count)].map((_, index) => {
-      const angle = (index * 2 * Math.PI) / count;
-      const x = 150 + radius * Math.sin(angle);
-      const y = 150 - radius * Math.cos(angle);
-      const value = isHour ? (index === 0 ? 12 : index) : index;
-      return (
-        <Circle
-          key={index}
-          cx={x}
-          cy={y}
-          r="10"
-          fill="transparent"
-          onPressIn={() =>
-            isHour
-              ? handleClockPress(value, selectedMinute)
-              : handleClockPress(selectedHour, value)
-          }
-        />
-      );
-    });
+        // Calculate the angle and convert to time
+        const angle = Math.atan2(dy, dx);
+        const degree = (angle * 180) / Math.PI + 90; // Convert to degrees
+        const adjustedDegree = degree < 0 ? degree + 360 : degree;
+
+        if (gestureState.dx ** 2 + gestureState.dy ** 2 > 6400) {
+          // Adjust for hour (shorter radius detection)
+          const hour = Math.round((adjustedDegree / 360) * 12) % 12 || 12;
+          setSelectedHour(hour);
+          onTimeSelect(hour, selectedMinute);
+        } else {
+          // Adjust for minute (larger radius detection)
+          const minute = Math.round((adjustedDegree / 360) * 60) % 60;
+          setSelectedMinute(minute);
+          onTimeSelect(selectedHour, minute);
+        }
+      },
+    })
+  ).current;
 
   return (
-    <Svg width="300" height="300" viewBox="0 0 300 300">
-      <Circle cx="150" cy="150" r="140" stroke="#8C46A9" strokeWidth="2" fill="none" />
-      {/* Clock numbers */}
-      {[...Array(12)].map((_, index) => {
-        const angle = (index * Math.PI) / 6;
-        const x = 150 + 120 * Math.sin(angle);
-        const y = 150 - 120 * Math.cos(angle);
-        return (
-          <SvgText
-            key={index}
-            x={x}
-            y={y}
-            fontSize="14"
-            textAnchor="middle"
-            fill="#8C46A9"
-          >
-            {index === 0 ? 12 : index}
-          </SvgText>
-        );
-      })}
-      {/* Clock hands */}
-      <Line
-        x1="150"
-        y1="150"
-        x2={150 + 80 * Math.sin((selectedHour * Math.PI) / 6)}
-        y2={150 - 80 * Math.cos((selectedHour * Math.PI) / 6)}
-        stroke="#8C46A9"
-        strokeWidth="3"
-      />
-      <Line
-        x1="150"
-        y1="150"
-        x2={150 + 100 * Math.sin((selectedMinute * Math.PI) / 30)}
-        y2={150 - 100 * Math.cos((selectedMinute * Math.PI) / 30)}
-        stroke="#8C46A9"
-        strokeWidth="2"
-      />
-      {/* Interactable regions for hour selection */}
-      {createInteractiveCircles(12, 120, true)}
-      {/* Interactable regions for minute selection */}
-      {createInteractiveCircles(60, 100, false)}
-    </Svg>
+    <View {...panResponder.panHandlers}>
+      <Svg width="300" height="300" viewBox="0 0 300 300">
+        <Circle
+          cx="150"
+          cy="150"
+          r="140"
+          stroke="#8C46A9"
+          strokeWidth="2"
+          fill="none"
+        />
+        {/* Clock numbers */}
+        {[...Array(12)].map((_, index) => {
+          const angle = (index * Math.PI) / 6;
+          const x = 150 + 120 * Math.sin(angle);
+          const y = 150 - 120 * Math.cos(angle);
+          return (
+            <SvgText
+              key={index}
+              x={x}
+              y={y}
+              fontSize="14"
+              textAnchor="middle"
+              fill="#8C46A9"
+            >
+              {index === 0 ? 12 : index}
+            </SvgText>
+          );
+        })}
+        {/* Clock hands */}
+        <Line
+          x1="150"
+          y1="150"
+          x2={150 + 80 * Math.sin((selectedHour * Math.PI) / 6)}
+          y2={150 - 80 * Math.cos((selectedHour * Math.PI) / 6)}
+          stroke="#8C46A9"
+          strokeWidth="3"
+        />
+        <Line
+          x1="150"
+          y1="150"
+          x2={150 + 100 * Math.sin((selectedMinute * Math.PI) / 30)}
+          y2={150 - 100 * Math.cos((selectedMinute * Math.PI) / 30)}
+          stroke="#8C46A9"
+          strokeWidth="2"
+        />
+      </Svg>
+    </View>
   );
 };
 
@@ -148,6 +159,8 @@ const styles = StyleSheet.create({
   },
   timeDisplayContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 20,
   },
   timeDisplay: {
