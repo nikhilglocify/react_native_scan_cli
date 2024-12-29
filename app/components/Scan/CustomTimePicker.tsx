@@ -103,7 +103,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
         <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[84px] max-h-[84px] text-center mx-auto">
           {renderScrollOptions(
             minutes,
-            time.getMinutes(),
+            Number(time.getMinutes()),
             handleMinuteChange
           )}
           <View className="border-b-[1.5px] border-solid border-[#8C46A9]/15"></View>

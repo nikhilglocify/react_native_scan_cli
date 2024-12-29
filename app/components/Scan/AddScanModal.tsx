@@ -30,6 +30,7 @@ import notifee, { AndroidStyle, EventType, RepeatFrequency, TimestampTrigger, Tr
 import { generateNotificationId } from '../../helpers';
 import { fontFamily } from '../../constants/theme';
 import CustomTimePicker from './CustomTimePicker';
+import AnalogTimePicker from './AnalogTimePicker';
 
 const AddScanModal = ({
   visible,
@@ -171,7 +172,8 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
           <Text style={styles.title} >Select Time</Text>
-    <CustomTimePicker onTimeChange={onChangeTimeNew}/>
+    {/* <CustomTimePicker onTimeChange={onChangeTimeNew}/> */}
+    <AnalogTimePicker/>
           {/* {Platform.OS == 'android' && (
             <Pressable onPress={() => setShowPicker(true)}>
               <View className="flex items-center gap-3 justify-center flex-row">
@@ -333,7 +335,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: 350,
-    height: 410,
+    height: 810,
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 20,
