@@ -27,8 +27,10 @@ import {createNotificationChannel} from '../../services/PushNotificationConfig';
 // import { Notifications } from 'react-native-notifications';
 import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
+import Loader from '../../components/ui/Loader';
 export default function HomeScreen({navigation}: any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
+  const [loading,setLoading]=useState(true)
   const {
     scans,
     removeScan,
@@ -46,6 +48,9 @@ export default function HomeScreen({navigation}: any) {
 
   useEffect(() => {
     createNotificationChannel();
+    setTimeout(()=>{
+      setLoading(false)
+    },1200)
   }, []);
   useEffect(() => {
     async function createChannel() {
@@ -135,6 +140,10 @@ export default function HomeScreen({navigation}: any) {
     };
   }, []);
 
+
+  if(loading){
+    return <Loader/>
+  }
   return (
     <>
       <View className="flex-1 h-screen mt-[80px]">

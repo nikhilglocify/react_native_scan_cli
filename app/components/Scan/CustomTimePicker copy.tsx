@@ -104,7 +104,7 @@ const handleScrollEnd = (event: any) => {
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
-        snapToInterval={itemHeight} // Ensures smooth snapping to each item
+        // snapToInterval={itemHeight} // Ensures smooth snapping to each item
         decelerationRate="fast"
         contentContainerStyle={styles.scrollViewContent}
         onMomentumScrollEnd={handleScrollEnd}

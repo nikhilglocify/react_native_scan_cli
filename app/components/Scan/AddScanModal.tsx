@@ -52,7 +52,7 @@ const AddScanModal = ({
 
   const onChangeTimeNew = ( selectedTime?: Date) => {
     setShowPicker(false);
-    console.log("Time selected",selectedTime?.toLocaleTimeString())
+    console.log("Time selected new ",selectedTime?.toLocaleTimeString())
     if (selectedTime) setTime(selectedTime);
   };
   
@@ -208,7 +208,7 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
             </Pressable>
           )} */}
 
-          {Platform.OS === 'android' && showPicker && (
+          {/* {Platform.OS === 'android' && showPicker && (
             <TouchableOpacity onPress={() => setTime(new Date())}>
               <DateTimePicker
                 value={time?time:new Date()}
@@ -235,7 +235,7 @@ const scheduleNotifeeNotification = async (data: any, date: Date) => {
                 onChange={onChangeTime}
               />
             </View>
-          )}
+          )} */}
 
           
           <View className="mt-[36px] mb-[36px] flex flex-row items-center gap-2">
