@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { get12HourFormat, getAmPm } from '../../helpers/dateUtils';
-import { fontFamily } from '../../constants/theme';
+import React, {useState} from 'react';
+import {View, Text, Pressable, StyleSheet} from 'react-native';
+import {get12HourFormat, getAmPm} from '../../helpers/dateUtils';
+import {fontFamily} from '../../constants/theme';
 
 type CustomTimePickerProps = {
   onTimeChange?: (time: Date) => void;
 };
 
-const CustomTimePicker: React.FC<CustomTimePickerProps> = ({ onTimeChange }) => {
+const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
   const [time, setTime] = useState<Date>(new Date());
 
   const handleHourChange = (increment: boolean) => {
@@ -29,7 +29,9 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({ onTimeChange }) => 
   const handleAmPmToggle = () => {
     const updatedTime = new Date(time);
     const currentHours = updatedTime.getHours();
-    updatedTime.setHours(currentHours >= 12 ? currentHours - 12 : currentHours + 12);
+    updatedTime.setHours(
+      currentHours >= 12 ? currentHours - 12 : currentHours + 12,
+    );
     setTime(updatedTime);
     if (onTimeChange) onTimeChange(updatedTime);
   };
@@ -38,23 +40,25 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({ onTimeChange }) => 
     <Pressable>
       <View className="flex items-center gap-3 justify-center flex-row">
         {/* Hour Picker */}
-        <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[120px] max-h-[120px] text-center mx-auto">
+        <View className="bg-[#8C46A9]/15 pb-1 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[120px] max-h-[120px] text-center mx-auto">
           <Pressable onPress={() => handleHourChange(true)}>
-            <Text className="text-lg text-[#8C46A9] text-center font-bold">▲</Text>
+            <Text className="text-lg text-[#8C46A9] text-center font-bold">
+              ▲
+            </Text>
           </Pressable>
           <Text
-            className="text-3xl text-[#535353] font-semibold leading-[48px] text-center"
-            style={{ fontFamily: fontFamily.nunitoBold }}
-          >
+            className="text-3xl text-[#535353] pt-[6px] font-semibold leading-[36px] text-center"
+            style={{fontFamily: fontFamily.nunitoBold}}>
             {get12HourFormat(time)}
           </Text>
           <Pressable onPress={() => handleHourChange(false)}>
-            <Text className="text-lg text-[#8C46A9] text-center font-bold">▼</Text>
+            <Text className="text-lg text-[#8C46A9] text-center font-bold">
+              ▼
+            </Text>
           </Pressable>
           <Text
             className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5"
-            style={{ fontFamily: fontFamily.nunitoBold }}
-          >
+            style={{fontFamily: fontFamily.nunitoBold}}>
             Hour
           </Text>
         </View>
@@ -62,39 +66,40 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({ onTimeChange }) => 
         {/* Minute Picker */}
         <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[120px] max-h-[120px] text-center mx-auto">
           <Pressable onPress={() => handleMinuteChange(true)}>
-            <Text className="text-lg text-[#8C46A9] text-center font-bold">▲</Text>
+            <Text className="text-lg text-[#8C46A9] text-center font-bold">
+              ▲
+            </Text>
           </Pressable>
           <Text
-            className="text-3xl text-[#535353] font-semibold leading-[48px] text-center"
-            style={{ fontFamily: fontFamily.nunitoBold }}
-          >
+            className="text-3xl text-[#535353] pt-[6px] font-semibold leading-[36px] text-center"
+            style={{fontFamily: fontFamily.nunitoBold}}>
             {String(time.getMinutes()).padStart(2, '0')}
           </Text>
           <Pressable onPress={() => handleMinuteChange(false)}>
-            <Text className="text-lg text-[#8C46A9] text-center font-bold">▼</Text>
+            <Text className="text-lg text-[#8C46A9] text-center font-bold">
+              ▼
+            </Text>
           </Pressable>
           <Text
             className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5"
-            style={{ fontFamily: fontFamily.nunitoBold }}
-          >
+            style={{fontFamily: fontFamily.nunitoBold}}>
             Min
           </Text>
         </View>
 
         {/* AM/PM Toggle */}
-        <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[120px] max-h-[120px] text-center mx-auto">
+        <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 pt-6 rounded-lg min-w-[63px] min-h-[120px] max-h-[120px] text-center mx-auto">
+          
           <Pressable onPress={handleAmPmToggle}>
             <Text
               className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center"
-              style={{ fontFamily: fontFamily.nunitoBold }}
-            >
+              style={{fontFamily: fontFamily.nunitoBold}}>
               {getAmPm(time)}
             </Text>
           </Pressable>
           <Text
-            className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5"
-            style={{ fontFamily: fontFamily.nunitoBold }}
-          >
+            className="text-[18px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5"
+            style={{fontFamily: fontFamily.nunitoBold}}>
             {getAmPm(time) === 'AM' ? 'PM' : 'AM'}
           </Text>
         </View>
