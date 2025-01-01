@@ -40,7 +40,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
     <Pressable>
       <View className="flex items-center gap-3 justify-center flex-row">
         {/* Hour Picker */}
-        <View className="bg-[#8C46A9]/15 pb-1 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[125px] max-h-[125px] text-center mx-auto">
+        <View className="bg-[#8C46A9]/15 flex items-center justify-center border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[125px] max-h-[125px] text-center mx-auto">
           <Pressable onPress={() => handleHourChange(true)}>
             <Text className="text-lg text-[#8C46A9] text-center font-bold">
               ▲
@@ -64,7 +64,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
         </View>
 
         {/* Minute Picker */}
-        <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[125px] max-h-[125px] text-center mx-auto">
+        <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[125px] max-h-[125px] flex items-center justify-center text-center mx-auto">
           <Pressable onPress={() => handleMinuteChange(true)}>
             <Text className="text-lg text-[#8C46A9] text-center font-bold">
               ▲
@@ -88,7 +88,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
         </View>
 
         {/* AM/PM Toggle */}
-        <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 pt-6 rounded-lg min-w-[63px] min-h-[125px] max-h-[125px] text-center mx-auto">
+        <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 flex items-center justify-center rounded-lg min-w-[63px] min-h-[125px] max-h-[125px] text-center mx-auto">
           
           <Pressable onPress={handleAmPmToggle}>
             <Text
