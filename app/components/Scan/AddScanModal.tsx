@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: 350,
-    height: 410,
+    height: 430,
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 20,

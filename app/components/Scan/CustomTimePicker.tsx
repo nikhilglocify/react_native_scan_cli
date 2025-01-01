@@ -40,77 +40,94 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
     <Pressable>
       <View className="flex items-center gap-3 justify-center flex-row">
         {/* Hour Picker */}
-        <View className="bg-[#8C46A9]/15 flex items-center justify-center border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[125px] max-h-[125px] text-center mx-auto">
-          <Pressable onPress={() => handleHourChange(true)}>
+        <View className="flex items-center justify-center border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[70px] text-center">
+          <Pressable
+            className="pt-1 pb-2"
+            onPress={() => handleHourChange(true)}>
             <Text className="text-lg text-[#8C46A9] text-center font-bold">
               ▲
             </Text>
           </Pressable>
-          <Text
-            className="text-3xl text-[#535353] pt-[8px] font-semibold text-center"
-            style={{fontFamily: fontFamily.nunitoBold}}>
-            {get12HourFormat(time)}
-          </Text>
-          <Pressable onPress={() => handleHourChange(false)}>
+          <View className="bg-[#8C46A9]/15 flex items-center justify-center py-1  border-solid w-full text-center">
+            <Text
+              className="text-3xl text-[#8C46A9]  py-[6px] w-full mb-1 font-semibold text-center border-solid border-[#8C46A9]/15 border-b"
+              style={{fontFamily: fontFamily.nunitoBold}}>
+              {get12HourFormat(time)}
+            </Text>
+
+            <Text
+              className="text-[12px] text-[#535353] leading-[16px] text-center pb-2"
+              style={{fontFamily: fontFamily.nunitoBold}}>
+              Hour
+            </Text>
+          </View>
+          <Pressable
+            className="pt-2 pb-1"
+            onPress={() => handleHourChange(false)}>
             <Text className="text-lg text-[#8C46A9] text-center font-bold">
               ▼
             </Text>
           </Pressable>
-          <Text
-            className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5"
-            style={{fontFamily: fontFamily.nunitoBold}}>
-            Hour
-          </Text>
         </View>
 
         {/* Minute Picker */}
-        <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[125px] max-h-[125px] flex items-center justify-center text-center mx-auto">
-          <Pressable onPress={() => handleMinuteChange(true)}>
+        <View className="flex items-center justify-center border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[70px] text-center">
+          <Pressable
+            className="pt-1 pb-2"
+            onPress={() => handleMinuteChange(true)}>
             <Text className="text-lg text-[#8C46A9] text-center font-bold">
               ▲
             </Text>
           </Pressable>
-          <Text
-            className="text-3xl text-[#535353] pt-[8px] font-semibold  text-center"
-            style={{fontFamily: fontFamily.nunitoBold}}>
-            {String(time.getMinutes()).padStart(2, '0')}
-          </Text>
-          <Pressable onPress={() => handleMinuteChange(false)}>
+          <View className="bg-[#8C46A9]/15 flex items-center justify-center py-1  border-solid w-full text-center">
+            <Text
+              className="text-3xl text-[#8C46A9]  py-[6px] w-full mb-1 font-semibold text-center border-solid border-[#8C46A9]/15 border-b"
+              style={{fontFamily: fontFamily.nunitoBold}}>
+              {String(time.getMinutes()).padStart(2, '0')}
+            </Text>
+
+            <Text
+              className="text-[12px] text-[#535353] leading-[16px] text-center pb-2"
+              style={{fontFamily: fontFamily.nunitoBold}}>
+              Min
+            </Text>
+          </View>
+          <Pressable
+            className="pt-2 pb-1"
+            onPress={() => handleMinuteChange(false)}>
             <Text className="text-lg text-[#8C46A9] text-center font-bold">
               ▼
             </Text>
           </Pressable>
-          <Text
-            className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5"
-            style={{fontFamily: fontFamily.nunitoBold}}>
-            Min
-          </Text>
         </View>
 
         {/* AM/PM Toggle */}
-        <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[125px] max-h-[125px] flex items-center justify-center text-center mx-auto">
-        <Pressable onPress={handleAmPmToggle}>
+        <View className="flex items-center justify-center border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[70px] text-center">
+          <Pressable  className="pt-1 pb-2" onPress={handleAmPmToggle}>
             <Text className="text-lg text-[#8C46A9] text-center font-bold">
               ▲
             </Text>
           </Pressable>
-          <Pressable onPress={handleAmPmToggle}>
+          <View className="bg-[#8C46A9]/15 flex items-center justify-center py-1  border-solid w-full text-center">
+            <Pressable onPress={handleAmPmToggle}>
+              <Text
+               className="text-3xl text-[#8C46A9]  py-[6px] w-full mb-1 font-semibold text-center border-solid border-[#8C46A9]/15 border-b"
+                style={{fontFamily: fontFamily.nunitoBold}}>
+                {getAmPm(time)}
+              </Text>
+            </Pressable>
+
             <Text
-              className="text-3xl font-bold text-[#8C46A9] pt-[8px] text-center"
+              className="text-[12px] text-[#535353] leading-[16px] text-center pb-2"
               style={{fontFamily: fontFamily.nunitoBold}}>
-              {getAmPm(time)}
+              {getAmPm(time) === 'AM' ? 'PM' : 'AM'}
             </Text>
-          </Pressable>
-          <Pressable onPress={handleAmPmToggle}>
+          </View>
+          <Pressable  className="pt-2 pb-1" onPress={handleAmPmToggle}>
             <Text className="text-lg text-[#8C46A9] text-center font-bold">
               ▼
             </Text>
           </Pressable>
-          <Text
-             className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5"
-            style={{fontFamily: fontFamily.nunitoBold}}>
-            {getAmPm(time) === 'AM' ? 'PM' : 'AM'}
-          </Text>
         </View>
       </View>
     </Pressable>
