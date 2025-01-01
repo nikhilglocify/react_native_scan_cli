@@ -88,17 +88,26 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
         </View>
 
         {/* AM/PM Toggle */}
-        <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 flex items-center justify-center rounded-lg min-w-[63px] min-h-[125px] max-h-[125px] text-center mx-auto">
-          
+        <View className="bg-[#8C46A9]/15 border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[63px] min-h-[125px] max-h-[125px] flex items-center justify-center text-center mx-auto">
+        <Pressable onPress={handleAmPmToggle}>
+            <Text className="text-lg text-[#8C46A9] text-center font-bold">
+              ▲
+            </Text>
+          </Pressable>
           <Pressable onPress={handleAmPmToggle}>
             <Text
-              className="text-3xl font-bold text-[#8C46A9] leading-[48px] text-center"
+              className="text-3xl font-bold text-[#8C46A9] pt-[8px] text-center"
               style={{fontFamily: fontFamily.nunitoBold}}>
               {getAmPm(time)}
             </Text>
           </Pressable>
+          <Pressable onPress={handleAmPmToggle}>
+            <Text className="text-lg text-[#8C46A9] text-center font-bold">
+              ▼
+            </Text>
+          </Pressable>
           <Text
-            className="text-[18px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5"
+             className="text-[15px] text-[#535353] font-semibold leading-[16.5px] text-center py-1.5"
             style={{fontFamily: fontFamily.nunitoBold}}>
             {getAmPm(time) === 'AM' ? 'PM' : 'AM'}
           </Text>
