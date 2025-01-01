@@ -81,10 +81,7 @@ export default function HomeScreen({navigation}: any) {
               // Handle "Open Now" action
               navigation.navigate('RunScan', detail.notification?.data);
               // Alert.alert('Scan Opened', 'You have accepted the scan request.');
-            } else if (actionId === 'ignore') {
-              // Handle "Ignore" action
-              // Alert.alert('Scan Ignored', 'You have ignored the scan request.');
-            }
+            } 
           }, 1000);
         }
 
@@ -94,11 +91,13 @@ export default function HomeScreen({navigation}: any) {
           // Check which action was pressed (Open Now or Ignore)
           const actionId = detail?.pressAction?.id;
           console.log("actionId",actionId)
-          if (actionId === 'open_now' ||actionId == 'default') {
-            
-            navigation.navigate('RunScan', detail.notification?.data);
-           
-          } 
+          setTimeout(() => {
+            if (actionId === 'open_now' ||actionId == 'default') {
+              // Handle "Open Now" action
+              navigation.navigate('RunScan', detail.notification?.data);
+              // Alert.alert('Scan Opened', 'You have accepted the scan request.');
+            } 
+          }, 1000);
         }
       },
     );
@@ -127,10 +126,13 @@ export default function HomeScreen({navigation}: any) {
         // Check which action was pressed (Open Now or Ignore)
         const actionId = detail?.pressAction?.id;
         
-        if (actionId === 'open_now' ||actionId == 'default') {
-          // Handle "Open Now" action
-          navigation.navigate('RunScan', detail.notification?.data);
-        } 
+        setTimeout(() => {
+          if (actionId === 'open_now' ||actionId == 'default') {
+            // Handle "Open Now" action
+            navigation.navigate('RunScan', detail.notification?.data);
+            // Alert.alert('Scan Opened', 'You have accepted the scan request.');
+          } 
+        }, 1000);
       }
     });
 

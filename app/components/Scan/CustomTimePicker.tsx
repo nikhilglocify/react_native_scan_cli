@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {View, Text, Pressable, StyleSheet} from 'react-native';
 import {get12HourFormat, getAmPm} from '../../helpers/dateUtils';
 import {fontFamily} from '../../constants/theme';
@@ -9,21 +9,38 @@ type CustomTimePickerProps = {
 
 const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
   const [time, setTime] = useState<Date>(new Date());
+  const timeRef = useRef<Date>(time); // Re
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleHourChange = (increment: boolean) => {
-    const updatedTime = new Date(time);
-    const currentHour = updatedTime.getHours();
-    updatedTime.setHours((currentHour + (increment ? 1 : -1) + 24) % 24); // Ensures hour stays within 0-23
+  const handlePressIn = (changeFunction: () => void) => {
+    changeFunction(); // Execute immediately
+    intervalRef.current = setInterval(changeFunction, 200); // Repeat every 200ms
+  };
+
+  const handlePressOut = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+  const updateTime = (updatedTime: Date) => {
+    timeRef.current = updatedTime;
     setTime(updatedTime);
     if (onTimeChange) onTimeChange(updatedTime);
   };
 
+  const handleHourChange = (increment: boolean) => {
+    const updatedTime = new Date(timeRef.current);
+    const currentHour = updatedTime.getHours();
+    updatedTime.setHours((currentHour + (increment ? 1 : -1) + 24) % 24);
+    updateTime(updatedTime);
+  };
+
   const handleMinuteChange = (increment: boolean) => {
-    const updatedTime = new Date(time);
+    const updatedTime = new Date(timeRef.current);
     const currentMinute = updatedTime.getMinutes();
-    updatedTime.setMinutes((currentMinute + (increment ? 1 : -1) + 60) % 60); // Ensures minutes stay within 0-59
-    setTime(updatedTime);
-    if (onTimeChange) onTimeChange(updatedTime);
+    updatedTime.setMinutes((currentMinute + (increment ? 1 : -1) + 60) % 60);
+    updateTime(updatedTime);
   };
 
   const handleAmPmToggle = () => {
@@ -43,7 +60,10 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
         <View className="flex items-center justify-center border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[70px] text-center">
           <Pressable
             className="pt-1 pb-2"
-            onPress={() => handleHourChange(true)}>
+            
+            onPressIn={() => handlePressIn(() => handleHourChange(true))}
+            onPressOut={handlePressOut}
+            >
             <Text className="text-lg  text-center font-bold">
               ▲
             </Text>
@@ -63,7 +83,10 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
           </View>
           <Pressable
             className="pt-2 pb-1"
-            onPress={() => handleHourChange(false)}>
+            onPressIn={() => handlePressIn(() => handleHourChange(false))}
+            onPressOut={handlePressOut}
+            
+            >
             <Text className="text-lg  text-center font-bold">
               ▼
             </Text>
@@ -74,7 +97,9 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
         <View className="flex items-center justify-center border-[1.5px] border-solid border-[#8C46A9]/15 rounded-lg min-w-[70px] text-center">
           <Pressable
             className="pt-1 pb-2"
-            onPress={() => handleMinuteChange(true)}>
+            onPressIn={() => handlePressIn(() => handleMinuteChange(true))}
+            onPressOut={handlePressOut}
+            >
             <Text className="text-lg  text-center font-bold">
               ▲
             </Text>
@@ -94,7 +119,9 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
           </View>
           <Pressable
             className="pt-2 pb-1"
-            onPress={() => handleMinuteChange(false)}>
+            onPressIn={() => handlePressIn(() => handleMinuteChange(false))}
+            onPressOut={handlePressOut}
+            >
             <Text className="text-lg  text-center font-bold">
               ▼
             </Text>

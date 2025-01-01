@@ -52,7 +52,7 @@ const AddScanModal = ({
 
   const onChangeTimeNew = ( selectedTime?: Date) => {
     setShowPicker(false);
-    console.log("Time selected new ",selectedTime?.toLocaleTimeString())
+    // console.log("Time selected new ",selectedTime?.toLocaleTimeString())
     if (selectedTime) setTime(selectedTime);
   };
   

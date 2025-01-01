@@ -77,9 +77,11 @@ const RunScan = ({navigation, route}: any) => {
 
   useEffect(() => {
     if (initNewScan && isFocused) {
+
       setTimeout(() => {
         runScan(selectedUrls);
         setIsInitialized(true);
+        console.log("initialezed timeout")
       }, 1450);
     }
   }, [initNewScan, checkForScan]);
