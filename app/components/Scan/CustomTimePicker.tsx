@@ -9,13 +9,13 @@ type CustomTimePickerProps = {
 
 const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
   const [time, setTime] = useState<Date>(new Date());
-  const timeRef = useRef<Date>(time); // Re
+  const timeRef = useRef<Date>(time); 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const handlePressIn = (changeFunction: () => void) => {
-    if (intervalRef.current) return; // Prevent multiple intervals
-    changeFunction(); // Execute immediately
-    intervalRef.current = setInterval(changeFunction, 200); // Repeat every 200ms
+    if (intervalRef.current) return; 
+    changeFunction(); 
+    intervalRef.current = setInterval(changeFunction, 200); 
   };
 
   const handlePressOut = () => {
