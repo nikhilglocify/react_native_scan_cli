@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  ImageBackground,
 } from 'react-native';
 
 import notifee, {
@@ -28,6 +29,7 @@ import {createNotificationChannel} from '../../services/PushNotificationConfig';
 import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
 import Loader from '../../components/ui/Loader';
+import { Colors } from '../../constants/Colors';
 export default function HomeScreen({navigation}: any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
   const [loading,setLoading]=useState(true)
@@ -148,7 +150,13 @@ export default function HomeScreen({navigation}: any) {
   }
   return (
     <>
-      <View className="flex-1 h-screen mt-[80px]">
+    <ImageBackground 
+    source={require("../../assets/images/App-bg.png")} style={{  flex:1 }}
+    >
+ <Image source={require("../../assets/images/app_logo.png")} style={{width:"100%", height:50 ,backgroundColor:Colors["light"].themeOrange, padding:10}} resizeMode="contain" />
+   
+      <View className="flex-1 h-screen mt-[20px]">
+       
         <View className="px-4">
           <View className="flex flex-row items-center justify-between mb-9">
             <Text
@@ -156,6 +164,9 @@ export default function HomeScreen({navigation}: any) {
               style={{fontFamily: fontFamily.nunitoSemiBold}}>
               Scheduled Scans
             </Text>
+            
+
+            
 
             <Pressable
               onPress={() => {
@@ -205,7 +216,7 @@ export default function HomeScreen({navigation}: any) {
             No Scheduled Scans Found...
           </Text>
         )}
-        <View className="absolute bottom-[2px] right-[24px]">
+        <View className="absolute bottom-[2px] mx-auto text-center">
           <Pressable onPress={() => setVisibleScanModal(true)}>
             <AddScanIcon />
           </Pressable>
@@ -215,6 +226,7 @@ export default function HomeScreen({navigation}: any) {
           onClose={() => setVisibleScanModal(false)}
         />
       </View>
+      </ImageBackground>
     </>
   );
 }

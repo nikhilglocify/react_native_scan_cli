@@ -17,7 +17,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import RunScan from './app/components/Scan/RunScan';
 import TabHistoryIcon from './app/components/ui/svgIcons/TabHistoryIcon';
 import {Colors} from './app/constants/Colors';
-import {Alert, useColorScheme} from 'react-native';
+import {Alert, ImageBackground, StyleSheet, useColorScheme} from 'react-native';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import notifee, {AuthorizationStatus} from '@notifee/react-native';
 // Define the types for the navigation
@@ -41,8 +41,8 @@ const TabNavigator: React.FC = () => {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].white,
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].lightBlue,
+        tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].lightGray,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].white,
         headerShown: false,
 
         tabBarLabelStyle: {
@@ -51,7 +51,8 @@ const TabNavigator: React.FC = () => {
           fontFamily: fontFamily.nunitoSemiBold,
         },
         tabBarStyle: {
-          backgroundColor: '#8C46A9',
+          // backgroundColor: '#8C46A9',
+          backgroundColor: Colors["light"].themeOrange,
           height: 70, // Set background color for other platforms
           paddingBottom: 20, // Adjust padding to avoid overlapping with the tab bar
         },
@@ -61,7 +62,7 @@ const TabNavigator: React.FC = () => {
         component={Home}
         options={{
           headerShown: false,
-          tabBarIcon: ({color, size}) => <TabHistoryIcon />,
+          tabBarIcon: ({color, size}) => <MaterialIcons name='home' />,
         }}
       />
       <Tab.Screen
@@ -88,6 +89,7 @@ import {PermissionsAndroid, Platform} from 'react-native';
 import {Linking} from 'react-native';
 import {navigationRef} from './app/navigation/NavigationRef';
 import {fontFamily} from './app/constants/theme';
+import { MaterialIcons } from './app/components/ui/TabIcons';
 
 export const checkPostNotificationPermission = async () => {
   if (Platform.OS === 'android' && Platform.Version >= 33) {
@@ -153,7 +155,7 @@ async function requestUserPermission() {
   }
 }
 async function registerNotificationCategories() {
-  console.log("Settingios categories")
+  console.log('Settingios categories');
   await notifee.setNotificationCategories([
     {
       id: 'scan_actions', // This must match the `categoryId` in the notification
@@ -174,15 +176,13 @@ async function registerNotificationCategories() {
   ]);
 }
 
-
-
 const App: React.FC = () => {
   useEffect(() => {
     // checkPostNotificationPermission();
     requestUserPermission();
     checkInitalNotification();
 
-    if(Platform.OS=="ios"){
+    if (Platform.OS == 'ios') {
       registerNotificationCategories();
     }
   }, []);
@@ -194,7 +194,6 @@ const App: React.FC = () => {
 
     setTimeout(() => {
       if (actionId == 'open_now' || actionId == 'default') {
-        
         if (!navigationRef || !navigationRef.isReady()) {
           console.log(
             'Navigation not initialized. Storing pending navigation.',
@@ -214,7 +213,7 @@ const App: React.FC = () => {
             initialNotification?.notification.data,
           );
         }
-        
+
         // Alert.alert('Init Scan Opened', 'You have accepted the scan request.');
       } else if (actionId == 'ignore') {
         console.log('init Opend with', actionId);
@@ -225,24 +224,37 @@ const App: React.FC = () => {
 
   return (
     <ScanProvider>
-      <NavigationContainer ref={navigationRef}>
-        <Stack.Navigator initialRouteName="Tabs">
-          {/* Main Tab Navigator */}
-          <Stack.Screen
-            name="Tabs"
-            component={TabNavigator}
-            options={{headerShown: false}}
-          />
-          {/* Additional screens */}
-          <Stack.Screen
-            name="RunScan"
-            component={RunScan}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <ImageBackground
+        source={require('./app/assets/images/App-bg.png')} // Replace with your image path
+        style={styles.backgroundImage}
+        resizeMode="stretch">
+        <NavigationContainer ref={navigationRef}>
+          <Stack.Navigator initialRouteName="Tabs">
+            {/* Main Tab Navigator */}
+            <Stack.Screen
+              name="Tabs"
+              component={TabNavigator}
+              options={{headerShown: false}}
+            />
+            {/* Additional screens */}
+            <Stack.Screen
+              name="RunScan"
+              component={RunScan}
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ImageBackground>
     </ScanProvider>
   );
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1, // Ensures the image covers the entire screen
+    width: '100%', // applied to Image
+      height: '100%' 
+  },
+});

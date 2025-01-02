@@ -18,7 +18,8 @@ export const Colors = {
     lightGray:"#C8C8C8",
     lightBlue:"#23B0C2",
     delete:"#FFDDDD",
-    red:"#FF3D3D"
+    red:"#FF3D3D",
+    themeOrange:"#f26722"
   },
   dark: {
     text: '#ECEDEE',
@@ -29,6 +30,8 @@ export const Colors = {
     tabIconSelected: tintColorDark,
     white:"#fff",
     lightGray:"#C8C8C8",
-    lightBlue:"#23B0C2"
+    lightBlue:"#23B0C2",
+    themeOrange:"f26722"
+    
   },
 };
