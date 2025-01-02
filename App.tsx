@@ -19,7 +19,7 @@ import TabHistoryIcon from './app/components/ui/svgIcons/TabHistoryIcon';
 import {Colors} from './app/constants/Colors';
 import {Alert, useColorScheme} from 'react-native';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import notifee from '@notifee/react-native';
+import notifee, {AuthorizationStatus} from '@notifee/react-native';
 // Define the types for the navigation
 export type RootTabParamList = {
   Home: undefined;
@@ -44,20 +44,18 @@ const TabNavigator: React.FC = () => {
         tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].white,
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].lightBlue,
         headerShown: false,
-       
+
         tabBarLabelStyle: {
           marginTop: 4, // Adjust spacing between the label and icon
           fontSize: 14, // Optional: Adjust label size
-          fontFamily:fontFamily.nunitoSemiBold
+          fontFamily: fontFamily.nunitoSemiBold,
         },
         tabBarStyle: {
           backgroundColor: '#8C46A9',
           height: 70, // Set background color for other platforms
           paddingBottom: 20, // Adjust padding to avoid overlapping with the tab bar
-
         },
-      }}
-    >
+      }}>
       <Tab.Screen
         name="Home"
         component={Home}
@@ -89,16 +87,14 @@ const TabNavigator: React.FC = () => {
 import {PermissionsAndroid, Platform} from 'react-native';
 import {Linking} from 'react-native';
 import {navigationRef} from './app/navigation/NavigationRef';
-import { fontFamily } from './app/constants/theme';
-
-
+import {fontFamily} from './app/constants/theme';
 
 export const checkPostNotificationPermission = async () => {
   if (Platform.OS === 'android' && Platform.Version >= 33) {
     try {
       // Check if POST_NOTIFICATIONS permission is granted
       const permissionStatus = await PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
       );
 
       if (permissionStatus) {
@@ -114,7 +110,7 @@ export const checkPostNotificationPermission = async () => {
               'This app requires notification permissions to send you alerts and updates.',
             buttonPositive: 'OK',
             buttonNegative: 'Cancel',
-          }
+          },
         );
 
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -123,13 +119,16 @@ export const checkPostNotificationPermission = async () => {
           console.log('POST_NOTIFICATIONS permission denied.');
         } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
           console.log(
-            'POST_NOTIFICATIONS permission denied permanently. Redirecting to settings.'
+            'POST_NOTIFICATIONS permission denied permanently. Redirecting to settings.',
           );
           Linking.openSettings(); // Open the app's settings
         }
       }
     } catch (err) {
-      console.error('Error checking or requesting POST_NOTIFICATIONS permission:', err);
+      console.error(
+        'Error checking or requesting POST_NOTIFICATIONS permission:',
+        err,
+      );
       // Redirect to settings as a fallback in case of an error
       Linking.openSettings();
     }
@@ -137,19 +136,93 @@ export const checkPostNotificationPermission = async () => {
     console.log('Permission not required for this Android version.');
   }
 };
+async function requestUserPermission() {
+  const settings = await notifee.requestPermission();
+
+  // if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+  //   console.log('Permission settings:', settings);
+  // } else {
+  //   console.log('User declined permissions');
+  // }
+  if (settings.authorizationStatus === AuthorizationStatus.DENIED) {
+    console.log('User denied permissions request');
+  } else if (settings.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
+    console.log('User granted permissions request');
+  } else if (settings.authorizationStatus === AuthorizationStatus.PROVISIONAL) {
+    console.log('User provisionally granted permissions request');
+  }
+}
+async function registerNotificationCategories() {
+  console.log("Settingios categories")
+  await notifee.setNotificationCategories([
+    {
+      id: 'scan_actions', // This must match the `categoryId` in the notification
+      actions: [
+        {
+          id: 'open_now',
+          title: 'Run Now',
+          foreground: true, // Bring the app to the foreground
+        },
+        {
+          id: 'ignore',
+          title: 'Ignore',
+          foreground: false, // Do not bring the app to the foreground
+          destructive: true, // Mark as a destructive action (optional)
+        },
+      ],
+    },
+  ]);
+}
+
+
 
 const App: React.FC = () => {
   useEffect(() => {
-    checkPostNotificationPermission();
-    checkInitalNotification()
+    // checkPostNotificationPermission();
+    requestUserPermission();
+    checkInitalNotification();
+
+    if(Platform.OS=="ios"){
+      registerNotificationCategories();
+    }
   }, []);
 
-  const checkInitalNotification=async()=>{
+  const checkInitalNotification = async () => {
     const initialNotification = await notifee.getInitialNotification();
-  console.log("initialNotification",initialNotification)
-  }
+    console.log('initialNotification id', initialNotification?.pressAction.id);
+    const actionId = initialNotification?.pressAction.id;
 
- 
+    setTimeout(() => {
+      if (actionId == 'open_now' || actionId == 'default') {
+        
+        if (!navigationRef || !navigationRef.isReady()) {
+          console.log(
+            'Navigation not initialized. Storing pending navigation.',
+          );
+
+          setTimeout(() => {
+            console.log('Navigating to target screen...');
+            navigationRef.navigate(
+              'RunScan',
+              initialNotification?.notification.data,
+            );
+          }, 2000); // Delay for navigation
+        } else {
+          console.log('Navigating immediately...');
+          navigationRef.navigate(
+            'RunScan',
+            initialNotification?.notification.data,
+          );
+        }
+        
+        // Alert.alert('Init Scan Opened', 'You have accepted the scan request.');
+      } else if (actionId == 'ignore') {
+        console.log('init Opend with', actionId);
+        // Alert.alert('Init Scan Ignored', 'You have ignored the scan request.');
+      }
+    }, 1000);
+  };
+
   return (
     <ScanProvider>
       <NavigationContainer ref={navigationRef}>

@@ -77,9 +77,11 @@ const RunScan = ({navigation, route}: any) => {
 
   useEffect(() => {
     if (initNewScan && isFocused) {
+
       setTimeout(() => {
         runScan(selectedUrls);
         setIsInitialized(true);
+        console.log("initialezed timeout")
       }, 1450);
     }
   }, [initNewScan, checkForScan]);
@@ -227,22 +229,33 @@ const RunScan = ({navigation, route}: any) => {
   const handleAddScan = async (urls?: string[]) => {
     console.log('data', data, urls);
     const visitedUrls = urls?.length ? urls : scannedUrls;
-    if (data?.id && !data?.scanNow) {
-      console.log('updating the scan');
-      updateScan(data?.id, {visitedSites: visitedUrls, isCompleted: true});
-      await updateScanStatus(data?.id, visitedUrls);
-    } else {
-      console.log('Adding  the scan');
-      const addToScanHistory: ScheduledScan = {
-        id: uuid.v4(),
-        time: new Date().toISOString(),
-        date: new Date(),
-        scanDuration: visitedUrls.length,
-        isCompleted: true,
-        visitedSites: visitedUrls,
-      };
-      addScan(addToScanHistory);
-    }
+    // console.log('Adding  the scan');
+    const addToScanHistory: ScheduledScan = {
+      id: uuid.v4(),
+      time: new Date().toISOString(),
+      date: new Date(),
+      scanDuration: visitedUrls.length,
+      isCompleted: true,
+      visitedSites: visitedUrls,
+      type:"history"
+    };
+    addScan(addToScanHistory);
+    // if (data?.id && !data?.scanNow) {
+    //   console.log('updating the scan');
+    //   updateScan(data?.id, {visitedSites: visitedUrls, isCompleted: true});
+    //   await updateScanStatus(data?.id, visitedUrls);
+    // } else {
+    //   console.log('Adding  the scan');
+    //   const addToScanHistory: ScheduledScan = {
+    //     id: uuid.v4(),
+    //     time: new Date().toISOString(),
+    //     date: new Date(),
+    //     scanDuration: visitedUrls.length,
+    //     isCompleted: true,
+    //     visitedSites: visitedUrls,
+    //   };
+    //   addScan(addToScanHistory);
+    // }
 
     setIsScanCompleted(true);
   };
@@ -280,8 +293,8 @@ const RunScan = ({navigation, route}: any) => {
         <View style={styles.container}>
           <FastImage
             style={{
-              width: screenWidth * 0.8, // 80% of the screen width
-              height: screenHeight * 0.4, // 40% of the screen height
+              width: screenWidth * 0.8, 
+              height: screenHeight * 0.4, 
             }}
             source={require('../../assets/gifs/scanGif.gif')}
             resizeMode={FastImage.resizeMode.contain}

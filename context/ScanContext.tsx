@@ -12,7 +12,7 @@ import {
   deleteScanLocally,
   getScansLocally,
 } from '../app/helpers/asyncStorage';
-import {deleteNotification} from '../app/services/PushNotificationConfig';
+import {deleteNotifeeNotification, deleteNotification} from '../app/services/PushNotificationConfig';
 // import { deleteNotification } from '../app/services/PushNotificationConfig';
 
 interface ScanContextType {
@@ -64,8 +64,9 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const removeScan = (id: string, notificationId?: string) => {
     setScans(prevScans => prevScans.filter(scan => scan.id !== id));
     deleteScanLocally(id);
-    if (notificationId) {
-      deleteNotification(notificationId);
+    if (id) {
+      // deleteNotification(notificationId);
+      deleteNotifeeNotification(id)
     }
     setupdatedScanList(!updatedScanList);
   };
@@ -79,16 +80,15 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   const getCompletedScans = () => {
-    console.log("getCompletedScans Rnning",scans
-    .filter(scan => scan.isCompleted === true).length)
+    
     return scans
       .filter(scan => scan.isCompleted === true)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   };
 
   const getScheduledScans = () => {  
-    return scans.filter(scan => scan.isCompleted === false);
-  };
+    return scans.filter((scan)=>scan?.type=="scheduled")
+  }
 
   return (
     <ScanContext.Provider
