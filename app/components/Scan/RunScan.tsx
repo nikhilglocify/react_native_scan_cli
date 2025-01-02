@@ -229,7 +229,7 @@ const RunScan = ({navigation, route}: any) => {
   const handleAddScan = async (urls?: string[]) => {
     console.log('data', data, urls);
     const visitedUrls = urls?.length ? urls : scannedUrls;
-    console.log('Adding  the scan');
+    // console.log('Adding  the scan');
     const addToScanHistory: ScheduledScan = {
       id: uuid.v4(),
       time: new Date().toISOString(),
@@ -293,8 +293,8 @@ const RunScan = ({navigation, route}: any) => {
         <View style={styles.container}>
           <FastImage
             style={{
-              width: screenWidth * 0.8, // 80% of the screen width
-              height: screenHeight * 0.4, // 40% of the screen height
+              width: screenWidth * 0.8, 
+              height: screenHeight * 0.4, 
             }}
             source={require('../../assets/gifs/scanGif.gif')}
             resizeMode={FastImage.resizeMode.contain}
