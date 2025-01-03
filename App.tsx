@@ -28,6 +28,7 @@ export type RootTabParamList = {
   History: undefined;
 
   Tips: undefined;
+  RunScan:undefined
 };
 export type RootStackParamList = {
   Tabs: undefined; // For the Tab Navigator
@@ -44,12 +45,13 @@ const TabNavigator: React.FC = () => {
         tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].lightGray,
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].white,
         headerShown: false,
+        
 
         tabBarLabelStyle: {
           marginTop: 4, // Adjust spacing between the label and icon
           fontSize: 14, // Optional: Adjust label size
           fontFamily: fontFamily.nunitoSemiBold,
-          // flex:1
+        
         },
         tabBarStyle: {
           // backgroundColor: '#8C46A9',
@@ -62,6 +64,7 @@ const TabNavigator: React.FC = () => {
         name="Home"
         component={Home}
         options={{
+          // tabBarStyle:{display:"flex"},
           headerShown: false,
           tabBarIcon: ({color, size}) => (
             <FontAwesomeIcon name="home" size={30} color={color} />
@@ -72,6 +75,7 @@ const TabNavigator: React.FC = () => {
         name="History"
         component={History}
         options={{
+          // tabBarStyle:{display:"flex"},
           headerShown: false,
           tabBarIcon: ({color, size}) => <TabHistoryIcon color={color} />,
         }}
@@ -80,12 +84,16 @@ const TabNavigator: React.FC = () => {
         name="Tips"
         component={Tips}
         options={{
+          
+          // tabBarStyle:{display:"flex"},
           headerShown: false,
           tabBarIcon: ({color, size}) => (
             <FontAwesomeIcon name="star" size={30} color={color} />
           ),
+          tabBarLabel: 'Daily Tips',
         }}
       />
+     
     </Tab.Navigator>
   );
 };
@@ -225,32 +233,35 @@ const App: React.FC = () => {
   };
 
   return (
-    
-      <ScanProvider>
-        <NavigationContainer ref={navigationRef}>
-          <ImageBackground
-            source={require('./app/assets/images/App-bg.png')} // Replace with your image path
-            style={styles.backgroundImage}
-            resizeMode="cover">
-            <Stack.Navigator initialRouteName="Tabs">
-              {/* Main Tab Navigator */}
+    <ScanProvider>
+      <NavigationContainer ref={navigationRef}>
+        <ImageBackground
+          source={require('./app/assets/images/App-bg.png')} // Replace with your image path
+          style={styles.backgroundImage}
+          resizeMode="cover">
+          <Stack.Navigator initialRouteName="Tabs">
+            {/* Main Tab Navigator */}
 
-              <Stack.Screen
-                name="Tabs"
-                component={TabNavigator}
-                options={{headerShown: false}}
-              />
-              {/* Additional screens */}
-              <Stack.Screen
-                name="RunScan"
-                component={RunScan}
-                options={{headerShown: false}}
-              />
-            </Stack.Navigator>
-          </ImageBackground>
-        </NavigationContainer>
-      </ScanProvider>
-    
+            <Stack.Screen
+              name="Tabs"
+              component={TabNavigator}
+              options={{headerShown: false}}
+            />
+            {/* Additional screens */}
+            <Stack.Screen
+              name="RunScan"
+              component={RunScan}
+              options={{
+                headerShown: false,
+                // tabBarStyle: { display: 'flex' }
+                
+                
+              }}
+            />
+          </Stack.Navigator>
+        </ImageBackground>
+      </NavigationContainer>
+    </ScanProvider>
   );
 };
 

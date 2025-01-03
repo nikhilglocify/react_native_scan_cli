@@ -11,9 +11,11 @@ const Tips = () => {
     <>
       <ImageBackground
         source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1, backgroundColor: 'black'}}>
+        style={{flex: 1, 
+        // backgroundColor: 'black'
+        }}>
         <View
-          className="p-4 inline-block w-[250px] mx-auto border-b-8"
+          className="p-4 inline-block w-[250px] mx-auto"
           style={{backgroundColor: Colors['light'].themeOrange}}>
           <Image
             source={require('../../assets/images/app_logo.png')}

@@ -156,22 +156,26 @@ export default function HomeScreen({navigation}: any) {
     <>
       <ImageBackground
         source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1, backgroundColor: 'black'}}>
-        <View className='p-4 inline-block w-[250px] mx-auto border-b-8' style={{backgroundColor: Colors['light'].themeOrange}}>
-        <Image
-          source={require('../../assets/images/app_logo.png')}
-          style={{
-            width: '100%',
-            height: 50,
-            padding:10,
-          }}
-          resizeMode="contain"
-        />
+        style={{
+          flex: 1,
+          // backgroundColor: 'black'
+        }}>
+        <View
+          className="p-4 inline-block w-[250px] mx-auto"
+          style={{backgroundColor: Colors['light'].themeOrange}}>
+          <Image
+            source={require('../../assets/images/app_logo.png')}
+            style={{
+              width: '100%',
+              height: 50,
+              padding: 10,
+            }}
+            resizeMode="contain"
+          />
         </View>
-        
 
         <View className="flex-1 h-screen mt-[30px]">
-          <View className="px-6">
+          <View className="px-4">
             <View className="flex flex-row items-center justify-between mb-4">
               <View
                 style={{backgroundColor: Colors['light'].themeOrange}}
@@ -193,21 +197,19 @@ export default function HomeScreen({navigation}: any) {
                   style={{backgroundColor: Colors['light'].themeOrange}}
                   className="p-5 min-h-[85px] max-h-[85px]">
                   <Text
-                    className="text-2xl"
+                    className="text-xl"
                     style={{
                       fontFamily: fontFamily.nunitoSemiBold,
                       color: Colors['light'].white,
                     }}>
-                    Run{"\n"}Now
+                    Run{'\n'}Now
                   </Text>
                 </View>
-
-                {/* <ScanIcon /> */}
               </Pressable>
             </View>
           </View>{' '}
           {scheduledScans.length > 0 ? (
-            <ScrollView className="p-4 mb-[45px] pb-5">
+            <ScrollView className="p-4 mb-[25px] pb-2">
               {scheduledScans.map((scan: any) => (
                 <View
                   key={scan.id}
@@ -239,11 +241,13 @@ export default function HomeScreen({navigation}: any) {
               ))}
             </ScrollView>
           ) : (
-            <Text
-              className="text-center my-auto text-lg"
-              style={{fontFamily: fontFamily.nunitoRegular}}>
-              No Scheduled Scans Found...
-            </Text>
+            <View className='flex-1 bg-white mx-4 my-4'>
+              <Text
+                className="text-center my-auto text-lg "
+                style={{fontFamily: fontFamily.nunitoRegular}}>
+                No Scheduled Scans Found...
+              </Text>
+            </View>
           )}
           <View className="bottom-[6px] left-0 right-0 mx-auto">
             <Pressable onPress={() => setVisibleScanModal(true)}>

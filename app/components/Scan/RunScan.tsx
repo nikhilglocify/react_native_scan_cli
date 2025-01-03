@@ -249,8 +249,10 @@ const RunScan = ({navigation, route}: any) => {
     <>
       <ImageBackground
         source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1,backgroundColor:"black"}}>
-        <View className='p-4 inline-block w-[250px] mx-auto border-b-8' style={{backgroundColor: Colors['light'].themeOrange}}>
+        style={{flex: 1,
+        // backgroundColor:"black"
+        }}>
+        <View className='p-4 inline-block w-[250px] mx-auto' style={{backgroundColor: Colors['light'].themeOrange}}>
         <Image
           source={require('../../assets/images/app_logo.png')}
           style={{
@@ -264,20 +266,20 @@ const RunScan = ({navigation, route}: any) => {
         <View className="flex-1 h-screen mt-[30px] px-4">
           <View
             style={{backgroundColor: Colors['light'].themeOrange}}
-            className="p-2 mb-[30px]">
+            className="p-2 mb-[20px]">
             <Text
               className="text-lg  text-white"
               style={{fontFamily: fontFamily.nunitoRegular}}>
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque. 
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis. 
             </Text>
           </View>
-          <View className="flex items-center justify-between flex-row mb-2 relative">
+          <View className="flex items-center justify-between flex-row mb-1 relative">
             <Pressable
               onPress={() => {
                 handleExitScan();
               }}>
               
-              <LeftCircleIcon height={35} width={35} />
+              <LeftCircleIcon height={28} width={28} />
             </Pressable>
            
 
@@ -289,7 +291,7 @@ const RunScan = ({navigation, route}: any) => {
                   setShowScannedUrls(!showScannedUrls);
                 }
               }}>
-              <BrowserTabIcon height={35} width={35}/>
+              <BrowserTabIcon height={25} width={25}/>
             </TouchableOpacity>
           </View>
 
@@ -305,7 +307,7 @@ const RunScan = ({navigation, route}: any) => {
               />
             </View>
           ) : (
-            <View className="flex-1 mt-4 bg-white px-3">
+            <View className="flex-1 mt-3 bg-white px-3">
               {currentUrl ? (
                 getRenderActiveTab(selectedUrl ? selectedUrl : currentUrl!)
               ) : isScanCompleted ? (
@@ -338,7 +340,7 @@ const RunScan = ({navigation, route}: any) => {
             </View>
           )}
           <TouchableOpacity
-            className="text-right pb-5 px-2 pt-2"
+            className="text-right pb-4 px-2 pt-3"
             onPress={() => handleExitScan()}
             >
             <Text

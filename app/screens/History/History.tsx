@@ -39,9 +39,11 @@ const History = () => {
     <>
       <ImageBackground
         source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1, backgroundColor: 'black'}}>
+        style={{flex: 1, 
+        // backgroundColor: 'black'
+        }}>
         <View
-          className="p-4 inline-block w-[250px] mx-auto border-b-8"
+          className="p-4 inline-block w-[250px] mx-auto"
           style={{backgroundColor: Colors['light'].themeOrange}}>
           <Image
             source={require('../../assets/images/app_logo.png')}
@@ -72,7 +74,7 @@ const History = () => {
             </View>
 
             {scanHistory && scanHistory.length > 0 ? (
-              <ScrollView className="mb-[150px] mt-4">
+              <ScrollView className="mb-[120px] mt-4">
                 {scanHistory.map(
                   (scan, index) =>
                     scan.visitedSites &&
