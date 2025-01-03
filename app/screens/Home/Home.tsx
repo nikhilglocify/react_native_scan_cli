@@ -158,7 +158,6 @@ export default function HomeScreen({navigation}: any) {
         source={require('../../assets/images/App-bg.png')}
         style={{
           flex: 1,
-          // backgroundColor: 'black'
         }}>
         <View
           className="p-4 inline-block w-[250px] mx-auto"
@@ -241,7 +240,7 @@ export default function HomeScreen({navigation}: any) {
               ))}
             </ScrollView>
           ) : (
-            <View className='flex-1 bg-white mx-4 my-4'>
+            <View className="flex-1 bg-white mx-4 my-4">
               <Text
                 className="text-center my-auto text-lg "
                 style={{fontFamily: fontFamily.nunitoRegular}}>
