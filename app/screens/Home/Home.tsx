@@ -31,6 +31,7 @@ import {fontFamily} from '../../constants/theme';
 import Loader from '../../components/ui/Loader';
 import {Colors} from '../../constants/Colors';
 import {FontAwesomeIcon} from '../../components/ui/TabIcons';
+import {Circle, Line, Svg} from 'react-native-svg';
 export default function HomeScreen({navigation}: any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -155,28 +156,31 @@ export default function HomeScreen({navigation}: any) {
     <>
       <ImageBackground
         source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1 ,backgroundColor:"black"}}>
+        style={{flex: 1, backgroundColor: 'black'}}>
+        <View className='p-4 inline-block w-[250px] mx-auto border-b-8' style={{backgroundColor: Colors['light'].themeOrange}}>
         <Image
           source={require('../../assets/images/app_logo.png')}
           style={{
             width: '100%',
             height: 50,
-            backgroundColor: Colors['light'].themeOrange,
-            padding: 10,
+            padding:10,
           }}
           resizeMode="contain"
         />
+        </View>
+        
 
         <View className="flex-1 h-screen mt-[30px]">
-          <View className="px-4">
-            <View className="flex flex-row items-center justify-between mb-9">
+          <View className="px-6">
+            <View className="flex flex-row items-center justify-between mb-4">
               <View
-                style={{backgroundColor: Colors['light'].themeOrange,}}
-                className="p-2">
+                style={{backgroundColor: Colors['light'].themeOrange}}
+                className="p-2 w-[72%]">
                 <Text
                   className="text-base text-white"
                   style={{fontFamily: fontFamily.nunitoRegular}}>
-                   At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti. 
+                  At vero eos et accusamus et iusto odio dignissimos ducimus qui
+                  blanditiis praesentium voluptatum deleniti atque corrupti.
                 </Text>
               </View>
 
@@ -187,11 +191,14 @@ export default function HomeScreen({navigation}: any) {
                 }}>
                 <View
                   style={{backgroundColor: Colors['light'].themeOrange}}
-                  className="p-5">
+                  className="p-5 min-h-[95px]">
                   <Text
                     className="text-2xl"
-                    style={{fontFamily: fontFamily.nunitoSemiBold,color:Colors["light"].white}}>
-                    Run Now
+                    style={{
+                      fontFamily: fontFamily.nunitoSemiBold,
+                      color: Colors['light'].white,
+                    }}>
+                    Run{"\n"}Now
                   </Text>
                 </View>
 
@@ -200,7 +207,7 @@ export default function HomeScreen({navigation}: any) {
             </View>
           </View>{' '}
           {scheduledScans.length > 0 ? (
-            <ScrollView className="p-4 mb-[50px] pb-10">
+            <ScrollView className="p-4 mb-[45px] pb-5">
               {scheduledScans.map((scan: any) => (
                 <View
                   key={scan.id}
@@ -238,15 +245,9 @@ export default function HomeScreen({navigation}: any) {
               No Scheduled Scans Found...
             </Text>
           )}
-          <View className="absolute bottom-[2px] mx-auto text-center">
+          <View className="bottom-[6px] left-0 right-0 mx-auto">
             <Pressable onPress={() => setVisibleScanModal(true)}>
-              {/* <AddScanIcon /> */}
-              <FontAwesomeIcon
-                name="plus-circle"
-                size={45}
-                color={Colors['light'].themeOrange}
-                style={{backgroundColor:"white"}}
-              />
+              <AddScanIcon color={Colors['light'].themeOrange} />
             </Pressable>
           </View>
           <AddScanModal
