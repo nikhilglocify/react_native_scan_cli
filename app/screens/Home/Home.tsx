@@ -155,7 +155,7 @@ export default function HomeScreen({navigation}: any) {
     <>
       <ImageBackground
         source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1}}>
+        style={{flex: 1 ,backgroundColor:"black"}}>
         <Image
           source={require('../../assets/images/app_logo.png')}
           style={{
@@ -200,7 +200,7 @@ export default function HomeScreen({navigation}: any) {
             </View>
           </View>{' '}
           {scheduledScans.length > 0 ? (
-            <ScrollView className="p-4 mb-[48px] pb-10">
+            <ScrollView className="p-4 mb-[50px] pb-10">
               {scheduledScans.map((scan: any) => (
                 <View
                   key={scan.id}
@@ -245,6 +245,7 @@ export default function HomeScreen({navigation}: any) {
                 name="plus-circle"
                 size={45}
                 color={Colors['light'].themeOrange}
+                style={{backgroundColor:"white"}}
               />
             </Pressable>
           </View>

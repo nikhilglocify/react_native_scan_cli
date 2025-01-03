@@ -248,7 +248,7 @@ const RunScan = ({navigation, route}: any) => {
     <>
       <ImageBackground
         source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1}}>
+        style={{flex: 1,backgroundColor:"black"}}>
         <Image
           source={require('../../assets/images/app_logo.png')}
           style={{

@@ -25,7 +25,7 @@ export function FontAwesomeIcon({
   color?: string;
   [key: string]: any; // Allow other dynamic props
 }) {
-  return <Icon name={name} size={size} color={color} {...props} />;
+  return <Icon name={name} size={size} color={color} {...props}  />;
 }
 
 
