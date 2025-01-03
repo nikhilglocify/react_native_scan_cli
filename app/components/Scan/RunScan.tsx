@@ -271,19 +271,15 @@ const RunScan = ({navigation, route}: any) => {
               At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque. 
             </Text>
           </View>
-          <View className="flex items-center justify-between flex-row mb-4 relative">
+          <View className="flex items-center justify-between flex-row mb-2 relative">
             <Pressable
               onPress={() => {
                 handleExitScan();
               }}>
-              {/* <Text> Back</Text> */}
+              
               <LeftCircleIcon height={35} width={35} />
             </Pressable>
-            {/* <Text
-              className="text-2xl font-medium flex-grow text-center pr-6"
-              style={{fontFamily: fontFamily.nunitoSemiBold}}>
-              Run Scan
-            </Text> */}
+           
 
             <TouchableOpacity
               className="absolute right-0 p-2 px-2 rounded-lg"
@@ -293,7 +289,7 @@ const RunScan = ({navigation, route}: any) => {
                   setShowScannedUrls(!showScannedUrls);
                 }
               }}>
-              <BrowserTabIcon/>
+              <BrowserTabIcon height={35} width={35}/>
             </TouchableOpacity>
           </View>
 

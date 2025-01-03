@@ -65,10 +65,9 @@ const History = () => {
                 History
               </Text>
               <Text
-                className="text-base text-white"
+                className="text-base text-white text-center"
                 style={{fontFamily: fontFamily.nunitoRegular}}>
-                At vero eos et accusamus et iusto odio dignissimos ducimus qui
-                blanditiis praesentium voluptatum deleniti atque corrupti.
+                At vero eos et accusamus et iusto odio dignissimos.
               </Text>
             </View>
 
