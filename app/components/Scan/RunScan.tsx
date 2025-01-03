@@ -293,7 +293,7 @@ const RunScan = ({navigation, route}: any) => {
                   setShowScannedUrls(!showScannedUrls);
                 }
               }}>
-              <BrowserTabIcon />
+              <BrowserTabIcon/>
             </TouchableOpacity>
           </View>
 
