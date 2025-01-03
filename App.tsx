@@ -20,6 +20,7 @@ import {Colors} from './app/constants/Colors';
 import {Alert, ImageBackground, StyleSheet, useColorScheme} from 'react-native';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import notifee, {AuthorizationStatus} from '@notifee/react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 // Define the types for the navigation
 export type RootTabParamList = {
   Home: undefined;
@@ -34,7 +35,6 @@ export type RootStackParamList = {
 };
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
-
 const TabNavigator: React.FC = () => {
   const colorScheme = useColorScheme();
   return (
@@ -49,10 +49,11 @@ const TabNavigator: React.FC = () => {
           marginTop: 4, // Adjust spacing between the label and icon
           fontSize: 14, // Optional: Adjust label size
           fontFamily: fontFamily.nunitoSemiBold,
+          // flex:1
         },
         tabBarStyle: {
           // backgroundColor: '#8C46A9',
-          backgroundColor: Colors["light"].themeOrange,
+          backgroundColor: Colors['light'].themeOrange,
           height: 70, // Set background color for other platforms
           paddingBottom: 20, // Adjust padding to avoid overlapping with the tab bar
         },
@@ -62,7 +63,7 @@ const TabNavigator: React.FC = () => {
         component={Home}
         options={{
           headerShown: false,
-          tabBarIcon: ({color, size}) => <MaterialIcons name='home' />,
+          tabBarIcon: ({color, size}) => <FontAwesomeIcon name="home" size={30} color="#fff" />,
         }}
       />
       <Tab.Screen
@@ -75,6 +76,7 @@ const TabNavigator: React.FC = () => {
       />
       <Tab.Screen
         name="Tips"
+        
         component={Tips}
         options={{
           headerShown: false,
@@ -89,7 +91,7 @@ import {PermissionsAndroid, Platform} from 'react-native';
 import {Linking} from 'react-native';
 import {navigationRef} from './app/navigation/NavigationRef';
 import {fontFamily} from './app/constants/theme';
-import { MaterialIcons } from './app/components/ui/TabIcons';
+import {FontAwesomeIcon, MaterialIcons} from './app/components/ui/TabIcons';
 
 export const checkPostNotificationPermission = async () => {
   if (Platform.OS === 'android' && Platform.Version >= 33) {
@@ -138,14 +140,11 @@ export const checkPostNotificationPermission = async () => {
     console.log('Permission not required for this Android version.');
   }
 };
+
 async function requestUserPermission() {
   const settings = await notifee.requestPermission();
 
-  // if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
-  //   console.log('Permission settings:', settings);
-  // } else {
-  //   console.log('User declined permissions');
-  // }
+  
   if (settings.authorizationStatus === AuthorizationStatus.DENIED) {
     console.log('User denied permissions request');
   } else if (settings.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
@@ -224,11 +223,11 @@ const App: React.FC = () => {
 
   return (
     <ScanProvider>
-      <ImageBackground
-        source={require('./app/assets/images/App-bg.png')} // Replace with your image path
-        style={styles.backgroundImage}
-        resizeMode="stretch">
-        <NavigationContainer ref={navigationRef}>
+      <NavigationContainer ref={navigationRef}>
+        <ImageBackground
+          source={require('./app/assets/images/App-bg.png')} // Replace with your image path
+          style={styles.backgroundImage}
+          resizeMode="cover">
           <Stack.Navigator initialRouteName="Tabs">
             {/* Main Tab Navigator */}
             <Stack.Screen
@@ -243,8 +242,8 @@ const App: React.FC = () => {
               options={{headerShown: false}}
             />
           </Stack.Navigator>
-        </NavigationContainer>
-      </ImageBackground>
+        </ImageBackground>
+      </NavigationContainer>
     </ScanProvider>
   );
 };
@@ -253,8 +252,8 @@ export default App;
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    flex: 1, // Ensures the image covers the entire screen
-    width: '100%', // applied to Image
-      height: '100%' 
+    flex: 2, // Ensures the image covers the entire screen
+    // width: '100%', // applied to Image
+    // height: '100%'
   },
 });

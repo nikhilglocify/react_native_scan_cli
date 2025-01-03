@@ -29,10 +29,11 @@ import {createNotificationChannel} from '../../services/PushNotificationConfig';
 import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
 import Loader from '../../components/ui/Loader';
-import { Colors } from '../../constants/Colors';
+import {Colors} from '../../constants/Colors';
+import {FontAwesomeIcon} from '../../components/ui/TabIcons';
 export default function HomeScreen({navigation}: any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
-  const [loading,setLoading]=useState(true)
+  const [loading, setLoading] = useState(true);
   const {
     scans,
     removeScan,
@@ -50,9 +51,9 @@ export default function HomeScreen({navigation}: any) {
 
   useEffect(() => {
     createNotificationChannel();
-    setTimeout(()=>{
-      setLoading(false)
-    },1200)
+    setTimeout(() => {
+      setLoading(false);
+    }, 1200);
   }, []);
   useEffect(() => {
     async function createChannel() {
@@ -69,7 +70,6 @@ export default function HomeScreen({navigation}: any) {
     // Register foreground event listener
     const unsubscribeForeground = notifee.onForegroundEvent(
       async ({type, detail}) => {
-      
         if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
           const actionId = detail?.pressAction?.id;
           // Alert.alert('Foreground Pressed');
@@ -79,26 +79,29 @@ export default function HomeScreen({navigation}: any) {
             detail.notification?.data,
           );
           setTimeout(() => {
-            if (actionId === 'open_now' ||actionId == 'default') {
+            if (actionId === 'open_now' || actionId == 'default') {
               // Handle "Open Now" action
               navigation.navigate('RunScan', detail.notification?.data);
               // Alert.alert('Scan Opened', 'You have accepted the scan request.');
-            } 
+            }
           }, 1000);
         }
 
         if (type === EventType.PRESS) {
-          console.log('Notification PRESS IOs in Foreground:', detail.notification);
+          console.log(
+            'Notification PRESS IOs in Foreground:',
+            detail.notification,
+          );
 
           // Check which action was pressed (Open Now or Ignore)
           const actionId = detail?.pressAction?.id;
-          console.log("actionId",actionId)
+          console.log('actionId', actionId);
           setTimeout(() => {
-            if (actionId === 'open_now' ||actionId == 'default') {
+            if (actionId === 'open_now' || actionId == 'default') {
               // Handle "Open Now" action
               navigation.navigate('RunScan', detail.notification?.data);
               // Alert.alert('Scan Opened', 'You have accepted the scan request.');
-            } 
+            }
           }, 1000);
         }
       },
@@ -106,7 +109,6 @@ export default function HomeScreen({navigation}: any) {
 
     // Register background event listener
     notifee.onBackgroundEvent(async ({type, detail}) => {
-      
       if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
         console.log(
           'Background User pressed an action with the id: ',
@@ -114,26 +116,28 @@ export default function HomeScreen({navigation}: any) {
         );
         const actionId = detail?.pressAction?.id;
         setTimeout(() => {
-          if (actionId === 'open_now' ||actionId == 'default') {
+          if (actionId === 'open_now' || actionId == 'default') {
             // Handle "Open Now" action
             navigation.navigate('RunScan', detail.notification?.data);
-            
-          } 
+          }
         }, 1000);
       }
 
       if (type === EventType.PRESS) {
-        console.log('Notification  EventType.PRESS Pressed in Background:', detail.notification);
+        console.log(
+          'Notification  EventType.PRESS Pressed in Background:',
+          detail.notification,
+        );
 
         // Check which action was pressed (Open Now or Ignore)
         const actionId = detail?.pressAction?.id;
-        
+
         setTimeout(() => {
-          if (actionId === 'open_now' ||actionId == 'default') {
+          if (actionId === 'open_now' || actionId == 'default') {
             // Handle "Open Now" action
             navigation.navigate('RunScan', detail.notification?.data);
             // Alert.alert('Scan Opened', 'You have accepted the scan request.');
-          } 
+          }
         }, 1000);
       }
     });
@@ -144,88 +148,111 @@ export default function HomeScreen({navigation}: any) {
     };
   }, []);
 
-
-  if(loading){
-    return <Loader/>
+  if (loading) {
+    return <Loader />;
   }
   return (
     <>
-    <ImageBackground 
-    source={require("../../assets/images/App-bg.png")} style={{  flex:1 }}
-    >
- <Image source={require("../../assets/images/app_logo.png")} style={{width:"100%", height:50 ,backgroundColor:Colors["light"].themeOrange, padding:10}} resizeMode="contain" />
-   
-      <View className="flex-1 h-screen mt-[20px]">
-       
-        <View className="px-4">
-          <View className="flex flex-row items-center justify-between mb-9">
+      <ImageBackground
+        source={require('../../assets/images/App-bg.png')}
+        style={{flex: 1}}>
+        <Image
+          source={require('../../assets/images/app_logo.png')}
+          style={{
+            width: '100%',
+            height: 50,
+            backgroundColor: Colors['light'].themeOrange,
+            padding: 10,
+          }}
+          resizeMode="contain"
+        />
+
+        <View className="flex-1 h-screen mt-[30px]">
+          <View className="px-4">
+            <View className="flex flex-row items-center justify-between mb-9">
+              <View
+                style={{backgroundColor: Colors['light'].themeOrange,}}
+                className="p-2">
+                <Text
+                  className="text-base text-white"
+                  style={{fontFamily: fontFamily.nunitoRegular}}>
+                   At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti. 
+                </Text>
+              </View>
+
+              <Pressable
+                onPress={() => {
+                  navigation.navigate('RunScan', {scanNow: true});
+                  setCheckForScan(!checkForScan);
+                }}>
+                <View
+                  style={{backgroundColor: Colors['light'].themeOrange}}
+                  className="p-5">
+                  <Text
+                    className="text-2xl"
+                    style={{fontFamily: fontFamily.nunitoSemiBold,color:Colors["light"].white}}>
+                    Run Now
+                  </Text>
+                </View>
+
+                {/* <ScanIcon /> */}
+              </Pressable>
+            </View>
+          </View>{' '}
+          {scheduledScans.length > 0 ? (
+            <ScrollView className="p-4 mb-[48px] pb-10">
+              {scheduledScans.map((scan: any) => (
+                <View
+                  key={scan.id}
+                  className="bg-white shadow-[0_5px_15px_0_rgba(0,0,0,0.2)] border border-solid border-[#F0F0F0] rounded-[10px] mt-1 mb-4">
+                  <View className="flex flex-row p-2 gap-3 items-center justify-between">
+                    <View className="flex flex-row gap-3 items-center">
+                      <TimerIcon />
+                      <View>
+                        <Text
+                          className="text-md text-[#393939] leading-5"
+                          style={{fontFamily: fontFamily.nunitoRegular}}>
+                          {new Date(scan.time).toLocaleTimeString()}
+                        </Text>
+                        <Text
+                          className="text-md text-[#393939] leading-5"
+                          style={{fontFamily: fontFamily.nunitoRegular}}>
+                          Duration: {scan.scanDuration} sites
+                        </Text>
+                      </View>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        removeScan(scan.id, scan?.notificationId);
+                      }}>
+                      <DeleteIcon />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+          ) : (
             <Text
-              className="text-2xl font-medium"
-              style={{fontFamily: fontFamily.nunitoSemiBold}}>
-              Scheduled Scans
+              className="text-center my-auto text-lg"
+              style={{fontFamily: fontFamily.nunitoRegular}}>
+              No Scheduled Scans Found...
             </Text>
-            
-
-            
-
-            <Pressable
-              onPress={() => {
-                navigation.navigate('RunScan', {scanNow: true});
-                setCheckForScan(!checkForScan);
-              }}>
-              <ScanIcon />
+          )}
+          <View className="absolute bottom-[2px] mx-auto text-center">
+            <Pressable onPress={() => setVisibleScanModal(true)}>
+              {/* <AddScanIcon /> */}
+              <FontAwesomeIcon
+                name="plus-circle"
+                size={40}
+                color={Colors['light'].themeOrange}
+              />
             </Pressable>
           </View>
-        </View>{' '}
-        {scheduledScans.length > 0 ? (
-          <ScrollView className="p-4 mb-[36px] pb-10">
-            {scheduledScans.map((scan: any) => (
-              <View
-                key={scan.id}
-                className="bg-white shadow-[0_5px_15px_0_rgba(0,0,0,0.2)] border border-solid border-[#F0F0F0] rounded-[10px] mt-1 mb-4">
-                <View className="flex flex-row p-2 gap-3 items-center justify-between">
-                  <View className="flex flex-row gap-3 items-center">
-                    <TimerIcon />
-                    <View>
-                      <Text
-                        className="text-md text-[#393939] leading-5"
-                        style={{fontFamily: fontFamily.nunitoRegular}}>
-                        {new Date(scan.time).toLocaleTimeString()}
-                      </Text>
-                      <Text
-                        className="text-md text-[#393939] leading-5"
-                        style={{fontFamily: fontFamily.nunitoRegular}}>
-                        Duration: {scan.scanDuration} sites
-                      </Text>
-                    </View>
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      removeScan(scan.id, scan?.notificationId);
-                    }}>
-                    <DeleteIcon />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))}
-          </ScrollView>
-        ) : (
-          <Text
-            className="text-center my-auto text-lg"
-            style={{fontFamily: fontFamily.nunitoRegular}}>
-            No Scheduled Scans Found...
-          </Text>
-        )}
-        <View className="absolute bottom-[2px] mx-auto text-center">
-          <Pressable onPress={() => setVisibleScanModal(true)}>
-            <AddScanIcon />
-          </Pressable>
+          <AddScanModal
+            visible={visibleScanModal}
+            onClose={() => setVisibleScanModal(false)}
+          />
         </View>
-        <AddScanModal
-          visible={visibleScanModal}
-          onClose={() => setVisibleScanModal(false)}
-        />
-      </View>
       </ImageBackground>
     </>
   );
