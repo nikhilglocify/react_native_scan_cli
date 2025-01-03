@@ -243,7 +243,7 @@ export default function HomeScreen({navigation}: any) {
               {/* <AddScanIcon /> */}
               <FontAwesomeIcon
                 name="plus-circle"
-                size={40}
+                size={45}
                 color={Colors['light'].themeOrange}
               />
             </Pressable>

@@ -2,6 +2,7 @@ import React, {useRef, useState} from 'react';
 import {View, Text, Pressable, StyleSheet} from 'react-native';
 import {get12HourFormat, getAmPm} from '../../helpers/dateUtils';
 import {fontFamily} from '../../constants/theme';
+import { Colors } from '../../constants/Colors';
 
 type CustomTimePickerProps = {
   onTimeChange?: (time: Date) => void;
@@ -70,10 +71,11 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
               ▲
             </Text>
           </Pressable>
-          <View className="bg-[#8C46A9]/15 flex items-center justify-center py-1  border-solid w-full text-center">
+          <View   className=" flex items-center justify-center py-1 bg-[#ECECEC]  border-solid w-full text-center">
             <Text
-              className="text-3xl text-[#8C46A9]  py-[6px] w-full mb-1 font-semibold text-center border-solid border-[#8C46A9]/15 border-b"
-              style={{fontFamily: fontFamily.nunitoBold}}>
+            
+              className="text-3xl   py-[6px] w-full mb-1 font-semibold text-center border-solid border-[#8C46A9]/15 border-b"
+              style={{fontFamily: fontFamily.nunitoBold,color:Colors["light"].themeOrange}}>
               {get12HourFormat(time)}
             </Text>
 
@@ -107,10 +109,10 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
               ▲
             </Text>
           </Pressable>
-          <View className="bg-[#8C46A9]/15 flex items-center justify-center py-1  border-solid w-full text-center">
+          <View className="bg-[#ECECEC] flex items-center justify-center py-1  border-solid w-full text-center">
             <Text
               className="text-3xl text-[#8C46A9]  py-[6px] w-full mb-1 font-semibold text-center border-solid border-[#8C46A9]/15 border-b"
-              style={{fontFamily: fontFamily.nunitoBold}}>
+              style={{fontFamily: fontFamily.nunitoBold,color:Colors["light"].themeOrange}}>
               {String(time.getMinutes()).padStart(2, '0')}
             </Text>
 
@@ -138,11 +140,11 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({onTimeChange}) => {
               ▲
             </Text>
           </Pressable>
-          <View className="bg-[#8C46A9]/15 flex items-center justify-center py-1  border-solid w-full text-center">
+          <View className="bg-[#ECECEC] flex items-center justify-center py-1  border-solid w-full text-center">
             <Pressable onPress={handleAmPmToggle}>
               <Text
                className="text-3xl text-[#8C46A9]  py-[6px] w-full mb-1 font-semibold text-center border-solid border-[#8C46A9]/15 border-b"
-                style={{fontFamily: fontFamily.nunitoBold}}>
+               style={{fontFamily: fontFamily.nunitoBold,color:Colors["light"].themeOrange}}>
                 {getAmPm(time)}
               </Text>
             </Pressable>

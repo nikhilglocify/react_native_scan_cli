@@ -61,9 +61,11 @@ const TabNavigator: React.FC = () => {
       <Tab.Screen
         name="Home"
         component={Home}
+        
         options={{
+          
           headerShown: false,
-          tabBarIcon: ({color, size}) => <FontAwesomeIcon name="home" size={30} color="#fff" />,
+          tabBarIcon: ({color, size}) => <FontAwesomeIcon name="home" size={30} color={color} />,
         }}
       />
       <Tab.Screen
@@ -71,7 +73,7 @@ const TabNavigator: React.FC = () => {
         component={History}
         options={{
           headerShown: false,
-          tabBarIcon: ({color, size}) => <TabHistoryIcon />,
+          tabBarIcon: ({color, size}) => <TabHistoryIcon color={color}  />,
         }}
       />
       <Tab.Screen
@@ -80,7 +82,7 @@ const TabNavigator: React.FC = () => {
         component={Tips}
         options={{
           headerShown: false,
-          tabBarIcon: ({color, size}) => <TabHistoryIcon />,
+          tabBarIcon: ({color, size}) => <FontAwesomeIcon name="star" size={30} color={color} />
         }}
       />
     </Tab.Navigator>
@@ -92,6 +94,7 @@ import {Linking} from 'react-native';
 import {navigationRef} from './app/navigation/NavigationRef';
 import {fontFamily} from './app/constants/theme';
 import {FontAwesomeIcon, MaterialIcons} from './app/components/ui/TabIcons';
+import { View } from 'react-native-reanimated/lib/typescript/Animated';
 
 export const checkPostNotificationPermission = async () => {
   if (Platform.OS === 'android' && Platform.Version >= 33) {
@@ -228,8 +231,10 @@ const App: React.FC = () => {
           source={require('./app/assets/images/App-bg.png')} // Replace with your image path
           style={styles.backgroundImage}
           resizeMode="cover">
-          <Stack.Navigator initialRouteName="Tabs">
+          <Stack.Navigator  initialRouteName="Tabs">
             {/* Main Tab Navigator */}
+
+            
             <Stack.Screen
               name="Tabs"
               component={TabNavigator}

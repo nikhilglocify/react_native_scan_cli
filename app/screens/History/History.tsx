@@ -69,7 +69,7 @@ const History = () => {
               </View>
 
             {scanHistory && scanHistory.length > 0 ? (
-              <ScrollView className="mb-[70px] mt-4">
+              <ScrollView className="mb-[150px] mt-4">
                 {scanHistory.map(
                   (scan, index) =>
                     scan.visitedSites &&
