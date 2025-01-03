@@ -39,34 +39,38 @@ const History = () => {
     <>
       <ImageBackground
         source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1,backgroundColor:"black"}}>
-        <Image
-          source={require('../../assets/images/app_logo.png')}
-          style={{
-            width: '100%',
-            height: 50,
-            backgroundColor: Colors['light'].themeOrange,
-            padding: 10,
-          }}
-          resizeMode="contain"
-        />
+        style={{flex: 1, backgroundColor: 'black'}}>
+        <View
+          className="p-4 inline-block w-[250px] mx-auto border-b-8"
+          style={{backgroundColor: Colors['light'].themeOrange}}>
+          <Image
+            source={require('../../assets/images/app_logo.png')}
+            style={{
+              width: '100%',
+              height: 50,
+              padding: 10,
+            }}
+            resizeMode="contain"
+          />
+        </View>
 
         <View className="flex-1 h-screen mt-[30px] px-6">
           <View>
-          <View
-                style={{backgroundColor: Colors['light'].themeOrange,}}
-                className="p-2">
-                   <Text
-                  className="text-lg text-white text-center mb-2"
-                  style={{fontFamily: fontFamily.nunitoSemiBold}}>
-                   History
-                </Text>
-                <Text
-                  className="text-base text-white"
-                  style={{fontFamily: fontFamily.nunitoRegular}}>
-                   At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti. 
-                </Text>
-              </View>
+            <View
+              style={{backgroundColor: Colors['light'].themeOrange}}
+              className="p-2">
+              <Text
+                className="text-xl text-white text-center mb-2"
+                style={{fontFamily: fontFamily.nunitoSemiBold}}>
+                History
+              </Text>
+              <Text
+                className="text-base text-white"
+                style={{fontFamily: fontFamily.nunitoRegular}}>
+                At vero eos et accusamus et iusto odio dignissimos ducimus qui
+                blanditiis praesentium voluptatum deleniti atque corrupti.
+              </Text>
+            </View>
 
             {scanHistory && scanHistory.length > 0 ? (
               <ScrollView className="mb-[150px] mt-4">

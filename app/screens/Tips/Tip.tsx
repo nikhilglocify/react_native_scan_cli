@@ -12,22 +12,23 @@ const Tips = () => {
       <ImageBackground
         source={require('../../assets/images/App-bg.png')}
         style={{flex: 1,backgroundColor:"black"}}>
+        <View className='p-4 inline-block w-[250px] mx-auto border-b-8' style={{backgroundColor: Colors['light'].themeOrange}}>
         <Image
           source={require('../../assets/images/app_logo.png')}
           style={{
             width: '100%',
             height: 50,
-            backgroundColor: Colors['light'].themeOrange,
-            padding: 10,
+            padding:10,
           }}
           resizeMode="contain"
         />
+        </View>
         <View className="flex-1 h-screen mt-[30px] px-4">
         <View
                 style={{backgroundColor: Colors['light'].themeOrange,}}
                 className="p-2">
                 <Text
-                  className="text-lg text-white"
+                  className="text-xl text-white text-center"
                   style={{fontFamily: fontFamily.nunitoRegular}}>
                    Daily Tips
                 </Text>

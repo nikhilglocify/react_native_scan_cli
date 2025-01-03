@@ -175,12 +175,12 @@ export default function HomeScreen({navigation}: any) {
             <View className="flex flex-row items-center justify-between mb-4">
               <View
                 style={{backgroundColor: Colors['light'].themeOrange}}
-                className="p-2 w-[72%]">
+                className="p-2 w-[72%] min-h-[85px]">
                 <Text
                   className="text-base text-white"
                   style={{fontFamily: fontFamily.nunitoRegular}}>
                   At vero eos et accusamus et iusto odio dignissimos ducimus qui
-                  blanditiis praesentium voluptatum deleniti atque corrupti.
+                  blanditiis praesentium voluptatum deleniti atque.
                 </Text>
               </View>
 
@@ -191,7 +191,7 @@ export default function HomeScreen({navigation}: any) {
                 }}>
                 <View
                   style={{backgroundColor: Colors['light'].themeOrange}}
-                  className="p-5 min-h-[95px]">
+                  className="p-5 min-h-[85px]">
                   <Text
                     className="text-2xl"
                     style={{

@@ -40,6 +40,7 @@ import {
 import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
 import {Colors} from '../../constants/Colors';
+import LeftCircleIcon from '../ui/svgIcons/LeftCircleIcon';
 // import { Image } from 'react-native-svg';
 
 type scannedWebView = {
@@ -249,16 +250,17 @@ const RunScan = ({navigation, route}: any) => {
       <ImageBackground
         source={require('../../assets/images/App-bg.png')}
         style={{flex: 1,backgroundColor:"black"}}>
+        <View className='p-4 inline-block w-[250px] mx-auto border-b-8' style={{backgroundColor: Colors['light'].themeOrange}}>
         <Image
           source={require('../../assets/images/app_logo.png')}
           style={{
             width: '100%',
             height: 50,
-            backgroundColor: Colors['light'].themeOrange,
-            padding: 10,
+            padding:10,
           }}
           resizeMode="contain"
         />
+        </View>
         <View className="flex-1 h-screen mt-[30px] px-4">
           <View
             style={{backgroundColor: Colors['light'].themeOrange}}
@@ -266,7 +268,7 @@ const RunScan = ({navigation, route}: any) => {
             <Text
               className="text-lg  text-white"
               style={{fontFamily: fontFamily.nunitoRegular}}>
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti. 
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque. 
             </Text>
           </View>
           <View className="flex items-center justify-between flex-row mb-4 relative">
@@ -275,7 +277,7 @@ const RunScan = ({navigation, route}: any) => {
                 handleExitScan();
               }}>
               {/* <Text> Back</Text> */}
-              <BackIconSvg />
+              <LeftCircleIcon height={35} width={35} />
             </Pressable>
             {/* <Text
               className="text-2xl font-medium flex-grow text-center pr-6"
@@ -307,7 +309,7 @@ const RunScan = ({navigation, route}: any) => {
               />
             </View>
           ) : (
-            <View className="flex-1 mt-4">
+            <View className="flex-1 mt-4 bg-white px-3">
               {currentUrl ? (
                 getRenderActiveTab(selectedUrl ? selectedUrl : currentUrl!)
               ) : isScanCompleted ? (
