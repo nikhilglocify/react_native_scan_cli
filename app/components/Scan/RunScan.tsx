@@ -263,10 +263,10 @@ const RunScan = ({navigation, route}: any) => {
           resizeMode="contain"
         />
         </View>
-        <View className="flex-1 h-screen mt-[30px] px-4">
+        <View className="flex-1 h-screen mt-[20px] px-4">
           <View
             style={{backgroundColor: Colors['light'].themeOrange}}
-            className="p-2 mb-[20px]">
+            className="p-2 mb-[15px]">
             <Text
               className="text-lg  text-white"
               style={{fontFamily: fontFamily.nunitoRegular}}>
