@@ -35,13 +35,11 @@ const AddScanModal = ({
 }) => {
   const [time, setTime] = useState<Date | null>(new Date());
   const [scanDuration, setScanDuration] = useState(10);
-  const [showPicker, setShowPicker] = useState(false);
   const {addScan} = useScanContext();
 
 
 
   const onChangeTime = (selectedTime?: Date) => {
-    setShowPicker(false);
     if (selectedTime) setTime(selectedTime);
   };
 
