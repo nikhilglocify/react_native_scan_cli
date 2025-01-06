@@ -36,6 +36,4 @@ export async function requestUserPermission() {
   }
 
 
-  const handleNotificationAction=(actionId:string,notificationData:any,navigation:any)=>{
-
-  }
+  
