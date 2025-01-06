@@ -1,6 +1,7 @@
 import PushNotification, { PushNotificationScheduleObject } from 'react-native-push-notification';
 import { ScheduledScan } from '../constants/Interface';
-import notifee, { AndroidImportance } from '@notifee/react-native';
+import notifee, { AndroidImportance, RepeatFrequency, TimestampTrigger, TriggerType } from '@notifee/react-native';
+import { notifiactionActions } from '../constants/enums';
 // Function to schedule a notification
 export const scheduleNotification = (
     id: string,
@@ -78,3 +79,54 @@ export const createNotifeeNotificationChannel=async()=>{
         sound: 'hollow',
       });
 }
+
+
+export  const scheduleNotifeeNotification = async (data: any, date: Date) => {
+    try {
+      console.log(' PushNotificationConfig scheduleNotifeeNotification running ', data);
+      const trigger: TimestampTrigger = {
+        type: TriggerType.TIMESTAMP,
+        timestamp: date.getTime(), // trigger time
+        repeatFrequency: RepeatFrequency.DAILY,
+      };
+
+      // Create the notification with action buttons for both iOS and Android
+      await notifee.createTriggerNotification(
+        {
+          id: data?.id,
+          data,
+          title: 'Schedule Scan',
+          body: `Click to start scan for ${data.scanDuration} sites `,
+          android: {
+            channelId: 'default',
+            pressAction: {
+              id: notifiactionActions.default,
+              launchActivity: 'default',
+            },
+            actions: [
+              {
+                title: 'Run Now',
+                pressAction: {
+                  id: notifiactionActions.open_now, 
+                  launchActivity: 'default',
+                },
+              },
+              {
+                title: 'Ignore',
+                pressAction: {
+                  id: notifiactionActions.ignore, 
+                  launchActivity: 'default',
+                },
+              },
+            ],
+          },
+          ios: {
+            categoryId: 'scan_actions', // Category for iOS actions
+          },
+        },
+        trigger,
+      );
+    } catch (error) {
+      console.log('Error creating notification', error);
+    }
+  };

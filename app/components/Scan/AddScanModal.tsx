@@ -15,19 +15,16 @@ import uuid from 'react-native-uuid';
 import {ScheduledScan} from '../../constants/Interface';
 import {useScanContext} from '../../../context/ScanContext';
 import ClockIcon from '../ui/svgIcons/ClockIcon';
-import {scheduleNotification} from '../../services/PushNotificationConfig';
-import {getItem, setItem} from '../../helpers/asyncStorage';
+import {
+  scheduleNotifeeNotification,
+  scheduleNotification,
+} from '../../services/PushNotificationConfig';
 
-import notifee, {
-  RepeatFrequency,
-  TimestampTrigger,
-  TriggerType,
-} from '@notifee/react-native';
-import {generateNotificationId} from '../../helpers';
+
+
 import {fontFamily} from '../../constants/theme';
 import CustomTimePicker from './CustomTimePicker';
 import {Colors} from '../../constants/Colors';
-import {notifiactionActions} from '../../constants/enums';
 
 const AddScanModal = ({
   visible,
@@ -41,13 +38,13 @@ const AddScanModal = ({
   const [showPicker, setShowPicker] = useState(false);
   const {addScan} = useScanContext();
 
-  const onChangeTime = (event: any, selectedTime?: Date) => {
-    setShowPicker(false);
-    console.log('Time selected', selectedTime?.toLocaleTimeString());
-    if (selectedTime) setTime(selectedTime);
-  };
+  // const onChangeTime = (event: any, selectedTime?: Date) => {
+  //   setShowPicker(false);
+  //   console.log('Time selected', selectedTime?.toLocaleTimeString());
+  //   if (selectedTime) setTime(selectedTime);
+  // };
 
-  const onChangeTimeNew = (selectedTime?: Date) => {
+  const onChangeTime = (selectedTime?: Date) => {
     setShowPicker(false);
     if (selectedTime) setTime(selectedTime);
   };
@@ -59,55 +56,55 @@ const AddScanModal = ({
     }, 1000);
   };
 
-  const scheduleNotifeeNotification = async (data: any, date: Date) => {
-    try {
-      console.log('scheduleNotifeeNotification', data);
-      const trigger: TimestampTrigger = {
-        type: TriggerType.TIMESTAMP,
-        timestamp: date.getTime(), // trigger time
-        repeatFrequency: RepeatFrequency.DAILY,
-      };
+  // const scheduleNotifeeNotification = async (data: any, date: Date) => {
+  //   try {
+  //     console.log('scheduleNotifeeNotification', data);
+  //     const trigger: TimestampTrigger = {
+  //       type: TriggerType.TIMESTAMP,
+  //       timestamp: date.getTime(), // trigger time
+  //       repeatFrequency: RepeatFrequency.DAILY,
+  //     };
 
-      // Create the notification with action buttons for both iOS and Android
-      await notifee.createTriggerNotification(
-        {
-          id: data?.id,
-          data,
-          title: 'Schedule Scan',
-          body: `Click to start scan for ${data.scanDuration} sites `,
-          android: {
-            channelId: 'default',
-            pressAction: {
-              id: notifiactionActions.default,
-              launchActivity: 'default',
-            },
-            actions: [
-              {
-                title: 'Run Now',
-                pressAction: {
-                  id: notifiactionActions.open_now, 
-                  launchActivity: 'default',
-                },
-              },
-              {
-                title: 'Ignore',
-                pressAction: {
-                  id: notifiactionActions.ignore, 
-                  launchActivity: 'default',
-                },
-              },
-            ],
-          },
-          ios: {
-            categoryId: 'scan_actions', // Category for iOS actions
-          },
-        },
-        trigger,
-      );
-    } catch (error) {
-      console.log('Error creating notification', error);
-    }
-  };
+  //     // Create the notification with action buttons for both iOS and Android
+  //     await notifee.createTriggerNotification(
+  //       {
+  //         id: data?.id,
+  //         data,
+  //         title: 'Schedule Scan',
+  //         body: `Click to start scan for ${data.scanDuration} sites `,
+  //         android: {
+  //           channelId: 'default',
+  //           pressAction: {
+  //             id: notifiactionActions.default,
+  //             launchActivity: 'default',
+  //           },
+  //           actions: [
+  //             {
+  //               title: 'Run Now',
+  //               pressAction: {
+  //                 id: notifiactionActions.open_now,
+  //                 launchActivity: 'default',
+  //               },
+  //             },
+  //             {
+  //               title: 'Ignore',
+  //               pressAction: {
+  //                 id: notifiactionActions.ignore,
+  //                 launchActivity: 'default',
+  //               },
+  //             },
+  //           ],
+  //         },
+  //         ios: {
+  //           categoryId: 'scan_actions', // Category for iOS actions
+  //         },
+  //       },
+  //       trigger,
+  //     );
+  //   } catch (error) {
+  //     console.log('Error creating notification', error);
+  //   }
+  // };
   // const handleScheduleNotification = async (
   //   id: string,
   //   date: Date,
@@ -160,7 +157,7 @@ const AddScanModal = ({
               Select Time
             </Text>
           </View>
-          <CustomTimePicker onTimeChange={onChangeTimeNew} />
+          <CustomTimePicker onTimeChange={onChangeTime} />
 
           <View className="mt-[36px] mb-[36px] flex flex-row items-center gap-2">
             <Text
