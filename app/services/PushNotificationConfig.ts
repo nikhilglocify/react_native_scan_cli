@@ -1,6 +1,6 @@
 import PushNotification, { PushNotificationScheduleObject } from 'react-native-push-notification';
 import { ScheduledScan } from '../constants/Interface';
-import notifee from '@notifee/react-native';
+import notifee, { AndroidImportance } from '@notifee/react-native';
 // Function to schedule a notification
 export const scheduleNotification = (
     id: string,
@@ -68,3 +68,13 @@ export const createNotificationChannel = (): void => {
         (created: boolean) => console.log(`Channel created: ${created}`)
     );
 };
+
+export const createNotifeeNotificationChannel=async()=>{
+    console.log("Notife chaneel")
+    await notifee.createChannel({
+        id: 'default',
+        name: 'Default Channel',
+        importance: AndroidImportance.HIGH, // High importance
+        sound: 'hollow',
+      });
+}

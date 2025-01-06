@@ -8,3 +8,10 @@ export interface ScheduledScan{
     type?:"scheduled" |"history"
     notificationId?:string
 }
+
+
+export interface svgProps  {
+    height?: number;
+    width?: number;
+    color?:any
+  };

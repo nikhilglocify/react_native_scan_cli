@@ -17,9 +17,17 @@ import {createStackNavigator} from '@react-navigation/stack';
 import RunScan from './app/components/Scan/RunScan';
 import TabHistoryIcon from './app/components/ui/svgIcons/TabHistoryIcon';
 import {Colors} from './app/constants/Colors';
-import {Alert, useColorScheme} from 'react-native';
-import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import notifee, {AuthorizationStatus} from '@notifee/react-native';
+import {ImageBackground, StyleSheet, useColorScheme} from 'react-native';
+import notifee from '@notifee/react-native';
+import {Platform} from 'react-native';
+import {navigationRef} from './app/navigation/NavigationRef';
+import {fontFamily} from './app/constants/theme';
+import {FontAwesomeIcon, MaterialIcons} from './app/components/ui/TabIcons';
+import {
+  registerNotificationCategories,
+  requestUserPermission,
+} from './app/helpers/initializationUtils';
+
 // Define the types for the navigation
 export type RootTabParamList = {
   Home: undefined;
@@ -27,6 +35,7 @@ export type RootTabParamList = {
   History: undefined;
 
   Tips: undefined;
+  RunScan: undefined;
 };
 export type RootStackParamList = {
   Tabs: undefined; // For the Tab Navigator
@@ -34,15 +43,14 @@ export type RootStackParamList = {
 };
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
-
 const TabNavigator: React.FC = () => {
   const colorScheme = useColorScheme();
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].white,
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].lightBlue,
+        tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].lightGray,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].white,
         headerShown: false,
 
         tabBarLabelStyle: {
@@ -51,7 +59,8 @@ const TabNavigator: React.FC = () => {
           fontFamily: fontFamily.nunitoSemiBold,
         },
         tabBarStyle: {
-          backgroundColor: '#8C46A9',
+          // backgroundColor: '#8C46A9',
+          backgroundColor: Colors['light'].themeOrange,
           height: 70, // Set background color for other platforms
           paddingBottom: 20, // Adjust padding to avoid overlapping with the tab bar
         },
@@ -60,129 +69,76 @@ const TabNavigator: React.FC = () => {
         name="Home"
         component={Home}
         options={{
+          // tabBarStyle:{display:"flex"},
           headerShown: false,
-          tabBarIcon: ({color, size}) => <TabHistoryIcon />,
+          tabBarIcon: ({color, size}) => (
+            <FontAwesomeIcon name="home" size={30} color={color} />
+          ),
         }}
       />
       <Tab.Screen
         name="History"
         component={History}
         options={{
+          // tabBarStyle:{display:"flex"},
           headerShown: false,
-          tabBarIcon: ({color, size}) => <TabHistoryIcon />,
+          tabBarIcon: ({color, size}) => <TabHistoryIcon color={color} />,
         }}
       />
       <Tab.Screen
         name="Tips"
         component={Tips}
         options={{
+          // tabBarStyle:{display:"flex"},
           headerShown: false,
-          tabBarIcon: ({color, size}) => <TabHistoryIcon />,
+          tabBarIcon: ({color, size}) => (
+            <FontAwesomeIcon name="star" size={30} color={color} />
+          ),
+          tabBarLabel: 'Daily Tips',
         }}
       />
     </Tab.Navigator>
   );
 };
 
-import {PermissionsAndroid, Platform} from 'react-native';
-import {Linking} from 'react-native';
-import {navigationRef} from './app/navigation/NavigationRef';
-import {fontFamily} from './app/constants/theme';
+// async function requestUserPermission() {
+//   const settings = await notifee.requestPermission();
 
-export const checkPostNotificationPermission = async () => {
-  if (Platform.OS === 'android' && Platform.Version >= 33) {
-    try {
-      // Check if POST_NOTIFICATIONS permission is granted
-      const permissionStatus = await PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      );
-
-      if (permissionStatus) {
-        console.log('POST_NOTIFICATIONS permission already granted.');
-        return;
-      } else {
-        // If permission is not granted, request permission
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-          {
-            title: 'Post Notification Permission',
-            message:
-              'This app requires notification permissions to send you alerts and updates.',
-            buttonPositive: 'OK',
-            buttonNegative: 'Cancel',
-          },
-        );
-
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('POST_NOTIFICATIONS permission granted.');
-        } else if (granted === PermissionsAndroid.RESULTS.DENIED) {
-          console.log('POST_NOTIFICATIONS permission denied.');
-        } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-          console.log(
-            'POST_NOTIFICATIONS permission denied permanently. Redirecting to settings.',
-          );
-          Linking.openSettings(); // Open the app's settings
-        }
-      }
-    } catch (err) {
-      console.error(
-        'Error checking or requesting POST_NOTIFICATIONS permission:',
-        err,
-      );
-      // Redirect to settings as a fallback in case of an error
-      Linking.openSettings();
-    }
-  } else {
-    console.log('Permission not required for this Android version.');
-  }
-};
-async function requestUserPermission() {
-  const settings = await notifee.requestPermission();
-
-  // if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
-  //   console.log('Permission settings:', settings);
-  // } else {
-  //   console.log('User declined permissions');
-  // }
-  if (settings.authorizationStatus === AuthorizationStatus.DENIED) {
-    console.log('User denied permissions request');
-  } else if (settings.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
-    console.log('User granted permissions request');
-  } else if (settings.authorizationStatus === AuthorizationStatus.PROVISIONAL) {
-    console.log('User provisionally granted permissions request');
-  }
-}
-async function registerNotificationCategories() {
-  console.log("Settingios categories")
-  await notifee.setNotificationCategories([
-    {
-      id: 'scan_actions', // This must match the `categoryId` in the notification
-      actions: [
-        {
-          id: 'open_now',
-          title: 'Run Now',
-          foreground: true, // Bring the app to the foreground
-        },
-        {
-          id: 'ignore',
-          title: 'Ignore',
-          foreground: false, // Do not bring the app to the foreground
-          destructive: true, // Mark as a destructive action (optional)
-        },
-      ],
-    },
-  ]);
-}
-
-
+//   if (settings.authorizationStatus === AuthorizationStatus.DENIED) {
+//     console.log('User denied permissions request');
+//   } else if (settings.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
+//     console.log('User granted permissions request');
+//   } else if (settings.authorizationStatus === AuthorizationStatus.PROVISIONAL) {
+//     console.log('User provisionally granted permissions request');
+//   }
+// }
+// async function registerNotificationCategories() {
+//   await notifee.setNotificationCategories([
+//     {
+//       id: 'scan_actions', // This must match the `categoryId` in the notification
+//       actions: [
+//         {
+//           id: 'open_now',
+//           title: 'Run Now',
+//           foreground: true, // Bring the app to the foreground
+//         },
+//         {
+//           id: 'ignore',
+//           title: 'Ignore',
+//           foreground: false, // Do not bring the app to the foreground
+//           destructive: true, // Mark as a destructive action (optional)
+//         },
+//       ],
+//     },
+//   ]);
+// }
 
 const App: React.FC = () => {
   useEffect(() => {
-    // checkPostNotificationPermission();
     requestUserPermission();
     checkInitalNotification();
 
-    if(Platform.OS=="ios"){
+    if (Platform.OS == 'ios') {
       registerNotificationCategories();
     }
   }, []);
@@ -194,7 +150,6 @@ const App: React.FC = () => {
 
     setTimeout(() => {
       if (actionId == 'open_now' || actionId == 'default') {
-        
         if (!navigationRef || !navigationRef.isReady()) {
           console.log(
             'Navigation not initialized. Storing pending navigation.',
@@ -214,7 +169,7 @@ const App: React.FC = () => {
             initialNotification?.notification.data,
           );
         }
-        
+
         // Alert.alert('Init Scan Opened', 'You have accepted the scan request.');
       } else if (actionId == 'ignore') {
         console.log('init Opend with', actionId);
@@ -226,23 +181,40 @@ const App: React.FC = () => {
   return (
     <ScanProvider>
       <NavigationContainer ref={navigationRef}>
-        <Stack.Navigator initialRouteName="Tabs">
-          {/* Main Tab Navigator */}
-          <Stack.Screen
-            name="Tabs"
-            component={TabNavigator}
-            options={{headerShown: false}}
-          />
-          {/* Additional screens */}
-          <Stack.Screen
-            name="RunScan"
-            component={RunScan}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
+        <ImageBackground
+          source={require('./app/assets/images/App-bg.png')} // Replace with your image path
+          style={styles.backgroundImage}
+          resizeMode="cover">
+          <Stack.Navigator initialRouteName="Tabs">
+            {/* Main Tab Navigator */}
+
+            <Stack.Screen
+              name="Tabs"
+              component={TabNavigator}
+              options={{headerShown: false}}
+            />
+            {/* Additional screens */}
+            <Stack.Screen
+              name="RunScan"
+              component={RunScan}
+              options={{
+                headerShown: false,
+                // tabBarStyle: { display: 'flex' }
+              }}
+            />
+          </Stack.Navigator>
+        </ImageBackground>
       </NavigationContainer>
     </ScanProvider>
   );
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 2, // Ensures the image covers the entire screen
+    // width: '100%', // applied to Image
+    // height: '100%'
+  },
+});

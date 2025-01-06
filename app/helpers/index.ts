@@ -43,6 +43,5 @@ export const generateNotificationId = async (): Promise<string> => {
 
 
 export const copyToClipboard = (text:string) => {
-  console.log("Copying to clipboard")
   Clipboard.setString(text);
 };

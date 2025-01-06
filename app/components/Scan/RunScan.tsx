@@ -13,6 +13,7 @@ import {
   Image,
   Alert,
   Dimensions,
+  ImageBackground,
 } from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {WebView} from 'react-native-webview';
@@ -38,6 +39,8 @@ import {
 } from '../../helpers/asyncStorage';
 import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
+import {Colors} from '../../constants/Colors';
+import LeftCircleIcon from '../ui/svgIcons/LeftCircleIcon';
 // import { Image } from 'react-native-svg';
 
 type scannedWebView = {
@@ -77,11 +80,9 @@ const RunScan = ({navigation, route}: any) => {
 
   useEffect(() => {
     if (initNewScan && isFocused) {
-
       setTimeout(() => {
         runScan(selectedUrls);
         setIsInitialized(true);
-        console.log("initialezed timeout")
       }, 1450);
     }
   }, [initNewScan, checkForScan]);
@@ -237,161 +238,175 @@ const RunScan = ({navigation, route}: any) => {
       scanDuration: visitedUrls.length,
       isCompleted: true,
       visitedSites: visitedUrls,
-      type:"history"
+      type: 'history',
     };
     addScan(addToScanHistory);
-    // if (data?.id && !data?.scanNow) {
-    //   console.log('updating the scan');
-    //   updateScan(data?.id, {visitedSites: visitedUrls, isCompleted: true});
-    //   await updateScanStatus(data?.id, visitedUrls);
-    // } else {
-    //   console.log('Adding  the scan');
-    //   const addToScanHistory: ScheduledScan = {
-    //     id: uuid.v4(),
-    //     time: new Date().toISOString(),
-    //     date: new Date(),
-    //     scanDuration: visitedUrls.length,
-    //     isCompleted: true,
-    //     visitedSites: visitedUrls,
-    //   };
-    //   addScan(addToScanHistory);
-    // }
 
     setIsScanCompleted(true);
   };
 
   return (
-    <View className="flex-1 h-screen mt-[80px] px-4">
-      <View className="flex items-center justify-between flex-row mb-4 relative">
-        <Pressable
-          onPress={() => {
-            handleExitScan();
-          }}>
-          {/* <Text> Back</Text> */}
-          <BackIconSvg />
-        </Pressable>
-        <Text
-          className="text-2xl font-medium flex-grow text-center pr-6"
-          style={{fontFamily: fontFamily.nunitoSemiBold}}>
-          Run Scan
-        </Text>
-
-        <TouchableOpacity
-          className="absolute right-0 p-2 px-2 rounded-lg"
-          onPress={() => {
-            console.log('onPress...', showScannedUrls);
-            if (scannedUrls.length) {
-              setShowScannedUrls(!showScannedUrls);
-            }
-          }}>
-          <BrowserTabIcon />
-        </TouchableOpacity>
-      </View>
-
-     
-      {!isInitialized ? (
-        <View style={styles.container}>
-          <FastImage
-            style={{
-              width: screenWidth * 0.8, 
-              height: screenHeight * 0.4, 
-            }}
-            source={require('../../assets/gifs/scanGif.gif')}
-            resizeMode={FastImage.resizeMode.contain}
-          />
+    <>
+      <ImageBackground
+        source={require('../../assets/images/App-bg.png')}
+        style={{flex: 1,
+        // backgroundColor:"black"
+        }}>
+        <View className='p-4 inline-block w-[250px] mx-auto' style={{backgroundColor: Colors['light'].themeOrange}}>
+        <Image
+          source={require('../../assets/images/app_logo.png')}
+          style={{
+            width: '100%',
+            height: 50,
+            padding:10,
+          }}
+          resizeMode="contain"
+        />
         </View>
-      ) : (
-        <View className="flex-1 mt-4">
-          {currentUrl?   (
-            getRenderActiveTab(selectedUrl ? selectedUrl : currentUrl!)
-          ) : isScanCompleted ? (
-            <View className="flex flex-1 items-center justify-center">
-              <Text style={{fontFamily:fontFamily.nunitoSemiBold}} className="text-center  text-2xl mb-2">Scan complete!</Text>
-              <Text
-                style={{fontFamily: fontFamily.nunitoRegular}}
-                className="text-center text-lg">
-                "Tap icon in upper right to see which sites were
-                visited and to re-visit any sites you'd like. Tap Exit to return
-                to Home. And don't forget to visit today's Tip!"
-              </Text>
-              <Text></Text>
+        <View className="flex-1 h-screen mt-[20px] px-4">
+          <View
+            style={{backgroundColor: Colors['light'].themeOrange}}
+            className="p-2 mb-[15px]">
+            <Text
+              className="text-lg  text-white"
+              style={{fontFamily: fontFamily.nunitoRegular}}>
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis. 
+            </Text>
+          </View>
+          <View className="flex items-center justify-between flex-row mb-1 relative">
+            <Pressable
+              onPress={() => {
+                handleExitScan();
+              }}>
+              
+              <LeftCircleIcon height={28} width={28} />
+            </Pressable>
+           
+
+            <TouchableOpacity
+              className="absolute right-0 p-2 px-2 rounded-lg"
+              onPress={() => {
+                console.log('onPress...', showScannedUrls);
+                if (scannedUrls.length) {
+                  setShowScannedUrls(!showScannedUrls);
+                }
+              }}>
+              <BrowserTabIcon height={25} width={25}/>
+            </TouchableOpacity>
+          </View>
+
+          {!isInitialized ? (
+            <View style={styles.container}>
+              <FastImage
+                style={{
+                  width: screenWidth * 0.8,
+                  height: screenHeight * 0.4,
+                }}
+                source={require('../../assets/gifs/scanGif.gif')}
+                resizeMode={FastImage.resizeMode.contain}
+              />
             </View>
           ) : (
-            <>
-              <View className="flex items-center justify-center flex-1">
-                <Text
-                  className="text-lg text-gray-600"
-                  style={{fontFamily: fontFamily.nunitoRegular}}>
-                 {!isInitialized? "Select a Tab to view site":""}
-                </Text>
-              </View>
-            </>
+            <View className="flex-1 mt-3 bg-white px-3">
+              {currentUrl ? (
+                getRenderActiveTab(selectedUrl ? selectedUrl : currentUrl!)
+              ) : isScanCompleted ? (
+                <View className="flex flex-1 items-center justify-center">
+                  <Text
+                    style={{fontFamily: fontFamily.nunitoSemiBold}}
+                    className="text-center  text-2xl mb-2">
+                    Scan complete!
+                  </Text>
+                  <Text
+                    style={{fontFamily: fontFamily.nunitoRegular}}
+                    className="text-center text-lg">
+                    "Tap icon in upper right to see which sites were visited and
+                    to re-visit any sites you'd like. Tap Exit to return to
+                    Home. And don't forget to visit today's Tip!"
+                  </Text>
+                  <Text></Text>
+                </View>
+              ) : (
+                <>
+                  <View className="flex items-center justify-center flex-1">
+                    <Text
+                      className="text-lg text-gray-600"
+                      style={{fontFamily: fontFamily.nunitoRegular}}>
+                      {!isInitialized ? 'Select a Tab to view site' : ''}
+                    </Text>
+                  </View>
+                </>
+              )}
+            </View>
           )}
-        </View>
-      )}
-       <TouchableOpacity
-        className="text-right pb-5 px-2 pt-2"
-        onPress={() => handleExitScan()}>
-        <Text
-          className="text-[##FF3D3D] bg-[#FFEBEB] shadow-[0_5px_15px_0_rgba(0,0,0,0.8)] text-center px-3 py-3 w-[100px] ml-[auto] rounded-lg  "
-          style={{fontFamily: fontFamily.nunitoRegular}}>
-          Exit Scan
-        </Text>
-      </TouchableOpacity>
+          <TouchableOpacity
+            className="text-right pb-4 px-2 pt-3"
+            onPress={() => handleExitScan()}
+            >
+            <Text
+              className="text-center px-4 py-4 w-[100px] ml-[auto]  text-white "
+              style={{fontFamily: fontFamily.nunitoRegular,backgroundColor:Colors['light'].themeOrange}}>
+              Exit Scan
+            </Text>
+          </TouchableOpacity>
 
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={scannedUrls.length ? showScannedUrls : false}
-        onRequestClose={() => setShowScannedUrls(false)}>
-        <TouchableWithoutFeedback onPress={() => setShowScannedUrls(false)}>
-          <View className="flex justify-start pt-28 items-end h-[100vh] bg-black/30">
-            <TouchableWithoutFeedback>
-              <View className="bg-gray-100 p-6 rounded-lg w-[200px] max-h-[70vh] min-h-[300px] overflow-y-auto">
-                <Text className="text-md font-semibold mb-4">Scanned URLs</Text>
-                <ScrollView>
-                  {scannedUrls.map((url, index) => {
-                    const cleanedUrl = url
-                      .replace(/^https?:\/\//, '')
-                      .replace(/^www\./, '');
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={scannedUrls.length ? showScannedUrls : false}
+            onRequestClose={() => setShowScannedUrls(false)}>
+            <TouchableWithoutFeedback onPress={() => setShowScannedUrls(false)}>
+              <View className="flex justify-start pt-28 items-end h-[100vh] bg-black/30">
+                <TouchableWithoutFeedback>
+                  <View className="bg-gray-100 p-6 rounded-lg w-[200px] max-h-[70vh] min-h-[300px] overflow-y-auto">
+                    <Text className="text-md font-semibold mb-4">
+                      Scanned URLs
+                    </Text>
+                    <ScrollView>
+                      {scannedUrls.map((url, index) => {
+                        const cleanedUrl = url
+                          .replace(/^https?:\/\//, '')
+                          .replace(/^www\./, '');
 
-                    const shortenedUrl =
-                      cleanedUrl.length > 30
-                        ? `${cleanedUrl.slice(0, 27)}...`
-                        : cleanedUrl;
+                        const shortenedUrl =
+                          cleanedUrl.length > 30
+                            ? `${cleanedUrl.slice(0, 27)}...`
+                            : cleanedUrl;
 
-                    return (
-                      <View key={index} className="flex relative">
-                        <Pressable
-                          onPress={() => {
-                            console.log('url', url);
-                            setSelectedUrl(url);
-                            setCurrentUrl(url);
-                            setShowScannedUrls(false);
-                          }}
-                          className="py-2 border-b border-gray-200">
-                          <Text
-                            className="text-base text-blue-500 pr-2 mr-4"
-                            style={{fontFamily: fontFamily.nunitoRegular}}>
-                            {shortenedUrl}
-                          </Text>
-                        </Pressable>
+                        return (
+                          <View key={index} className="flex relative">
+                            <Pressable
+                              onPress={() => {
+                                console.log('url', url);
+                                setSelectedUrl(url);
+                                setCurrentUrl(url);
+                                setShowScannedUrls(false);
+                              }}
+                              className="py-2 border-b border-gray-200">
+                              <Text
+                                className="text-base text-blue-500 pr-2 mr-4"
+                                style={{fontFamily: fontFamily.nunitoRegular}}>
+                                {shortenedUrl}
+                              </Text>
+                            </Pressable>
 
-                        <Pressable
-                          onPress={() => closeTabUrl(url)}
-                          className="absolute top-3 right-1">
-                          <CrossIcon />
-                        </Pressable>
-                      </View>
-                    );
-                  })}
-                </ScrollView>
+                            <Pressable
+                              onPress={() => closeTabUrl(url)}
+                              className="absolute top-3 right-1">
+                              <CrossIcon />
+                            </Pressable>
+                          </View>
+                        );
+                      })}
+                    </ScrollView>
+                  </View>
+                </TouchableWithoutFeedback>
               </View>
             </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    </View>
+          </Modal>
+        </View>
+      </ImageBackground>
+    </>
   );
 };
 
