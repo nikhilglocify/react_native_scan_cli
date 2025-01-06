@@ -24,7 +24,7 @@ import DeleteIcon from '../../components/ui/svgIcons/DeleteIcon';
 import {useScanContext} from '../../../context/ScanContext';
 import AddScanModal from '../../components/Scan/AddScanModal';
 import {getScansLocally, setItem} from '../../helpers/asyncStorage';
-import {createNotificationChannel} from '../../services/PushNotificationConfig';
+import {createNotifeeNotificationChannel, createNotificationChannel} from '../../services/PushNotificationConfig';
 // import { Notifications } from 'react-native-notifications';
 import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
@@ -51,103 +51,103 @@ export default function HomeScreen({navigation}: any) {
   );
 
   useEffect(() => {
-    createNotificationChannel();
+    createNotifeeNotificationChannel();
     setTimeout(() => {
       setLoading(false);
     }, 1200);
   }, []);
-  useEffect(() => {
-    async function createChannel() {
-      await notifee.createChannel({
-        id: 'default',
-        name: 'Default Channel',
-        importance: AndroidImportance.HIGH, // High importance
-        sound: 'hollow',
-      });
-    }
+  // useEffect(() => {
+  //   async function createChannel() {
+  //     await notifee.createChannel({
+  //       id: 'default',
+  //       name: 'Default Channel',
+  //       importance: AndroidImportance.HIGH, // High importance
+  //       sound: 'hollow',
+  //     });
+  //   }
 
-    createChannel();
+  //   createChannel();
 
-    // Register foreground event listener
-    const unsubscribeForeground = notifee.onForegroundEvent(
-      async ({type, detail}) => {
-        if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
-          const actionId = detail?.pressAction?.id;
-          // Alert.alert('Foreground Pressed');
-          console.log(
-            'Foreground User pressed an action with the id: ',
-            detail.pressAction.id,
-            detail.notification?.data,
-          );
-          setTimeout(() => {
-            if (actionId === 'open_now' || actionId == 'default') {
-              // Handle "Open Now" action
-              navigation.navigate('RunScan', detail.notification?.data);
-              // Alert.alert('Scan Opened', 'You have accepted the scan request.');
-            }
-          }, 1000);
-        }
+  //   // Register foreground event listener
+  //   const unsubscribeForeground = notifee.onForegroundEvent(
+  //     async ({type, detail}) => {
+  //       if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
+  //         const actionId = detail?.pressAction?.id;
+  //         // Alert.alert('Foreground Pressed');
+  //         console.log(
+  //           'Foreground User pressed an action with the id: ',
+  //           detail.pressAction.id,
+  //           detail.notification?.data,
+  //         );
+  //         setTimeout(() => {
+  //           if (actionId === 'open_now' || actionId == 'default') {
+  //             // Handle "Open Now" action
+  //             navigation.navigate('RunScan', detail.notification?.data);
+  //             // Alert.alert('Scan Opened', 'You have accepted the scan request.');
+  //           }
+  //         }, 1000);
+  //       }
 
-        if (type === EventType.PRESS) {
-          console.log(
-            'Notification PRESS IOs in Foreground:',
-            detail.notification,
-          );
+  //       if (type === EventType.PRESS) {
+  //         console.log(
+  //           'Notification PRESS IOs in Foreground:',
+  //           detail.notification,
+  //         );
 
-          // Check which action was pressed (Open Now or Ignore)
-          const actionId = detail?.pressAction?.id;
-          console.log('actionId', actionId);
-          setTimeout(() => {
-            if (actionId === 'open_now' || actionId == 'default') {
-              // Handle "Open Now" action
-              navigation.navigate('RunScan', detail.notification?.data);
-              // Alert.alert('Scan Opened', 'You have accepted the scan request.');
-            }
-          }, 1000);
-        }
-      },
-    );
+  //         // Check which action was pressed (Open Now or Ignore)
+  //         const actionId = detail?.pressAction?.id;
+  //         console.log('actionId', actionId);
+  //         setTimeout(() => {
+  //           if (actionId === 'open_now' || actionId == 'default') {
+  //             // Handle "Open Now" action
+  //             navigation.navigate('RunScan', detail.notification?.data);
+  //             // Alert.alert('Scan Opened', 'You have accepted the scan request.');
+  //           }
+  //         }, 1000);
+  //       }
+  //     },
+  //   );
 
-    // Register background event listener
-    notifee.onBackgroundEvent(async ({type, detail}) => {
-      if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
-        console.log(
-          'Background User pressed an action with the id: ',
-          detail.pressAction.id,
-        );
-        const actionId = detail?.pressAction?.id;
-        setTimeout(() => {
-          if (actionId === 'open_now' || actionId == 'default') {
-            // Handle "Open Now" action
-            navigation.navigate('RunScan', detail.notification?.data);
-          }
-        }, 1000);
-      }
+  //   // Register background event listener
+  //   notifee.onBackgroundEvent(async ({type, detail}) => {
+  //     if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
+  //       console.log(
+  //         'Background User pressed an action with the id: ',
+  //         detail.pressAction.id,
+  //       );
+  //       const actionId = detail?.pressAction?.id;
+  //       setTimeout(() => {
+  //         if (actionId === 'open_now' || actionId == 'default') {
+  //           // Handle "Open Now" action
+  //           navigation.navigate('RunScan', detail.notification?.data);
+  //         }
+  //       }, 1000);
+  //     }
 
-      if (type === EventType.PRESS) {
-        console.log(
-          'Notification  EventType.PRESS Pressed in Background:',
-          detail.notification,
-        );
+  //     if (type === EventType.PRESS) {
+  //       console.log(
+  //         'Notification  EventType.PRESS Pressed in Background:',
+  //         detail.notification,
+  //       );
 
-        // Check which action was pressed (Open Now or Ignore)
-        const actionId = detail?.pressAction?.id;
+  //       // Check which action was pressed (Open Now or Ignore)
+  //       const actionId = detail?.pressAction?.id;
 
-        setTimeout(() => {
-          if (actionId === 'open_now' || actionId == 'default') {
-            // Handle "Open Now" action
-            navigation.navigate('RunScan', detail.notification?.data);
-            // Alert.alert('Scan Opened', 'You have accepted the scan request.');
-          }
-        }, 1000);
-      }
-    });
+  //       setTimeout(() => {
+  //         if (actionId === 'open_now' || actionId == 'default') {
+  //           // Handle "Open Now" action
+  //           navigation.navigate('RunScan', detail.notification?.data);
+  //           // Alert.alert('Scan Opened', 'You have accepted the scan request.');
+  //         }
+  //       }, 1000);
+  //     }
+  //   });
 
-    // Clean up the foreground listener when the component unmounts
-    return () => {
-      unsubscribeForeground(); // Unsubscribe from the foreground listener
-    };
-  }, []);
+  //   // Clean up the foreground listener when the component unmounts
+  //   return () => {
+  //     unsubscribeForeground(); // Unsubscribe from the foreground listener
+  //   };
+  // }, []);
 
   if (loading) {
     return <Loader />;
