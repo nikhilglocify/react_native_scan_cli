@@ -62,7 +62,6 @@ const RunScan = ({navigation, route}: any) => {
   } = useScanContext();
 
   const data = route.params;
-  console.log('DATA RECIVED', data);
 
   const selectedUrls = data?.scanNow
     ? getRandomURLs(urlData.term)
@@ -181,7 +180,6 @@ const RunScan = ({navigation, route}: any) => {
         setWebViews(prev => [...prev, {webView, url, id: uuid.v4()}]);
         if (index === selectedUrls.length - 1) {
           setIsScanCompleted(true);
-          // Alert.alert('Scan completed');
           setCurrentUrl(null);
         }
       }, k);
