@@ -103,55 +103,7 @@ import {Linking, View} from 'react-native';
 import {navigationRef} from './app/navigation/NavigationRef';
 import {fontFamily} from './app/constants/theme';
 import {FontAwesomeIcon, MaterialIcons} from './app/components/ui/TabIcons';
-// import { View } from 'react-native-reanimated/lib/typescript/Animated';
 
-export const checkPostNotificationPermission = async () => {
-  if (Platform.OS === 'android' && Platform.Version >= 33) {
-    try {
-      // Check if POST_NOTIFICATIONS permission is granted
-      const permissionStatus = await PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      );
-
-      if (permissionStatus) {
-        console.log('POST_NOTIFICATIONS permission already granted.');
-        return;
-      } else {
-        // If permission is not granted, request permission
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-          {
-            title: 'Post Notification Permission',
-            message:
-              'This app requires notification permissions to send you alerts and updates.',
-            buttonPositive: 'OK',
-            buttonNegative: 'Cancel',
-          },
-        );
-
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('POST_NOTIFICATIONS permission granted.');
-        } else if (granted === PermissionsAndroid.RESULTS.DENIED) {
-          console.log('POST_NOTIFICATIONS permission denied.');
-        } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-          console.log(
-            'POST_NOTIFICATIONS permission denied permanently. Redirecting to settings.',
-          );
-          Linking.openSettings(); // Open the app's settings
-        }
-      }
-    } catch (err) {
-      console.error(
-        'Error checking or requesting POST_NOTIFICATIONS permission:',
-        err,
-      );
-      // Redirect to settings as a fallback in case of an error
-      Linking.openSettings();
-    }
-  } else {
-    console.log('Permission not required for this Android version.');
-  }
-};
 
 async function requestUserPermission() {
   const settings = await notifee.requestPermission();
@@ -188,7 +140,6 @@ async function registerNotificationCategories() {
 
 const App: React.FC = () => {
   useEffect(() => {
-    // checkPostNotificationPermission();
     requestUserPermission();
     checkInitalNotification();
 
