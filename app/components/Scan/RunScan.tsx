@@ -25,23 +25,16 @@ import {ScheduledScan} from '../../constants/Interface';
 import BrowserTabIcon from '../ui/svgIcons/BrowserTabIcon';
 import CrossIcon from '../ui/svgIcons/CrossIcon';
 import FastImage from 'react-native-fast-image';
-
-import {
-  createNotificationChannel,
-  scheduleNotification,
-} from '../../services/PushNotificationConfig';
-import BackIconSvg from '../ui/svgIcons/BackIconSvg';
 import {
   clearScannedUrls,
   getItem,
-  updateScanStatus,
   updateScannedUrls,
 } from '../../helpers/asyncStorage';
 import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
 import {Colors} from '../../constants/Colors';
 import LeftCircleIcon from '../ui/svgIcons/LeftCircleIcon';
-// import { Image } from 'react-native-svg';
+
 
 type scannedWebView = {
   webView: JSX.Element;
@@ -65,10 +58,7 @@ const RunScan = ({navigation, route}: any) => {
     addScan,
     initNewScan,
     setInitNewScan,
-    checkForScan,
-    setupdatedScanList,
-    updatedScanList,
-    updateScan,
+    checkForScan
   } = useScanContext();
 
   const data = route.params;
@@ -228,9 +218,7 @@ const RunScan = ({navigation, route}: any) => {
   };
 
   const handleAddScan = async (urls?: string[]) => {
-    console.log('data', data, urls);
     const visitedUrls = urls?.length ? urls : scannedUrls;
-    // console.log('Adding  the scan');
     const addToScanHistory: ScheduledScan = {
       id: uuid.v4(),
       time: new Date().toISOString(),

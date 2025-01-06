@@ -5,30 +5,22 @@ import {
   View,
   Modal,
   TouchableOpacity,
-  Platform,
   Pressable,
 } from 'react-native';
 
-import DateTimePicker from '@react-native-community/datetimepicker';
-
 import Svg, {Path, Rect, Mask, G} from 'react-native-svg';
 
-import {v4 as uuidv4} from 'uuid';
 import uuid from 'react-native-uuid';
 
 import {ScheduledScan} from '../../constants/Interface';
 import {useScanContext} from '../../../context/ScanContext';
-import {get12HourFormat, getAmPm} from '../../helpers/dateUtils';
 import ClockIcon from '../ui/svgIcons/ClockIcon';
 import {
-  localNotification,
   scheduleNotification,
 } from '../../services/PushNotificationConfig';
 import {getItem, setItem} from '../../helpers/asyncStorage';
-// import { Notifications } from 'react-native-notifications';
+
 import notifee, {
-  AndroidStyle,
-  EventType,
   RepeatFrequency,
   TimestampTrigger,
   TriggerType,
@@ -36,7 +28,6 @@ import notifee, {
 import {generateNotificationId} from '../../helpers';
 import {fontFamily} from '../../constants/theme';
 import CustomTimePicker from './CustomTimePicker';
-import AnalogTimePicker from './AnalogTimePicker';
 import {Colors} from '../../constants/Colors';
 
 const AddScanModal = ({
@@ -49,7 +40,7 @@ const AddScanModal = ({
   const [time, setTime] = useState<Date | null>(new Date());
   const [scanDuration, setScanDuration] = useState(10);
   const [showPicker, setShowPicker] = useState(false);
-  const {scans, addScan, removeScan, updateScan} = useScanContext();
+  const { addScan} = useScanContext();
 
   const onChangeTime = (event: any, selectedTime?: Date) => {
     setShowPicker(false);
@@ -59,7 +50,6 @@ const AddScanModal = ({
 
   const onChangeTimeNew = (selectedTime?: Date) => {
     setShowPicker(false);
-    // console.log("Time selected new ",selectedTime?.toLocaleTimeString())
     if (selectedTime) setTime(selectedTime);
   };
 
@@ -73,7 +63,6 @@ const AddScanModal = ({
   const scheduleNotifeeNotification = async (data: any, date: Date) => {
     try {
       console.log('scheduleNotifeeNotification', data);
-
       const trigger: TimestampTrigger = {
         type: TriggerType.TIMESTAMP,
         timestamp: date.getTime(), // trigger time
@@ -121,27 +110,23 @@ const AddScanModal = ({
       console.log('Error creating notification', error);
     }
   };
-  const handleScheduleNotification = async (
-    id: string,
-    date: Date,
-    data: ScheduledScan,
-  ) => {
-    scheduleNotification(
-      id,
-      'Schedule Scan',
-      `Click to start scan for ${data.scanDuration} sites `,
-      date,
-      data,
-    );
-    await setItem('NotificationIdCounter', id.toString());
-  };
+  // const handleScheduleNotification = async (
+  //   id: string,
+  //   date: Date,
+  //   data: ScheduledScan,
+  // ) => {
+  //   scheduleNotification(
+  //     id,
+  //     'Schedule Scan',
+  //     `Click to start scan for ${data.scanDuration} sites `,
+  //     date,
+  //     data,
+  //   );
+  //   await setItem('NotificationIdCounter', id.toString());
+  // };
 
   const handleAddScan = async () => {
-    // console.log("handleAddScan")
-    const notificationId = await generateNotificationId();
-    console.log('notificationId', notificationId);
     console.log('timeState', time);
-
     const scanTime = time ? time : new Date();
     console.log('scanTime', scanTime.toLocaleTimeString());
     const obj: ScheduledScan = {
@@ -150,8 +135,6 @@ const AddScanModal = ({
       date: scanTime,
       scanDuration,
       type: 'scheduled',
-      // isCompleted: "false",
-      notificationId,
     };
 
     await addScan(obj);
