@@ -17,11 +17,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import RunScan from './app/components/Scan/RunScan';
 import TabHistoryIcon from './app/components/ui/svgIcons/TabHistoryIcon';
 import {Colors} from './app/constants/Colors';
-import {Alert, ImageBackground, StyleSheet, useColorScheme} from 'react-native';
-import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import notifee, {AuthorizationStatus} from '@notifee/react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
+import {ImageBackground, StyleSheet, useColorScheme} from 'react-native';
+import notifee from '@notifee/react-native';
 import {Platform} from 'react-native';
 import {navigationRef} from './app/navigation/NavigationRef';
 import {fontFamily} from './app/constants/theme';
