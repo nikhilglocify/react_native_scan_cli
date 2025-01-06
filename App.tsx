@@ -98,8 +98,7 @@ const TabNavigator: React.FC = () => {
   );
 };
 
-import {PermissionsAndroid, Platform} from 'react-native';
-import {Linking, View} from 'react-native';
+import { Platform} from 'react-native';
 import {navigationRef} from './app/navigation/NavigationRef';
 import {fontFamily} from './app/constants/theme';
 import {FontAwesomeIcon, MaterialIcons} from './app/components/ui/TabIcons';
@@ -117,7 +116,6 @@ async function requestUserPermission() {
   }
 }
 async function registerNotificationCategories() {
-  console.log('Settingios categories');
   await notifee.setNotificationCategories([
     {
       id: 'scan_actions', // This must match the `categoryId` in the notification
