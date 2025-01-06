@@ -44,11 +44,11 @@ export const localNotification = (
         channelId: "default-channel-id", // Required for Android
         title: title, // Notification title
         message: message, // Notification message
-        testMessage:"fsafasfsafsf",
+        testMessage:"test local msg",
         userInfo: {
-            scanId: "sdfsf",
-            name: "test data",
-            visitidUrks:["sfs","fsfs"],
+            scanId: "test scan_id",
+            name: "test name",
+            visitidUrls:["sfs","fsfs"],
             scanDuration:2
         
         }
