@@ -170,10 +170,6 @@ const App: React.FC = () => {
           );
         }
 
-        // Alert.alert('Init Scan Opened', 'You have accepted the scan request.');
-      } else if (actionId == 'ignore') {
-        console.log('init Opend with', actionId);
-        // Alert.alert('Init Scan Ignored', 'You have ignored the scan request.');
       }
     }, 1000);
   };
@@ -213,8 +209,6 @@ export default App;
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    flex: 2, // Ensures the image covers the entire screen
-    // width: '100%', // applied to Image
-    // height: '100%'
+    flex: 2
   },
 });
