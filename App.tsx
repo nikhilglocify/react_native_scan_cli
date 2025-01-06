@@ -102,39 +102,40 @@ import { Platform} from 'react-native';
 import {navigationRef} from './app/navigation/NavigationRef';
 import {fontFamily} from './app/constants/theme';
 import {FontAwesomeIcon, MaterialIcons} from './app/components/ui/TabIcons';
+import { registerNotificationCategories, requestUserPermission } from './app/helpers/initializationUtils';
 
 
-async function requestUserPermission() {
-  const settings = await notifee.requestPermission();
+// async function requestUserPermission() {
+//   const settings = await notifee.requestPermission();
 
-  if (settings.authorizationStatus === AuthorizationStatus.DENIED) {
-    console.log('User denied permissions request');
-  } else if (settings.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
-    console.log('User granted permissions request');
-  } else if (settings.authorizationStatus === AuthorizationStatus.PROVISIONAL) {
-    console.log('User provisionally granted permissions request');
-  }
-}
-async function registerNotificationCategories() {
-  await notifee.setNotificationCategories([
-    {
-      id: 'scan_actions', // This must match the `categoryId` in the notification
-      actions: [
-        {
-          id: 'open_now',
-          title: 'Run Now',
-          foreground: true, // Bring the app to the foreground
-        },
-        {
-          id: 'ignore',
-          title: 'Ignore',
-          foreground: false, // Do not bring the app to the foreground
-          destructive: true, // Mark as a destructive action (optional)
-        },
-      ],
-    },
-  ]);
-}
+//   if (settings.authorizationStatus === AuthorizationStatus.DENIED) {
+//     console.log('User denied permissions request');
+//   } else if (settings.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
+//     console.log('User granted permissions request');
+//   } else if (settings.authorizationStatus === AuthorizationStatus.PROVISIONAL) {
+//     console.log('User provisionally granted permissions request');
+//   }
+// }
+// async function registerNotificationCategories() {
+//   await notifee.setNotificationCategories([
+//     {
+//       id: 'scan_actions', // This must match the `categoryId` in the notification
+//       actions: [
+//         {
+//           id: 'open_now',
+//           title: 'Run Now',
+//           foreground: true, // Bring the app to the foreground
+//         },
+//         {
+//           id: 'ignore',
+//           title: 'Ignore',
+//           foreground: false, // Do not bring the app to the foreground
+//           destructive: true, // Mark as a destructive action (optional)
+//         },
+//       ],
+//     },
+//   ]);
+// }
 
 const App: React.FC = () => {
   useEffect(() => {
