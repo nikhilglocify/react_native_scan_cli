@@ -18,15 +18,14 @@ import DeleteIcon from '../../components/ui/svgIcons/DeleteIcon';
 import {useScanContext} from '../../../context/ScanContext';
 import AddScanModal from '../../components/Scan/AddScanModal';
 
-import {
-  createNotifeeNotificationChannel,
-} from '../../services/PushNotificationConfig';
+import {createNotifeeNotificationChannel} from '../../services/PushNotificationConfig';
 
 import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
 import Loader from '../../components/ui/Loader';
 import {Colors} from '../../constants/Colors';
 import useHandleNotifiactionAction from '../../hooks/useHandleNotifiactionAction';
+import AppTheme from '../../components/Layout/AppTheme';
 
 export default function HomeScreen({navigation}: any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
@@ -45,7 +44,6 @@ export default function HomeScreen({navigation}: any) {
     () => getScheduledScans(),
     [scans, updatedScanList],
   );
-
 
   //hook to handle NotificationActions and Scan navigation
   useHandleNotifiactionAction({navigation});
@@ -154,25 +152,7 @@ export default function HomeScreen({navigation}: any) {
   }
   return (
     <>
-      <ImageBackground
-        source={require('../../assets/images/App-bg.png')}
-        style={{
-          flex: 1,
-        }}>
-        <View
-          className="p-4 inline-block w-[250px] mx-auto"
-          style={{backgroundColor: Colors['light'].themeOrange}}>
-          <Image
-            source={require('../../assets/images/app_logo.png')}
-            style={{
-              width: '100%',
-              height: 50,
-              padding: 10,
-            }}
-            resizeMode="contain"
-          />
-        </View>
-
+      <AppTheme>
         <View className="flex-1 h-screen mt-[30px]">
           <View className="px-4">
             <View className="flex flex-row items-center justify-between mb-4">
@@ -258,7 +238,7 @@ export default function HomeScreen({navigation}: any) {
             onClose={() => setVisibleScanModal(false)}
           />
         </View>
-      </ImageBackground>
+      </AppTheme>
     </>
   );
 }

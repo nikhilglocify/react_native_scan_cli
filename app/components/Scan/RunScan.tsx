@@ -34,7 +34,7 @@ import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
 import {Colors} from '../../constants/Colors';
 import LeftCircleIcon from '../ui/svgIcons/LeftCircleIcon';
-
+import AppTheme from '../Layout/AppTheme';
 
 type scannedWebView = {
   webView: JSX.Element;
@@ -54,12 +54,7 @@ const RunScan = ({navigation, route}: any) => {
   const [selectedUrl, setSelectedUrl] = useState<string | null>();
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const appState = useRef(AppState.currentState);
-  const {
-    addScan,
-    initNewScan,
-    setInitNewScan,
-    checkForScan
-  } = useScanContext();
+  const {addScan, initNewScan, setInitNewScan, checkForScan} = useScanContext();
 
   const data = route.params;
 
@@ -233,22 +228,7 @@ const RunScan = ({navigation, route}: any) => {
 
   return (
     <>
-      <ImageBackground
-        source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1,
-        // backgroundColor:"black"
-        }}>
-        <View className='p-4 inline-block w-[250px] mx-auto' style={{backgroundColor: Colors['light'].themeOrange}}>
-        <Image
-          source={require('../../assets/images/app_logo.png')}
-          style={{
-            width: '100%',
-            height: 50,
-            padding:10,
-          }}
-          resizeMode="contain"
-        />
-        </View>
+      <AppTheme>
         <View className="flex-1 h-screen mt-[20px] px-4">
           <View
             style={{backgroundColor: Colors['light'].themeOrange}}
@@ -256,7 +236,8 @@ const RunScan = ({navigation, route}: any) => {
             <Text
               className="text-lg  text-white"
               style={{fontFamily: fontFamily.nunitoRegular}}>
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis. 
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui
+              blanditiis.
             </Text>
           </View>
           <View className="flex items-center justify-between flex-row mb-1 relative">
@@ -264,10 +245,8 @@ const RunScan = ({navigation, route}: any) => {
               onPress={() => {
                 handleExitScan();
               }}>
-              
               <LeftCircleIcon height={28} width={28} />
             </Pressable>
-           
 
             <TouchableOpacity
               className="absolute right-0 p-2 px-2 rounded-lg"
@@ -277,7 +256,7 @@ const RunScan = ({navigation, route}: any) => {
                   setShowScannedUrls(!showScannedUrls);
                 }
               }}>
-              <BrowserTabIcon height={25} width={25}/>
+              <BrowserTabIcon height={25} width={25} />
             </TouchableOpacity>
           </View>
 
@@ -327,11 +306,13 @@ const RunScan = ({navigation, route}: any) => {
           )}
           <TouchableOpacity
             className="text-right pb-4 px-2 pt-3"
-            onPress={() => handleExitScan()}
-            >
+            onPress={() => handleExitScan()}>
             <Text
               className="text-center px-4 py-4 w-[100px] ml-[auto]  text-white "
-              style={{fontFamily: fontFamily.nunitoRegular,backgroundColor:Colors['light'].themeOrange}}>
+              style={{
+                fontFamily: fontFamily.nunitoRegular,
+                backgroundColor: Colors['light'].themeOrange,
+              }}>
               Exit Scan
             </Text>
           </TouchableOpacity>
@@ -391,7 +372,7 @@ const RunScan = ({navigation, route}: any) => {
             </TouchableWithoutFeedback>
           </Modal>
         </View>
-      </ImageBackground>
+      </AppTheme>
     </>
   );
 };
