@@ -5,3 +5,11 @@ export enum Scan {
     scan_list="scan_list",
     currenScanUrls="curren_scan_urls"
 }
+
+
+export enum notifiactionActions{
+    ignore="ignore",
+    open_now="open_now",
+    default="default"
+
+}

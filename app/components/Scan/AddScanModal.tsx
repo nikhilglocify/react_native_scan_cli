@@ -15,9 +15,7 @@ import uuid from 'react-native-uuid';
 import {ScheduledScan} from '../../constants/Interface';
 import {useScanContext} from '../../../context/ScanContext';
 import ClockIcon from '../ui/svgIcons/ClockIcon';
-import {
-  scheduleNotification,
-} from '../../services/PushNotificationConfig';
+import {scheduleNotification} from '../../services/PushNotificationConfig';
 import {getItem, setItem} from '../../helpers/asyncStorage';
 
 import notifee, {
@@ -29,6 +27,7 @@ import {generateNotificationId} from '../../helpers';
 import {fontFamily} from '../../constants/theme';
 import CustomTimePicker from './CustomTimePicker';
 import {Colors} from '../../constants/Colors';
+import {notifiactionActions} from '../../constants/enums';
 
 const AddScanModal = ({
   visible,
@@ -40,7 +39,7 @@ const AddScanModal = ({
   const [time, setTime] = useState<Date | null>(new Date());
   const [scanDuration, setScanDuration] = useState(10);
   const [showPicker, setShowPicker] = useState(false);
-  const { addScan} = useScanContext();
+  const {addScan} = useScanContext();
 
   const onChangeTime = (event: any, selectedTime?: Date) => {
     setShowPicker(false);
@@ -79,22 +78,21 @@ const AddScanModal = ({
           android: {
             channelId: 'default',
             pressAction: {
-              id: 'default',
+              id: notifiactionActions.default,
               launchActivity: 'default',
             },
-            // style:{type: Android.BIGPICTURE},
             actions: [
               {
                 title: 'Run Now',
                 pressAction: {
-                  id: 'open_now', // Action ID for "Open Now"
+                  id: notifiactionActions.open_now, 
                   launchActivity: 'default',
                 },
               },
               {
                 title: 'Ignore',
                 pressAction: {
-                  id: 'ignore', // Action ID for "Ignore"
+                  id: notifiactionActions.ignore, 
                   launchActivity: 'default',
                 },
               },

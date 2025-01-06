@@ -1,4 +1,5 @@
 import notifee, {AuthorizationStatus} from '@notifee/react-native';
+import { notifiactionActions } from '../constants/enums';
 
 export async function requestUserPermission() {
 
@@ -20,12 +21,12 @@ export async function requestUserPermission() {
         id: 'scan_actions', 
         actions: [
           {
-            id: 'open_now',
+            id: notifiactionActions.open_now,
             title: 'Run Now',
             foreground: true, 
           },
           {
-            id: 'ignore',
+            id: notifiactionActions.ignore,
             title: 'Ignore',
             foreground: false, 
             destructive: true, 

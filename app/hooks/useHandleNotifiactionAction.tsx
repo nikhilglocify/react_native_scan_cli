@@ -5,6 +5,7 @@ import notifee, {
   EventType,
   TriggerType,
 } from '@notifee/react-native';
+import { notifiactionActions } from '../constants/enums';
 
 const useHandleNotifiactionAction = ({navigation}: any) => {
   const handleNotificationAction = (
@@ -15,7 +16,7 @@ const useHandleNotifiactionAction = ({navigation}: any) => {
     console.log('ACTION_ID=>', actionId);
     if (actionId) {
       setTimeout(() => {
-        if (actionId === 'open_now' || actionId == 'default') {
+        if (actionId === notifiactionActions.open_now || actionId == notifiactionActions.default) {
           navigation.navigate('RunScan', notificationData);
         }
       }, 1000);
