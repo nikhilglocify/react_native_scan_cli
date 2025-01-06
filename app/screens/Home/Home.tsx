@@ -11,22 +11,15 @@ import {
   ImageBackground,
 } from 'react-native';
 
-import notifee, {
-  AndroidImportance,
-  EventType,
-  TriggerType,
-} from '@notifee/react-native';
 import {useEffect, useMemo, useState} from 'react';
-import {ScanIcon} from '../../components/ui/svgIcons/Scan';
 import AddScanIcon from '../../components/ui/svgIcons/AddScanIcon';
 import TimerIcon from '../../components/ui/svgIcons/TimerIcon';
 import DeleteIcon from '../../components/ui/svgIcons/DeleteIcon';
 import {useScanContext} from '../../../context/ScanContext';
 import AddScanModal from '../../components/Scan/AddScanModal';
-import {getScansLocally, setItem} from '../../helpers/asyncStorage';
+
 import {
   createNotifeeNotificationChannel,
-  createNotificationChannel,
 } from '../../services/PushNotificationConfig';
 
 import {Scan} from '../../constants/enums';
@@ -52,6 +45,9 @@ export default function HomeScreen({navigation}: any) {
     () => getScheduledScans(),
     [scans, updatedScanList],
   );
+
+
+  //hook to handle NotificationActions and Scan navigation
   useHandleNotifiactionAction({navigation});
 
   useEffect(() => {

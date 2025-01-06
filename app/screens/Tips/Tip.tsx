@@ -4,7 +4,6 @@ import TipHomeIcon from '../../components/ui/svgIcons/TipHomeIcon';
 import {fontFamily} from '../../constants/theme';
 
 import {Colors} from '../../constants/Colors';
-// import TipHomeIcon from '@/components/ui/svgIcons/TipHomeIcon'
 
 const Tips = () => {
   return (
