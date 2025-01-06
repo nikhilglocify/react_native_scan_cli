@@ -27,6 +27,7 @@ import {
   registerNotificationCategories,
   requestUserPermission,
 } from './app/helpers/initializationUtils';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 // Define the types for the navigation
 export type RootTabParamList = {
@@ -145,7 +146,6 @@ const App: React.FC = () => {
 
   const checkInitalNotification = async () => {
     const initialNotification = await notifee.getInitialNotification();
-    console.log('initialNotification id', initialNotification?.pressAction.id);
     const actionId = initialNotification?.pressAction.id;
 
     setTimeout(() => {
@@ -169,7 +169,6 @@ const App: React.FC = () => {
             initialNotification?.notification.data,
           );
         }
-
       }
     }, 1000);
   };
@@ -177,10 +176,7 @@ const App: React.FC = () => {
   return (
     <ScanProvider>
       <NavigationContainer ref={navigationRef}>
-        <ImageBackground
-          source={require('./app/assets/images/App-bg.png')} // Replace with your image path
-          style={styles.backgroundImage}
-          resizeMode="cover">
+        <SafeAreaView style={{flex:1}}>
           <Stack.Navigator initialRouteName="Tabs">
             {/* Main Tab Navigator */}
 
@@ -199,7 +195,7 @@ const App: React.FC = () => {
               }}
             />
           </Stack.Navigator>
-        </ImageBackground>
+        </SafeAreaView>
       </NavigationContainer>
     </ScanProvider>
   );
@@ -209,6 +205,6 @@ export default App;
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    flex: 2
+    flex: 2,
   },
 });
