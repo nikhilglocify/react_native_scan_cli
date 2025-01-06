@@ -21,6 +21,16 @@ import {Alert, ImageBackground, StyleSheet, useColorScheme} from 'react-native';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import notifee, {AuthorizationStatus} from '@notifee/react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+import {Platform} from 'react-native';
+import {navigationRef} from './app/navigation/NavigationRef';
+import {fontFamily} from './app/constants/theme';
+import {FontAwesomeIcon, MaterialIcons} from './app/components/ui/TabIcons';
+import {
+  registerNotificationCategories,
+  requestUserPermission,
+} from './app/helpers/initializationUtils';
+
 // Define the types for the navigation
 export type RootTabParamList = {
   Home: undefined;
@@ -28,7 +38,7 @@ export type RootTabParamList = {
   History: undefined;
 
   Tips: undefined;
-  RunScan:undefined
+  RunScan: undefined;
 };
 export type RootStackParamList = {
   Tabs: undefined; // For the Tab Navigator
@@ -45,13 +55,11 @@ const TabNavigator: React.FC = () => {
         tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].lightGray,
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].white,
         headerShown: false,
-        
 
         tabBarLabelStyle: {
           marginTop: 4, // Adjust spacing between the label and icon
           fontSize: 14, // Optional: Adjust label size
           fontFamily: fontFamily.nunitoSemiBold,
-        
         },
         tabBarStyle: {
           // backgroundColor: '#8C46A9',
@@ -84,7 +92,6 @@ const TabNavigator: React.FC = () => {
         name="Tips"
         component={Tips}
         options={{
-          
           // tabBarStyle:{display:"flex"},
           headerShown: false,
           tabBarIcon: ({color, size}) => (
@@ -93,17 +100,9 @@ const TabNavigator: React.FC = () => {
           tabBarLabel: 'Daily Tips',
         }}
       />
-     
     </Tab.Navigator>
   );
 };
-
-import { Platform} from 'react-native';
-import {navigationRef} from './app/navigation/NavigationRef';
-import {fontFamily} from './app/constants/theme';
-import {FontAwesomeIcon, MaterialIcons} from './app/components/ui/TabIcons';
-import { registerNotificationCategories, requestUserPermission } from './app/helpers/initializationUtils';
-
 
 // async function requestUserPermission() {
 //   const settings = await notifee.requestPermission();
@@ -204,8 +203,6 @@ const App: React.FC = () => {
               options={{
                 headerShown: false,
                 // tabBarStyle: { display: 'flex' }
-                
-                
               }}
             />
           </Stack.Navigator>
