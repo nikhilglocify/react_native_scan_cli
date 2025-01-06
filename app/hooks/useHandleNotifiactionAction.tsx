@@ -24,10 +24,7 @@ const useHandleNotifiactionAction = ({navigation}: any) => {
   };
 
   useEffect(() => {
-    console.log(
-      'useHandleNotifiactionAction Refactor code hook running ',
-      navigation,
-    );
+    
     // Register foreground event listener
     const unsubscribeForeground = notifee.onForegroundEvent(
       async ({type, detail}) => {
