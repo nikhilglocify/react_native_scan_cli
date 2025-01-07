@@ -87,7 +87,7 @@ export const ScanProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   const getScheduledScans = () => {  
-    return scans.filter((scan)=>scan?.type=="scheduled")
+    return scans.filter((scan)=>scan?.type=="scheduled").sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
   return (

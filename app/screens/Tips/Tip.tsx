@@ -4,29 +4,12 @@ import TipHomeIcon from '../../components/ui/svgIcons/TipHomeIcon';
 import {fontFamily} from '../../constants/theme';
 
 import {Colors} from '../../constants/Colors';
-// import TipHomeIcon from '@/components/ui/svgIcons/TipHomeIcon'
+import AppTheme from '../../components/Layout/AppTheme';
 
 const Tips = () => {
   return (
     <>
-      <ImageBackground
-        source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1, 
-        // backgroundColor: 'black'
-        }}>
-        <View
-          className="p-4 inline-block w-[250px] mx-auto"
-          style={{backgroundColor: Colors['light'].themeOrange}}>
-          <Image
-            source={require('../../assets/images/app_logo.png')}
-            style={{
-              width: '100%',
-              height: 50,
-              padding: 10,
-            }}
-            resizeMode="contain"
-          />
-        </View>
+      <AppTheme>
         <View className="flex-1 h-screen mt-[30px] px-4">
           <View
             style={{backgroundColor: Colors['light'].themeOrange}}
@@ -52,7 +35,7 @@ const Tips = () => {
             </Text>
           </View>
         </View>
-      </ImageBackground>
+      </AppTheme>
     </>
   );
 };

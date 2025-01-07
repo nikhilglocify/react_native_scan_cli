@@ -11,27 +11,22 @@ import {
   ImageBackground,
 } from 'react-native';
 
-import notifee, {
-  AndroidImportance,
-  EventType,
-  TriggerType,
-} from '@notifee/react-native';
 import {useEffect, useMemo, useState} from 'react';
-import {ScanIcon} from '../../components/ui/svgIcons/Scan';
 import AddScanIcon from '../../components/ui/svgIcons/AddScanIcon';
 import TimerIcon from '../../components/ui/svgIcons/TimerIcon';
 import DeleteIcon from '../../components/ui/svgIcons/DeleteIcon';
 import {useScanContext} from '../../../context/ScanContext';
 import AddScanModal from '../../components/Scan/AddScanModal';
-import {getScansLocally, setItem} from '../../helpers/asyncStorage';
-import {createNotifeeNotificationChannel, createNotificationChannel} from '../../services/PushNotificationConfig';
-// import { Notifications } from 'react-native-notifications';
+
+import {createNotifeeNotificationChannel} from '../../services/PushNotificationConfig';
+
 import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
 import Loader from '../../components/ui/Loader';
 import {Colors} from '../../constants/Colors';
-import {FontAwesomeIcon} from '../../components/ui/TabIcons';
-import {Circle, Line, Svg} from 'react-native-svg';
+import useHandleNotifiactionAction from '../../hooks/useHandleNotifiactionAction';
+import AppTheme from '../../components/Layout/AppTheme';
+
 export default function HomeScreen({navigation}: any) {
   const [visibleScanModal, setVisibleScanModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -50,6 +45,9 @@ export default function HomeScreen({navigation}: any) {
     [scans, updatedScanList],
   );
 
+  //hook to handle NotificationActions and Scan navigation
+  useHandleNotifiactionAction({navigation});
+
   useEffect(() => {
     createNotifeeNotificationChannel();
     setTimeout(() => {
@@ -57,23 +55,23 @@ export default function HomeScreen({navigation}: any) {
     }, 1200);
   }, []);
   // useEffect(() => {
-  //   async function createChannel() {
-  //     await notifee.createChannel({
-  //       id: 'default',
-  //       name: 'Default Channel',
-  //       importance: AndroidImportance.HIGH, // High importance
-  //       sound: 'hollow',
-  //     });
-  //   }
+  //   // async function createChannel() {
+  //   //   await notifee.createChannel({
+  //   //     id: 'default',
+  //   //     name: 'Default Channel',
+  //   //     importance: AndroidImportance.HIGH, // High importance
+  //   //     sound: 'hollow',
+  //   //   });
+  //   // }
 
-  //   createChannel();
+  //   // createChannel();
 
   //   // Register foreground event listener
   //   const unsubscribeForeground = notifee.onForegroundEvent(
   //     async ({type, detail}) => {
   //       if (type === EventType.ACTION_PRESS && detail?.pressAction?.id) {
   //         const actionId = detail?.pressAction?.id;
-  //         // Alert.alert('Foreground Pressed');
+
   //         console.log(
   //           'Foreground User pressed an action with the id: ',
   //           detail.pressAction.id,
@@ -81,9 +79,9 @@ export default function HomeScreen({navigation}: any) {
   //         );
   //         setTimeout(() => {
   //           if (actionId === 'open_now' || actionId == 'default') {
-  //             // Handle "Open Now" action
+
   //             navigation.navigate('RunScan', detail.notification?.data);
-  //             // Alert.alert('Scan Opened', 'You have accepted the scan request.');
+
   //           }
   //         }, 1000);
   //       }
@@ -101,7 +99,7 @@ export default function HomeScreen({navigation}: any) {
   //           if (actionId === 'open_now' || actionId == 'default') {
   //             // Handle "Open Now" action
   //             navigation.navigate('RunScan', detail.notification?.data);
-  //             // Alert.alert('Scan Opened', 'You have accepted the scan request.');
+
   //           }
   //         }, 1000);
   //       }
@@ -154,25 +152,7 @@ export default function HomeScreen({navigation}: any) {
   }
   return (
     <>
-      <ImageBackground
-        source={require('../../assets/images/App-bg.png')}
-        style={{
-          flex: 1,
-        }}>
-        <View
-          className="p-4 inline-block w-[250px] mx-auto"
-          style={{backgroundColor: Colors['light'].themeOrange}}>
-          <Image
-            source={require('../../assets/images/app_logo.png')}
-            style={{
-              width: '100%',
-              height: 50,
-              padding: 10,
-            }}
-            resizeMode="contain"
-          />
-        </View>
-
+      <AppTheme>
         <View className="flex-1 h-screen mt-[30px]">
           <View className="px-4">
             <View className="flex flex-row items-center justify-between mb-4">
@@ -206,7 +186,7 @@ export default function HomeScreen({navigation}: any) {
                 </View>
               </Pressable>
             </View>
-          </View>{' '}
+          </View>
           {scheduledScans.length > 0 ? (
             <ScrollView className="p-4 mb-[25px] pb-2">
               {scheduledScans.map((scan: any) => (
@@ -258,7 +238,7 @@ export default function HomeScreen({navigation}: any) {
             onClose={() => setVisibleScanModal(false)}
           />
         </View>
-      </ImageBackground>
+      </AppTheme>
     </>
   );
 }

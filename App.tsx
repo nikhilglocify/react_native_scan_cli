@@ -27,6 +27,7 @@ import {
   registerNotificationCategories,
   requestUserPermission,
 } from './app/helpers/initializationUtils';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 // Define the types for the navigation
 export type RootTabParamList = {
@@ -145,7 +146,6 @@ const App: React.FC = () => {
 
   const checkInitalNotification = async () => {
     const initialNotification = await notifee.getInitialNotification();
-    console.log('initialNotification id', initialNotification?.pressAction.id);
     const actionId = initialNotification?.pressAction.id;
 
     setTimeout(() => {
@@ -169,11 +169,6 @@ const App: React.FC = () => {
             initialNotification?.notification.data,
           );
         }
-
-        // Alert.alert('Init Scan Opened', 'You have accepted the scan request.');
-      } else if (actionId == 'ignore') {
-        console.log('init Opend with', actionId);
-        // Alert.alert('Init Scan Ignored', 'You have ignored the scan request.');
       }
     }, 1000);
   };
@@ -181,10 +176,7 @@ const App: React.FC = () => {
   return (
     <ScanProvider>
       <NavigationContainer ref={navigationRef}>
-        <ImageBackground
-          source={require('./app/assets/images/App-bg.png')} // Replace with your image path
-          style={styles.backgroundImage}
-          resizeMode="cover">
+        <SafeAreaView style={{flex:1}}>
           <Stack.Navigator initialRouteName="Tabs">
             {/* Main Tab Navigator */}
 
@@ -203,7 +195,7 @@ const App: React.FC = () => {
               }}
             />
           </Stack.Navigator>
-        </ImageBackground>
+        </SafeAreaView>
       </NavigationContainer>
     </ScanProvider>
   );
@@ -213,8 +205,6 @@ export default App;
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    flex: 2, // Ensures the image covers the entire screen
-    // width: '100%', // applied to Image
-    // height: '100%'
+    flex: 2,
   },
 });

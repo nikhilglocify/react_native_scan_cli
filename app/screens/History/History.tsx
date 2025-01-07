@@ -19,6 +19,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {copyToClipboard} from '../../helpers';
 import CopyIcon from '../../components/ui/svgIcons/CopyIcon';
 import {Colors} from '../../constants/Colors';
+import AppTheme from '../../components/Layout/AppTheme';
 
 const History = () => {
   type showHistoryCollapse = {
@@ -37,25 +38,7 @@ const History = () => {
 
   return (
     <>
-      <ImageBackground
-        source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1, 
-        // backgroundColor: 'black'
-        }}>
-        <View
-          className="p-4 inline-block w-[250px] mx-auto"
-          style={{backgroundColor: Colors['light'].themeOrange}}>
-          <Image
-            source={require('../../assets/images/app_logo.png')}
-            style={{
-              width: '100%',
-              height: 50,
-              padding: 10,
-            }}
-            resizeMode="contain"
-          />
-        </View>
-
+      <AppTheme>
         <View className="flex-1 h-screen mt-[30px] px-6">
           <View>
             <View
@@ -172,7 +155,7 @@ const History = () => {
             )}
           </View>
         </View>
-      </ImageBackground>
+      </AppTheme>
     </>
   );
 };

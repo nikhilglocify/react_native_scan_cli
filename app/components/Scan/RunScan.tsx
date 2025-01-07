@@ -25,23 +25,16 @@ import {ScheduledScan} from '../../constants/Interface';
 import BrowserTabIcon from '../ui/svgIcons/BrowserTabIcon';
 import CrossIcon from '../ui/svgIcons/CrossIcon';
 import FastImage from 'react-native-fast-image';
-
-import {
-  createNotificationChannel,
-  scheduleNotification,
-} from '../../services/PushNotificationConfig';
-import BackIconSvg from '../ui/svgIcons/BackIconSvg';
 import {
   clearScannedUrls,
   getItem,
-  updateScanStatus,
   updateScannedUrls,
 } from '../../helpers/asyncStorage';
 import {Scan} from '../../constants/enums';
 import {fontFamily} from '../../constants/theme';
 import {Colors} from '../../constants/Colors';
 import LeftCircleIcon from '../ui/svgIcons/LeftCircleIcon';
-// import { Image } from 'react-native-svg';
+import AppTheme from '../Layout/AppTheme';
 
 type scannedWebView = {
   webView: JSX.Element;
@@ -61,18 +54,9 @@ const RunScan = ({navigation, route}: any) => {
   const [selectedUrl, setSelectedUrl] = useState<string | null>();
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const appState = useRef(AppState.currentState);
-  const {
-    addScan,
-    initNewScan,
-    setInitNewScan,
-    checkForScan,
-    setupdatedScanList,
-    updatedScanList,
-    updateScan,
-  } = useScanContext();
+  const {addScan, initNewScan, setInitNewScan, checkForScan} = useScanContext();
 
   const data = route.params;
-  console.log('DATA RECIVED', data);
 
   const selectedUrls = data?.scanNow
     ? getRandomURLs(urlData.term)
@@ -191,7 +175,6 @@ const RunScan = ({navigation, route}: any) => {
         setWebViews(prev => [...prev, {webView, url, id: uuid.v4()}]);
         if (index === selectedUrls.length - 1) {
           setIsScanCompleted(true);
-          // Alert.alert('Scan completed');
           setCurrentUrl(null);
         }
       }, k);
@@ -228,9 +211,7 @@ const RunScan = ({navigation, route}: any) => {
   };
 
   const handleAddScan = async (urls?: string[]) => {
-    console.log('data', data, urls);
     const visitedUrls = urls?.length ? urls : scannedUrls;
-    // console.log('Adding  the scan');
     const addToScanHistory: ScheduledScan = {
       id: uuid.v4(),
       time: new Date().toISOString(),
@@ -247,22 +228,7 @@ const RunScan = ({navigation, route}: any) => {
 
   return (
     <>
-      <ImageBackground
-        source={require('../../assets/images/App-bg.png')}
-        style={{flex: 1,
-        // backgroundColor:"black"
-        }}>
-        <View className='p-4 inline-block w-[250px] mx-auto' style={{backgroundColor: Colors['light'].themeOrange}}>
-        <Image
-          source={require('../../assets/images/app_logo.png')}
-          style={{
-            width: '100%',
-            height: 50,
-            padding:10,
-          }}
-          resizeMode="contain"
-        />
-        </View>
+      <AppTheme>
         <View className="flex-1 h-screen mt-[20px] px-4">
           <View
             style={{backgroundColor: Colors['light'].themeOrange}}
@@ -270,7 +236,8 @@ const RunScan = ({navigation, route}: any) => {
             <Text
               className="text-lg  text-white"
               style={{fontFamily: fontFamily.nunitoRegular}}>
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis. 
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui
+              blanditiis.
             </Text>
           </View>
           <View className="flex items-center justify-between flex-row mb-1 relative">
@@ -278,10 +245,8 @@ const RunScan = ({navigation, route}: any) => {
               onPress={() => {
                 handleExitScan();
               }}>
-              
               <LeftCircleIcon height={28} width={28} />
             </Pressable>
-           
 
             <TouchableOpacity
               className="absolute right-0 p-2 px-2 rounded-lg"
@@ -291,7 +256,7 @@ const RunScan = ({navigation, route}: any) => {
                   setShowScannedUrls(!showScannedUrls);
                 }
               }}>
-              <BrowserTabIcon height={25} width={25}/>
+              <BrowserTabIcon height={25} width={25} />
             </TouchableOpacity>
           </View>
 
@@ -341,11 +306,13 @@ const RunScan = ({navigation, route}: any) => {
           )}
           <TouchableOpacity
             className="text-right pb-4 px-2 pt-3"
-            onPress={() => handleExitScan()}
-            >
+            onPress={() => handleExitScan()}>
             <Text
               className="text-center px-4 py-4 w-[100px] ml-[auto]  text-white "
-              style={{fontFamily: fontFamily.nunitoRegular,backgroundColor:Colors['light'].themeOrange}}>
+              style={{
+                fontFamily: fontFamily.nunitoRegular,
+                backgroundColor: Colors['light'].themeOrange,
+              }}>
               Exit Scan
             </Text>
           </TouchableOpacity>
@@ -405,7 +372,7 @@ const RunScan = ({navigation, route}: any) => {
             </TouchableWithoutFeedback>
           </Modal>
         </View>
-      </ImageBackground>
+      </AppTheme>
     </>
   );
 };
