@@ -88,9 +88,8 @@ export const scheduleNotifeeNotification = async (data: any, date: Date) => {
     let notificationTime = new Date(date); // Ensure `date` is a Date object
     if (current.getTime() > notificationTime.getTime()) {
       notificationTime.setDate(notificationTime.getDate() + 1);
-      console.log("Notification Day:", notificationTime.toLocaleString());
+     
     }
-    console.log(' PushNotificationConfig scheduleNotifeeNotification running ', data);
     const trigger: TimestampTrigger = {
       type: TriggerType.TIMESTAMP,
       timestamp: notificationTime.getTime(), // trigger time
