@@ -15,3 +15,12 @@ export interface svgProps  {
     width?: number;
     color?:any
   };
+
+
+  export interface Tip{
+    image?:string,
+    description:string,
+    date:Date,
+    
+
+  }

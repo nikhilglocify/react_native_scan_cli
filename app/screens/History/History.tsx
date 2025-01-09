@@ -145,11 +145,11 @@ const History = () => {
                 )}
               </ScrollView>
             ) : (
-              <View className="flex items-center mt-20 h-screen">
+              <View className="flex items-center mt-20 h-[400px] bg-white">
                 <Text
-                  className="text-center text-lg"
+                  className="text-center text-lg my-auto"
                   style={{fontFamily: fontFamily.nunitoRegular}}>
-                  No Scans Found...
+                  No Scan History Found...
                 </Text>
               </View>
             )}
