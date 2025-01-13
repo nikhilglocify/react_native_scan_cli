@@ -1,8 +1,8 @@
 export const Apis={
     getJsonUrl:"scanApi",
-    getDailyTip:"tip"
+    getDailyTip:"tip/getDailyTip"
 
 }
 
 
-export const endPoint="http://192.168.50.15:3000/api"
+export const endPoint="http://192.168.50.28:3000/api"

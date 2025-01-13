@@ -45,3 +45,11 @@ export const generateNotificationId = async (): Promise<string> => {
 export const copyToClipboard = (text:string) => {
   Clipboard.setString(text);
 };
+
+
+
+export function generateS3Url(objectKey: string) {
+  console.log("file object key",objectKey)
+  console.log("gg",`https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${objectKey}`)
+  return `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${objectKey}`;
+}

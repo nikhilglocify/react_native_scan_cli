@@ -8,6 +8,7 @@ import AppTheme from '../../components/Layout/AppTheme';
 import {getDailyTip} from '../../apis/Tips';
 import {Tip} from '../../constants/Interface';
 import Loader from '../../components/ui/Loader';
+import { generateS3Url } from '../../helpers';
 
 const Tips = () => {
   const [tipData, setTipData] = useState<Tip | null>(null);
@@ -18,7 +19,7 @@ const Tips = () => {
       const data = await getDailyTip();
 
       setTipData(data?.data);
-      console.log('Tip=>Data', tipData);
+      console.log('Tip=>Data', data?.data);
     } catch (error) {
     } finally {
       setLoading(false);
@@ -50,11 +51,11 @@ const Tips = () => {
             </Text>
           </View>
           <View className="flex justify-center items-center h-[410px]  box-content  p-3 rounded-lg bg-white  mt-4">
-            {/* <TipHomeIcon /> */}
+           
             <Image
-              style={{height: 100, width: 100}}
+              style={{height: 150, width: 150}}
               source={{
-                uri: 'https://static-00.iconduck.com/assets.00/avatar-default-icon-1975x2048-2mpk4u9k.png',
+                uri: generateS3Url(tipData?.image!)||'https://static-00.iconduck.com/assets.00/avatar-default-icon-1975x2048-2mpk4u9k.png',
               }}
               resizeMode="contain"
             />

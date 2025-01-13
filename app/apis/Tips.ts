@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Apis, endPoint } from '../constants/Api';
+// import {AWS_REGION} from "react-native-dotenv"
 
 
 
@@ -8,8 +9,6 @@ export const getDailyTip = async () => {
 
     try {
         const requestId = Date.now();
-        console.log(`[${requestId}] Starting API call`);
-
         const response = await axios.get(`${endPoint}/${Apis.getDailyTip}`);
         console.log(`[${requestId}] Response success`);
 
