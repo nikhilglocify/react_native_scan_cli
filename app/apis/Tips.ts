@@ -13,7 +13,7 @@ export const getDailyTip = async () => {
         console.log(`[${requestId}] Response success`);
 
         return response.data;
-    } catch (error:any) {
+    } catch (error: any) {
         if (axios.isAxiosError(error)) {
             if (!error.response) {
                 console.error('Network Error or No Response:', error.message);
