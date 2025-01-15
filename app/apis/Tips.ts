@@ -9,7 +9,12 @@ export const getDailyTip = async () => {
 
     try {
         const requestId = Date.now();
-        const response = await axios.get(`${endPoint}/${Apis.getDailyTip}`);
+        console.log("process.env.END_POINT",process.env.END_POINT)
+        const response = await axios.get(`${endPoint}/${Apis.getDailyTip}`,{
+            headers:{
+                "appToken":process.env.APP_TOKEN_SECRET
+            }
+        });
         
         console.log(`[${requestId}] Response success`,`${endPoint}/${Apis.getDailyTip}`);
     
