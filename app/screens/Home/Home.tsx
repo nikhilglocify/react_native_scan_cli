@@ -230,9 +230,7 @@ export default function HomeScreen({navigation}: any) {
           )}
           <View className="bottom-[6px] left-0 right-0 mx-auto">
             <Pressable onPress={() => {
-              console.log("crash app")
-              crashlytics().crash();
-              // setVisibleScanModal(true)
+              setVisibleScanModal(true)
               }}>
               <AddScanIcon color={Colors['light'].themeOrange} />
             </Pressable>
