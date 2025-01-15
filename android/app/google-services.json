@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "498284480636",
+    "project_id": "jtreactnative",
+    "storage_bucket": "jtreactnative.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498284480636:android:7114d33ca4eb3980dc61f9",
+        "android_client_info": {
+          "package_name": "com.new_scan_cli"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZ9c49wnS4kxLQsHEy8-oSnZDQ7TAjcCc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

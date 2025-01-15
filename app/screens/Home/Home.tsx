@@ -17,7 +17,7 @@ import TimerIcon from '../../components/ui/svgIcons/TimerIcon';
 import DeleteIcon from '../../components/ui/svgIcons/DeleteIcon';
 import {useScanContext} from '../../../context/ScanContext';
 import AddScanModal from '../../components/Scan/AddScanModal';
-
+import crashlytics from '@react-native-firebase/crashlytics';
 import {createNotifeeNotificationChannel} from '../../services/PushNotificationConfig';
 
 import {Scan} from '../../constants/enums';
@@ -229,7 +229,9 @@ export default function HomeScreen({navigation}: any) {
             </View>
           )}
           <View className="bottom-[6px] left-0 right-0 mx-auto">
-            <Pressable onPress={() => setVisibleScanModal(true)}>
+            <Pressable onPress={() => {
+              setVisibleScanModal(true)
+              }}>
               <AddScanIcon color={Colors['light'].themeOrange} />
             </Pressable>
           </View>
