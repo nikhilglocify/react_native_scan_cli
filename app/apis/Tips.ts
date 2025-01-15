@@ -10,8 +10,9 @@ export const getDailyTip = async () => {
     try {
         const requestId = Date.now();
         const response = await axios.get(`${endPoint}/${Apis.getDailyTip}`);
-        console.log(`[${requestId}] Response success`);
-
+        
+        console.log(`[${requestId}] Response success`,`${endPoint}/${Apis.getDailyTip}`);
+    
         return response.data;
     } catch (error: any) {
         if (axios.isAxiosError(error)) {

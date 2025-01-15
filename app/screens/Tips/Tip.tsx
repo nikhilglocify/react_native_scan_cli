@@ -28,7 +28,7 @@ const Tips = () => {
       const data = await getDailyTip();
 
       setTipData(data?.data);
-      // console.log('Tip=>Data', data?.data);
+      console.log('Tip=>Data', data?.data);
     } catch (error) {
     } finally {
       setLoading(false);
@@ -76,7 +76,8 @@ const Tips = () => {
                 style={{height: 150, width: 150}}
                 source={{
                   uri:
-                    generateS3Url(tipData?.image!) ||
+                  tipData?.image?
+                    generateS3Url(tipData?.image!) :
                     'https://static-00.iconduck.com/assets.00/avatar-default-icon-1975x2048-2mpk4u9k.png',
                 }}
                 resizeMode="contain"
