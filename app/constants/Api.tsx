@@ -1,6 +1,7 @@
 export const Apis={
     getJsonUrl:"scanApi",
-    getDailyTip:"tip/getDailyTip"
+    getDailyTip:"tip/getDailyTip",
+    getUrls:"upload-json"
 
 }
 
@@ -12,9 +13,9 @@ export const requestMethods={
 
 
 // export const endPoint="https://subtle-fox-bdcd12.netlify.app/api"
-// export const endPoint="http://192.168.50.7:3000/api"
+export const endPoint="http://192.168.50.7:3000/api"
 
-export const endPoint=`${process.env.END_POINT}/api`
+// export const endPoint=`${process.env.END_POINT}/api`
 
 import axios from "axios";
 

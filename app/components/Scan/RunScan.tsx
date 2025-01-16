@@ -14,6 +14,7 @@ import {
   Alert,
   Dimensions,
   ImageBackground,
+  ActivityIndicator,
 } from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {WebView} from 'react-native-webview';
@@ -35,6 +36,7 @@ import {fontFamily} from '../../constants/theme';
 import {Colors} from '../../constants/Colors';
 import LeftCircleIcon from '../ui/svgIcons/LeftCircleIcon';
 import AppTheme from '../Layout/AppTheme';
+import {getUrlsfromServer} from '../../apis/Scan';
 
 type scannedWebView = {
   webView: JSX.Element;
@@ -55,22 +57,31 @@ const RunScan = ({navigation, route}: any) => {
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const appState = useRef(AppState.currentState);
   const {addScan, initNewScan, setInitNewScan, checkForScan} = useScanContext();
+  const [loading, setLoading] = useState(false);
 
   const data = route.params;
 
-  const selectedUrls = data?.scanNow
-    ? getRandomURLs(urlData.term)
-    : getUrls(urlData.term, data?.scanDuration || 5);
-
   useEffect(() => {
+    fetcUrl();
+
     if (initNewScan && isFocused) {
       setTimeout(() => {
-        runScan(selectedUrls);
         setIsInitialized(true);
       }, 1450);
     }
   }, [initNewScan, checkForScan]);
 
+  const fetcUrl = async () => {
+    try {
+      setLoading(true);
+      const resData = await getUrlsfromServer(data?.scanDuration || 5);
+
+      runScan(resData?.data);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
       appState.current = nextAppState;
@@ -273,7 +284,11 @@ const RunScan = ({navigation, route}: any) => {
             </View>
           ) : (
             <View className="flex-1 mt-3 bg-white px-3">
-              {currentUrl ? (
+              {loading ? (
+                <View className="flex flex-1 items-center justify-center">
+                  <ActivityIndicator size={'small'}></ActivityIndicator>
+                </View>
+              ) : currentUrl ? (
                 getRenderActiveTab(selectedUrl ? selectedUrl : currentUrl!)
               ) : isScanCompleted ? (
                 <View className="flex flex-1 items-center justify-center">
