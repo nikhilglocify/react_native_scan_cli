@@ -21,7 +21,7 @@ import {WebView} from 'react-native-webview';
 import urlData from '../../scripts/scanScript/compilation_array2.json';
 import uuid from 'react-native-uuid';
 import {useScanContext} from '../../../context/ScanContext';
-import {getRandomURLs, getUrls} from '../../helpers';
+import {getRandomNum, getRandomURLs, getUrls} from '../../helpers';
 import {ScheduledScan} from '../../constants/Interface';
 import BrowserTabIcon from '../ui/svgIcons/BrowserTabIcon';
 import CrossIcon from '../ui/svgIcons/CrossIcon';
@@ -60,21 +60,30 @@ const RunScan = ({navigation, route}: any) => {
   const [loading, setLoading] = useState(false);
 
   const data = route.params;
-
+// console.log("setIsInitiali",isInitialized)
   useEffect(() => {
-    fetcUrl();
+    
 
     if (initNewScan && isFocused) {
       setTimeout(() => {
+        console.log("setinitialize tru running")
         setIsInitialized(true);
+        
       }, 1450);
+
+      setTimeout(()=>{
+        fetcUrl()
+      },1600)
+      // fetcUrl();
     }
   }, [initNewScan, checkForScan]);
 
   const fetcUrl = async () => {
     try {
+      console.log("running fetch url")
+      setIsInitialized(true);
       setLoading(true);
-      const resData = await getUrlsfromServer(data?.scanDuration || 5);
+      const resData = await getUrlsfromServer(data?.scanDuration || getRandomNum(5,20));
 
       runScan(resData?.data);
     } catch (error) {

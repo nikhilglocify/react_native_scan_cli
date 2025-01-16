@@ -4,14 +4,15 @@ import { Apis, endPoint } from '../constants/Api';
 
 
 
-export const getUrlsfromServer = async (sitesToVist:number) => {
+export const getUrlsfromServer = async (sitesToVisit:number) => {
 
 
     try {
+        console.log("sitesToVist",sitesToVisit)
         const requestId = Date.now();
-        console.log("endPoint",endPoint)
+        console.log("endPoint",endPoint,process.env.APP_TOKEN_SECRET)
         // console.log("process.env.END_POINT",process.env.END_POINT)
-        const response = await axios.get(`${endPoint}/${Apis.getUrls}?fileKey=uploads/1737008424184-compilation_array3_010225.json`,{
+        const response = await axios.get(`${endPoint}/${Apis.getUrls}?sitesToVisit=${sitesToVisit}`,{
             headers:{
                 "appToken":process.env.APP_TOKEN_SECRET
             }
