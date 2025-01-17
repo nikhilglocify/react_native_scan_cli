@@ -12,10 +12,10 @@ export const requestMethods={
 }
 
 
-export const endPoint="https://staging-fingerprintzero.netlify.app/api"
+// export const endPoint="https://staging-fingerprintzero.netlify.app/api"
 // export const endPoint="http://192.168.50.7:3000/api"
 
-// export const endPoint=`${process.env.END_POINT}/api`
+export const endPoint=`${process.env.END_POINT}/api`
 
 import axios from "axios";
 

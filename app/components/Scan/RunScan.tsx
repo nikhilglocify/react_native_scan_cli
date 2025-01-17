@@ -60,30 +60,45 @@ const RunScan = ({navigation, route}: any) => {
   const [loading, setLoading] = useState(false);
 
   const data = route.params;
-// console.log("setIsInitiali",isInitialized)
+  // console.log("setIsInitiali",isInitialized)
+  // useEffect(() => {
+
+  //   if (initNewScan && isFocused) {
+  //     setTimeout(() => {
+  //       console.log("setinitialize tru running")
+  //       setLoading(true)
+  //       setIsInitialized(true);
+
+  //     }, 1450);
+
+  //     setTimeout(()=>{
+  //       fetcUrl()
+  //     },2000)
+  //     // fetcUrl();
+  //   }
+  // }, [initNewScan, checkForScan]);
   useEffect(() => {
-    
+    const initialize = async () => {
+      // Wait for 1450ms and set isInitialized to true
+      await new Promise(resolve => setTimeout(resolve, 1450));
+      setIsInitialized(true);
+      console.log('Initialization complete');
 
-    if (initNewScan && isFocused) {
-      setTimeout(() => {
-        console.log("setinitialize tru running")
-        setIsInitialized(true);
-        
-      }, 1450);
+      // Fetch the URL after initialization
+      await fetchUrl();
+    };
 
-      setTimeout(()=>{
-        fetcUrl()
-      },1600)
-      // fetcUrl();
-    }
+    initialize();
   }, [initNewScan, checkForScan]);
 
-  const fetcUrl = async () => {
+  const fetchUrl = async () => {
     try {
-      console.log("running fetch url")
+      console.log('running fetch url');
       setIsInitialized(true);
       setLoading(true);
-      const resData = await getUrlsfromServer(data?.scanDuration || getRandomNum(5,20));
+      const resData = await getUrlsfromServer(
+        data?.scanDuration || getRandomNum(5, 20),
+      );
 
       runScan(resData?.data);
     } catch (error) {

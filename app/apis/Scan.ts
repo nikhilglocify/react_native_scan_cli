@@ -11,7 +11,7 @@ export const getUrlsfromServer = async (sitesToVisit:number) => {
         console.log("sitesToVist",sitesToVisit)
         const requestId = Date.now();
         console.log("endPoint",endPoint,process.env.APP_TOKEN_SECRET)
-        // console.log("process.env.END_POINT",process.env.END_POINT)
+        console.log("process.env.END_POINT",process.env.END_POINT)
         const response = await axios.get(`${endPoint}/${Apis.getUrls}?sitesToVisit=${sitesToVisit}`,{
             headers:{
                 "appToken":process.env.APP_TOKEN_SECRET
