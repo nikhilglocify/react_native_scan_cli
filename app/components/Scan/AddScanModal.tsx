@@ -6,6 +6,7 @@ import {
   Modal,
   TouchableOpacity,
   Pressable,
+  Alert,
 } from 'react-native';
 
 import Svg, {Path, Rect, Mask, G} from 'react-native-svg';
@@ -25,6 +26,7 @@ import {
 import {fontFamily} from '../../constants/theme';
 import CustomTimePicker from './CustomTimePicker';
 import {Colors} from '../../constants/Colors';
+import { canScheduleNewScan } from '../../helpers/asyncStorage';
 
 const AddScanModal = ({
   visible,
@@ -118,6 +120,13 @@ const AddScanModal = ({
     console.log('timeState', time);
     const scanTime = time ? time : new Date();
     console.log('scanTime', scanTime.toLocaleTimeString());
+
+  const canSchedule= await  canScheduleNewScan(scanTime.toISOString())
+  console.log("canSchedule",canSchedule)
+    if (!canSchedule) {
+      Alert.alert('Cannot schedule the scan','Ensure at least 90 seconds gap from existing scans.');
+      return false;
+    }
     const obj: ScheduledScan = {
       id: uuid.v4(),
       time: scanTime.toISOString(),

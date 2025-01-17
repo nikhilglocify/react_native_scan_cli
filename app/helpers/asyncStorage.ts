@@ -58,6 +58,39 @@ export const getScansLocally = async (): Promise<ScheduledScan[]> => {
     return [];
   }
 };
+const MINIMUM_INTERVAL = 90 * 1000;
+export const canScheduleNewScan = async (newScanTime: string): Promise<boolean> => {
+  try {
+    const scheduledScansJSON = await AsyncStorage.getItem(Scan.scan_list);
+    if (!scheduledScansJSON) {
+      return true; // No existing scans, allow scheduling
+    }
+
+    const scheduledScans: ScheduledScan[] = JSON.parse(scheduledScansJSON);
+
+    // Filter only scans with type "scheduled"
+    const scheduledTypeScans = scheduledScans.filter(scan => scan.type === 'scheduled');
+console.log("scheduledTypeScans",scheduledTypeScans)
+    const newScanTimestamp = new Date(newScanTime).getTime();
+console.log("newScanTime",new Date(newScanTime).toLocaleTimeString())
+    for (const scan of scheduledTypeScans) {
+      const existingScanTimestamp = new Date(scan.time).getTime();
+      console.log("exisitng",new Date(scan.time).toISOString(),new Date(scan.time).toLocaleTimeString(),scan.id)
+      console.log("(newScanTimestamp - existingScanTimestamp)",(newScanTimestamp - existingScanTimestamp))
+      
+      if (Math.abs(newScanTimestamp - existingScanTimestamp) < MINIMUM_INTERVAL) {
+
+        console.log("time conlficted")
+        return false; // Found a scan within the minimum interval
+      }
+    }
+
+    return true; // No conflicts, allow scheduling
+  } catch (error) {
+    console.error('Error checking scheduled scans:', error);
+    return false; // Default to not allow scheduling on error
+  }
+};
 
 
 export const deleteScanLocally = async (identifier: string | number): Promise<void> => {
