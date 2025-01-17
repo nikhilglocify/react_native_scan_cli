@@ -78,17 +78,21 @@ const RunScan = ({navigation, route}: any) => {
   //   }
   // }, [initNewScan, checkForScan]);
   useEffect(() => {
-    const initialize = async () => {
-      // Wait for 1450ms and set isInitialized to true
-      await new Promise(resolve => setTimeout(resolve, 1450));
-      setIsInitialized(true);
-      console.log('Initialization complete');
 
-      // Fetch the URL after initialization
-      await fetchUrl();
-    };
-
-    initialize();
+    if (initNewScan && isFocused){
+      const initialize = async () => {
+        // Wait for 1450ms and set isInitialized to true
+        await new Promise(resolve => setTimeout(resolve, 1450));
+        setIsInitialized(true);
+        console.log('Initialization complete');
+  
+        // Fetch the URL after initialization
+        await fetchUrl();
+      };
+  
+      initialize();
+    }
+   
   }, [initNewScan, checkForScan]);
 
   const fetchUrl = async () => {
@@ -96,9 +100,11 @@ const RunScan = ({navigation, route}: any) => {
       console.log('running fetch url');
       setIsInitialized(true);
       setLoading(true);
+      console.log("no sites",data?.scanDuration)
       const resData = await getUrlsfromServer(
         data?.scanDuration || getRandomNum(5, 20),
       );
+      console.log("resData?.data",resData?.data.length)
 
       runScan(resData?.data);
     } catch (error) {
@@ -220,6 +226,7 @@ const RunScan = ({navigation, route}: any) => {
     };
 
     for (let i = 0; i < selectedUrls.length; i++) {
+      console.log("visit i",i,selectedUrls.length)
       const url = selectedUrls[i];
       visitUrl(url, i);
 
